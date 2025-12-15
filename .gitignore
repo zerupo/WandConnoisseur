@@ -1,0 +1,9 @@
+# Default ignored files
+/shelf/
+
+src/main/java/org/example/fileOutput/*
+src/main/resources/*
+.idea/
+target/
+*.properties
+*.class
