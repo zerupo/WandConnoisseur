@@ -10,7 +10,7 @@ public class PIPE_BOMB_DEATH_TRIGGER extends Spell{
         this.name = "Dormant Crystal With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "dormant crystal trigger", "dormant crystal expiration"};
         this.imageFile = "pipe_bomb_death_trigger.png";
-        this.emote = "<:pipe_bomb_death_trigger:1433949664469712967>";
+        this.emote = "<:pipe_bomb_death_trigger:1451342049604407410>";
         this.description = "A crystal that explodes when caught in an explosion";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_PIPE_BOMB();
