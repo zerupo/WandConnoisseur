@@ -467,9 +467,9 @@ public abstract class Spell{
                 case other -> type = ImageIO.read(new File(this.imagePath + "item_bg_other_emote.png"));
                 default -> type = ImageIO.read(new File(this.imagePath + "item_bg_other_emote.png"));
             }
-            ImageIO.write(scaleImage(combineImages(type, ImageIO.read(new File(this.imagePath + this.imageFile)), new Color(54, 43, 39)), 8),"png",new File("./src/main/java/org/example/fileOutput/" + this.getClass().getSimpleName().toLowerCase() + ".png"));
+            ImageIO.write(scaleImage(combineImages(type, ImageIO.read(new File(this.imagePath + this.imageFile)), new Color(54, 43, 39)), 8),"png",new File(Global.getPathOutput() + this.getClass().getSimpleName().toLowerCase() + ".png"));
         }catch(IOException e){
-            System.out.println(e.getMessage());
+            System.out.println("Error trying to create emote for spell \"" + this.name + "\" : " + e.getMessage());
         }
     }
 

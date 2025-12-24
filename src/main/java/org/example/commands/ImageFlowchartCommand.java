@@ -47,7 +47,7 @@ public class ImageFlowchartCommand implements Command{
             int manaRegen = 1000000;
             double spread = 0.0;
             double speed = 1.0;
-            String outputPath = "./src/main/java/org/example/fileOutput/";
+            String outputPath = Global.getPathOutput();
             String fileName = event.getId() + ".png";
             String unknownSpell = "";
             Spell currentSpell;

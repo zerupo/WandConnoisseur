@@ -16,6 +16,8 @@ public class PIPE_BOMB extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 1, 1, 0.6, 0, 0, 0, 0, 0, 0);
         this.price = 200;
         this.manaCost = 20;
+        this.hasCharges = true;
+        this.maxCharges = 20;
         this.castDelay = 30;
     }
 

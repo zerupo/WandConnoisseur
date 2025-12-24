@@ -29,8 +29,6 @@ public class SpellListCommand implements Command{
         }
 
         for(int i=0; i < spellList.length; i++){
-            // uncomment temporarily to create all spell emotes when using this command
-            //spellList[i].createEmote();
             result.append(spellList[i].getEmote() + " " + spellList[i].getName());
             if(alias){
                 aliasList = spellList[i].getAlias();

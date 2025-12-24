@@ -576,7 +576,7 @@ public class WandList{
 
     public void generateAllSprites(){
         JPanel wandJPanel;
-        String outputPath = "./src/main/java/org/example/fileOutput/";
+        String outputPath = Global.getPathOutput();
         for(int i=0; i < this.wandList.length; i++){
             System.out.println(this.wandList[i].toString());
             wandJPanel = this.wandList[i].getJPanel();

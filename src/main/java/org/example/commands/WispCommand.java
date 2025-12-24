@@ -134,7 +134,7 @@ public class WispCommand implements Command{
             int lifetimeMax = 0;
             int nbModifier = 11;
             boolean validSpellFound = false;
-            String outputPath = "./src/main/java/org/example/fileOutput/";
+            String outputPath = Global.getPathOutput();
 
             if(spellOption != null){
                 System.out.println("sort");

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Comparator;
 
 public class Global{
+    private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
     private final static SpellList spellList = new SpellList();
     private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
     private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
@@ -24,6 +25,10 @@ public class Global{
     private final static int margin = 4*getImageScaleFactor();
 
     // getters
+    public static String getPathOutput(){
+        return pathOutput;
+    }
+
     public static SpellList getSpellList(){
         return spellList;
     }

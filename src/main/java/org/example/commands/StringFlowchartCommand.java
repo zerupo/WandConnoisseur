@@ -53,7 +53,7 @@ public class StringFlowchartCommand implements Command{
         String[] spellsString;
         int chunkSize = 1980;
         String chunk = "";
-        String outputPath = "./src/main/java/org/example/fileOutput/";
+        String outputPath = Global.getPathOutput();
         Wand wand;
         boolean statChanged = false;
         Pattern p = Pattern.compile("^(inf|max|[0-9]+):(.*)$");

@@ -16,6 +16,8 @@ public class DEATH_CROSS_BIG extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.5, 0.55, 0.3, 0.4, 0, 0, 0, 0.2);
         this.price = 310;
         this.manaCost = 150;
+        this.hasCharges = true;
+        this.maxCharges = 8;
         this.castDelay = 70;
         this.recoil = 30.0;
     }

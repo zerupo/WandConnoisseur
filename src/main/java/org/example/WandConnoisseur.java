@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.example.main.Global;
+import org.example.main.WandList;
+import org.example.spells.Spell;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,11 +75,31 @@ public class WandConnoisseur{
     // refactoring wand (delay)
     // fix charges removal
     // coder tout les spells
-    // list des 1k wands
+    // list of 1k wands
     // put on the raspberry
     // create parameter for standalone with deck evaluation
     public static void main(String[] args){
         String botToken = BotConfig.getBotToken();
+        boolean generateEmotes = false;
+        boolean generateWandstat = false;
+
+        for(int i=0; i < args.length; i++){
+            switch(args[i]){
+                case "-emote" -> generateEmotes = true;
+                case "-wandstat" -> generateWandstat = true;
+                default -> {System.err.println("Unknown option: " + args[i]);System.exit(1);}
+            }
+        }
+
+        if(generateEmotes){
+            Spell[] spells = Global.getSpellList().getSpells();
+            for(int i=0; i < spells.length; i++){
+                spells[i].createEmote();
+            }
+        }
+        if(generateWandstat){
+            new WandList().generateAllSprites();
+        }
 
         if(botToken == null || botToken.isEmpty()){
             logger.error("Bot token not found in config.properties. Please provide a valid token.");
@@ -101,7 +123,6 @@ public class WandConnoisseur{
     }
 
     private static void registerSlashCommands(){
-        //new WandList().generateAllSprites();
         if(jda == null){
             logger.error("JDA instance is not initialized. Cannot register slash commands.");
             return;

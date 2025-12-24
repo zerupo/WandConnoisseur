@@ -53,6 +53,7 @@ public class TextCommand implements Command{
         OptionMapping couleurOption = event.getOption("couleur");
         String texte = "";
         String fontTexte = "title";
+        String outputPath = Global.getPathOutput();
         int taille = 100;
         Color couleur = new Color(255, 255, 255, 255);
         BufferedImage gradientImage;
@@ -136,14 +137,14 @@ public class TextCommand implements Command{
                 g2d.dispose();
             }
 
-            File textFile = new File("./src/main/java/org/example/fileOutput/text_" + event.getId() + ".png");
+            File textFile = new File(outputPath + "text_" + event.getId() + ".png");
             ImageIO.write(image, "PNG", textFile);
             event.reply("OK").setEphemeral(true).queue(message -> {
                 message.deleteOriginal().queue();
             });
             event.getChannel().sendFiles(FileUpload.fromData(textFile, "text.png")).queue();
             if(!textFile.delete()){
-                System.out.println("\"./src/main/java/org/example/fileOutput/text_" + event.getId() + ".png\" not deleted");
+                System.out.println("\"" + outputPath + "text_" + event.getId() + ".png\" not deleted");
             }
         }catch(Exception e){
             event.reply("Erreur lors de la création de l'image").setEphemeral(true).queue();

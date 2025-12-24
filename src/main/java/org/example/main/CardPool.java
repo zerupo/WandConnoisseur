@@ -124,6 +124,10 @@ public class CardPool{
         this.recoil += recoil;
     }
 
+    public void setRecoil(double recoil){
+        this.recoil = recoil;
+    }
+
     public void addScreenshake(double screenshake){
         this.screenshake += screenshake;
     }

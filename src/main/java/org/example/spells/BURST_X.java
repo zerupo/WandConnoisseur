@@ -14,6 +14,8 @@ public class BURST_X extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0, 0, 0, 0.5);
         this.price = 500;
         this.manaCost = 50;
+        this.hasCharges = true;
+        this.maxCharges = 30;
     }
 
     @Override

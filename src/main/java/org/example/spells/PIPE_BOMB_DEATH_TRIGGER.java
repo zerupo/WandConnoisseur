@@ -17,6 +17,8 @@ public class PIPE_BOMB_DEATH_TRIGGER extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.6, 0.8, 1, 0.8, 0, 0, 0, 0, 0);
         this.price = 230;
         this.manaCost = 20;
+        this.hasCharges = true;
+        this.maxCharges = 20;
         this.autoStat = false;
         this.castDelay = 30;
         this.recoil = 60.0;
