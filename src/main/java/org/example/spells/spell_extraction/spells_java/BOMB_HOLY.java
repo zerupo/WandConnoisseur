@@ -1,0 +1,52 @@
+package org.example.spells;
+
+import org.example.main.*;
+
+public class BOMB_HOLY extends Spell{
+    @Override
+    protected void initialization(){
+        this.name = "Holy Bomb";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "bomb_holy.png";
+        //this.emote = "";
+        this.description = "Summons a bomb that... well...";
+        this.type = SpellType.projectile;
+        this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.2, 0.2, 0.2, 0.2, 0, 0, 0, 0.5);
+        this.price = 400;
+        this.manaCost = 300;
+        this.hasCharges = true;
+        this.maxCharges = 2;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        // TODO: Implement action logic
+    }
+
+/*
+=== CODE LUA ORIGINAL (gun_actions.lua) ===
+	{
+		id          = "BOMB_HOLY",
+		name 		= "$action_bomb_holy",
+		description = "$actiondesc_bomb_holy",
+		spawn_requires_flag = "card_unlocked_bomb_holy",
+		sprite 		= "data/ui_gfx/gun_actions/bomb_holy.png",
+		sprite_unidentified = "data/ui_gfx/gun_actions/bomb_unidentified.png",
+		related_projectiles	= {"data/entities/projectiles/bomb_holy.xml"},
+		type 		= ACTION_TYPE_PROJECTILE,
+		spawn_level                       = "2,3,4,5,6,10", -- BOMB_HOLY
+		spawn_probability                 = "0.2,0.2,0.2,0.2,0.2,0.5", -- BOMB_HOLY
+		price = 400,
+		mana = 300, 
+		max_uses    = 2, 
+		custom_xml_file = "data/entities/misc/custom_cards/bomb_holy.xml",
+		action 		= function()
+			add_projectile("data/entities/projectiles/bomb_holy.xml")
+			current_reload_time = current_reload_time + 80
+			shot_effects.recoil_knockback = shot_effects.recoil_knockback + 100.0
+			c.fire_rate_wait = c.fire_rate_wait + 40
+		end,
+	},
+	},
+*/
+}

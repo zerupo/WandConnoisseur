@@ -1,0 +1,52 @@
+package org.example.spells;
+
+import org.example.main.*;
+
+public class ROCKET_TIER_2 extends Spell{
+    @Override
+    protected void initialization(){
+        this.name = "Large magic missile";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "rocket_tier_2.png";
+        //this.emote = "";
+        this.description = "A more powerful version of Magic missile";
+        this.type = SpellType.projectile;
+        this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.5, 1, 1, 0.8, 0.5, 0, 0, 0, 0);
+        this.price = 240;
+        this.manaCost = 90;
+        this.hasCharges = true;
+        this.maxCharges = 8;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        // TODO: Implement action logic
+    }
+
+/*
+=== CODE LUA ORIGINAL (gun_actions.lua) ===
+	{
+		id          = "ROCKET_TIER_2",
+		name 		= "$action_rocket_tier_2",
+		description = "$actiondesc_rocket_tier_2",
+		sprite 		= "data/ui_gfx/gun_actions/rocket_tier_2.png",
+		sprite_unidentified = "data/ui_gfx/gun_actions/rocket_unidentified.png",
+		related_projectiles	= {"data/entities/projectiles/deck/rocket_tier_2.xml"},
+		type 		= ACTION_TYPE_PROJECTILE,
+		spawn_level                       = "2,3,4,5,6", -- ROCKET_TIER_2
+		spawn_probability                 = "0.5,1,1,0.8,0.5", -- ROCKET_TIER_2
+		price = 240,
+		mana = 90,
+		max_uses    = 8, 
+		custom_xml_file = "data/entities/misc/custom_cards/rocket_tier_2.xml",
+		action 		= function()
+			add_projectile("data/entities/projectiles/deck/rocket_tier_2.xml")
+			c.fire_rate_wait = c.fire_rate_wait + 90
+			--current_reload_time = current_reload_time + 40
+			c.ragdoll_fx = 2
+			shot_effects.recoil_knockback = 160.0
+		end,
+	},
+	},
+*/
+}
