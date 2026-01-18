@@ -1,0 +1,73 @@
+package org.example.spells;
+
+import org.example.main.*;
+
+public class Y_SHOT extends Spell{
+    @Override
+    protected void initialization(){
+        this.name = "Yplicate Spell";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "y_shot.png";
+        //this.emote = "";
+        this.description = "Casts a copy of a projectile in a bifurcated pattern";
+        this.type = SpellType.utility;
+        this.spawnProbabilities = new SpawnProbabilities(0, 0.1, 0.2, 0.5, 0, 0, 0, 0, 0, 0, 0);
+        this.price = 135;
+        this.manaCost = 40;
+        this.hasCharges = true;
+        this.maxCharges = 30;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        // TODO: Implement action logic
+    }
+
+/*
+=== CODE LUA ORIGINAL (gun_actions.lua) ===
+	{
+		id          = "Y_SHOT",
+		name 		= "$action_y_shot",
+		description = "$actiondesc_y_shot",
+		sprite 		= "data/ui_gfx/gun_actions/y_shot.png",
+		sprite_unidentified = "data/ui_gfx/gun_actions/i_shape_unidentified.png",
+		type 		= ACTION_TYPE_UTILITY,
+		spawn_level                       = "1,2,3", -- I_SHAPE
+		spawn_probability                 = "0.1,0.2,0.5", -- I_SHAPE
+		price = 135,
+		mana = 40,
+		max_uses = 30,
+		action 		= function()
+			local data
+			
+			if ( #deck > 0 ) then
+				data = deck[1]
+			end
+			
+			if ( data ~= nil ) and ( ( data.type == ACTION_TYPE_PROJECTILE ) or ( data.type == ACTION_TYPE_STATIC_PROJECTILE ) ) and ( data.related_projectiles ~= nil ) and ( ( data.uses_remaining == nil ) or ( data.uses_remaining ~= 0 ) ) then
+				local count = 2
+				for i=1,count-1 do
+					if ( mana >= data.mana ) then
+						local proj = data.related_projectiles[1]
+						local proj_count = data.related_projectiles[2] or 1
+						
+						for a=1,proj_count do
+							add_projectile(proj)
+						end
+						
+						mana = mana - data.mana
+					else
+						OnNotEnoughManaForAction()
+						break
+					end
+				end
+			end
+			
+			c.pattern_degrees = 45
+			
+			draw_actions( 1, true )
+		end,
+	},
+	},
+*/
+}

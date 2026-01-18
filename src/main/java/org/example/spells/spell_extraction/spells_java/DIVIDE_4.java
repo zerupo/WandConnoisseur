@@ -1,0 +1,110 @@
+package org.example.spells;
+
+import org.example.main.*;
+
+public class DIVIDE_4 extends Spell{
+    @Override
+    protected void initialization(){
+        this.name = "Divide by 4";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "divide_4.png";
+        //this.emote = "";
+        this.description = "The projectile is divided in four pieces with lower damage";
+        this.type = SpellType.other;
+        this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0, 0, 0, 1);
+        this.price = 300;
+        this.manaCost = 70;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        // TODO: Implement action logic
+    }
+
+/*
+=== CODE LUA ORIGINAL (gun_actions.lua) ===
+	{
+		id          = "DIVIDE_4",
+		name 		= "$action_divide_4",
+		description = "$actiondesc_divide_4",
+		sprite 		= "data/ui_gfx/gun_actions/divide_4.png",
+		sprite_unidentified = "data/ui_gfx/gun_actions/spread_reduce_unidentified.png",
+		spawn_requires_flag = "card_unlocked_musicbox",
+		type 		= ACTION_TYPE_OTHER,
+		spawn_level                       = "5,6,10", -- MANA_REDUCE
+		spawn_probability                 = "0.1,0.1,1", -- MANA_REDUCE
+		price = 300,
+		mana = 70,
+		action 		= function( recursion_level, iteration )
+			c.fire_rate_wait = c.fire_rate_wait + 50
+			
+			local data = {}
+			
+			local iter = iteration or 1
+			local iter_max = iteration or 1
+			
+			if ( #deck > 0 ) then
+				data = deck[iter] or nil
+			else
+				data = nil
+			end
+			
+			local count = 4
+			if ( iter >= 4 ) then
+				count = 1
+			end
+			
+			local rec = check_recursion( data, recursion_level )
+			
+			if ( data ~= nil ) and ( rec > -1 ) and ( ( data.uses_remaining == nil ) or ( data.uses_remaining ~= 0 ) ) then
+				local firerate = c.fire_rate_wait
+				local reload = current_reload_time
+				
+				for i=1,count do
+					if ( i == 1 ) then
+						dont_draw_actions = true
+					end
+					local imax = data.action( rec, iter + 1 )
+					dont_draw_actions = false
+					if (imax ~= nil) then
+						iter_max = imax
+					end
+				end
+				
+				if ( data.uses_remaining ~= nil ) and ( data.uses_remaining > 0 ) then
+					data.uses_remaining = data.uses_remaining - 1
+					
+					local reduce_uses = ActionUsesRemainingChanged( data.inventoryitem_id, data.uses_remaining )
+					if not reduce_uses then
+						data.uses_remaining = data.uses_remaining + 1 -- cancel the reduction
+					end
+				end
+				
+				if (iter == 1) then
+					c.fire_rate_wait = firerate
+					current_reload_time = reload
+					
+					for i=1,iter_max do
+						if (#deck > 0) then
+							local d = deck[1]
+							table.insert( discarded, d )
+							table.remove( deck, 1 )
+						end
+					end
+				end
+			end
+			
+			c.damage_projectile_add = c.damage_projectile_add - 0.6
+			c.explosion_radius = c.explosion_radius - 20.0
+			if (c.explosion_radius < 0) then
+				c.explosion_radius = 0
+			end
+			
+			c.pattern_degrees = 5
+			
+			return iter_max
+		end,
+	},
+	},
+*/
+}

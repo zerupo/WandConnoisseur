@@ -1,0 +1,50 @@
+package org.example.spells;
+
+import org.example.main.*;
+
+public class LANCE_HOLY extends Spell{
+    @Override
+    protected void initialization(){
+        this.name = "Holy Lance";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "lance_holy.png";
+        //this.emote = "";
+        this.description = "A fast-flying";
+        this.type = SpellType.projectile;
+        this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.5, 0, 0.8, 1, 0, 0, 0, 0);
+        this.price = 250;
+        this.manaCost = 120;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        // TODO: Implement action logic
+    }
+
+/*
+=== CODE LUA ORIGINAL (gun_actions.lua) ===
+	{
+		id          = "LANCE_HOLY",
+		name 		= "$action_holy",
+		description = "$actiondesc_holy",
+		sprite 		= "data/ui_gfx/gun_actions/lance_holy.png",
+		sprite_unidentified = "data/ui_gfx/gun_actions/lance_unidentified.png",
+		related_projectiles	= {"data/entities/projectiles/deck/lance_holy.xml"},
+		type 		= ACTION_TYPE_PROJECTILE,
+		spawn_level                       = "3,5,6", -- LANCE
+		spawn_probability                 = "0.5,0.8,1", -- LANCE
+		price = 250,
+		mana = 120,
+		--max_uses = 30,
+		custom_xml_file = "data/entities/misc/custom_cards/lance_holy.xml",
+		action 		= function()
+			add_projectile("data/entities/projectiles/deck/lance_holy.xml")
+			-- damage = 0.3
+			c.fire_rate_wait = c.fire_rate_wait + 30
+			c.spread_degrees = c.spread_degrees - 10
+			shot_effects.recoil_knockback = 60.0
+		end,
+	},
+	},
+*/
+}

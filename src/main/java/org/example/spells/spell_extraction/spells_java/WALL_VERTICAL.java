@@ -1,0 +1,46 @@
+package org.example.spells;
+
+import org.example.main.*;
+
+public class WALL_VERTICAL extends Spell{
+    @Override
+    protected void initialization(){
+        this.name = "Vertical barrier";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "wall_vertical.png";
+        //this.emote = "";
+        this.description = "A thin";
+        this.type = SpellType.projectile;
+        this.spawnProbabilities = new SpawnProbabilities(0.4, 0.4, 0.6, 0, 0.5, 0.2, 0, 0, 0, 0, 0);
+        this.price = 160;
+        this.manaCost = 70;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        // TODO: Implement action logic
+    }
+
+/*
+=== CODE LUA ORIGINAL (gun_actions.lua) ===
+	{
+		id          = "WALL_VERTICAL",
+		name 		= "$action_wall_vertical",
+		description = "$actiondesc_wall_vertical",
+		sprite 		= "data/ui_gfx/gun_actions/wall_vertical.png",
+		sprite_unidentified = "data/ui_gfx/gun_actions/teleport_projectile_unidentified.png",
+		related_projectiles	= {"data/entities/projectiles/deck/wall_vertical.xml"},
+		type 		= ACTION_TYPE_STATIC_PROJECTILE,
+		spawn_level                       = "0,1,2,4,5", -- WALL_VERTICAL
+		spawn_probability                 = "0.4,0.4,0.6,0.5,0.2", -- WALL_VERTICAL
+		price = 160,
+		mana = 70,
+		--max_uses = 80,
+		action 		= function()
+			add_projectile("data/entities/projectiles/deck/wall_vertical.xml")
+			c.fire_rate_wait = c.fire_rate_wait + 5
+		end,
+	},
+	},
+*/
+}

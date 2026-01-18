@@ -1,0 +1,44 @@
+package org.example.spells;
+
+import org.example.main.*;
+
+public class TINY_GHOST extends Spell{
+    @Override
+    protected void initialization(){
+        this.name = "Summon Tiny Ghost";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "tiny_ghost.png";
+        //this.emote = "";
+        this.description = "Summons a tiny ethereal being to your help";
+        this.type = SpellType.other;
+        this.spawnProbabilities = new SpawnProbabilities(0, 0.1, 0.5, 1, 0.8, 0.7, 0.5, 0, 0, 0, 0);
+        this.price = 160;
+        this.manaCost = 0;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        // TODO: Implement action logic
+    }
+
+/*
+=== CODE LUA ORIGINAL (gun_actions.lua) ===
+	{
+		id          = "TINY_GHOST",
+		name 		= "$action_tiny_ghost",
+		description = "$actiondesc_tiny_ghost",
+		sprite 		= "data/ui_gfx/gun_actions/tiny_ghost.png",
+		sprite_unidentified = "data/ui_gfx/gun_actions/torch_unidentified.png",
+		type 		= ACTION_TYPE_PASSIVE,
+		spawn_level                       = "1,2,3,4,5,6", -- TINY_GHOST
+		spawn_probability                 = "0.1,0.5,1,0.8,0.7,0.5", -- TINY_GHOST
+		price = 160,
+		mana = 0,
+		custom_xml_file = "data/entities/misc/custom_cards/tiny_ghost.xml",
+		action 		= function()
+			draw_actions( 1, true )
+		end,
+	},
+	},
+*/
+}
