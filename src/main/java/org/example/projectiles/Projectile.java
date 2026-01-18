@@ -133,6 +133,9 @@ public abstract class Projectile{
         return this.lifetime + this.lifetimeRandomness;
     }
 
+    public String getLifetimeString(){
+        return "[" + (this.lifetime - this.lifetimeRandomness) + "; " + (this.lifetime + this.lifetimeRandomness) + "]";
+    }
 
     protected abstract void initialization();
 }

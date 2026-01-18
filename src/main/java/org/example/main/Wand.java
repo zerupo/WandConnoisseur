@@ -439,7 +439,6 @@ public class Wand{
         int currentRechargeTime = 0;
         int nbCast = 0;
         boolean recharged = false;
-        String waitMessage = "";
 
         for(int i=0; i < spellsCopy.length; i++){
             if(this.spells[i] != null){
@@ -462,7 +461,7 @@ public class Wand{
             currentCastDelay += primaryCastState.getCastDelay();
             currentMana -= cardPoolCopy.getManaUsage()*60;
             if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                System.out.println(currentCastDelay + " " + currentRechargeTime + " " + waitingTime);
+                //System.out.println(currentCastDelay + " " + currentRechargeTime + " " + waitingTime);
                 if(currentCastDelay > currentRechargeTime){
                     result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time (cast delay): " + String.format("%1$3.2f s (%2$df)", currentCastDelay/60.0, currentCastDelay) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
                 }else{

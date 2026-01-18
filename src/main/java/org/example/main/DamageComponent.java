@@ -139,6 +139,10 @@ public class DamageComponent{
         return this.holy;
     }
 
+    public double getTotal(){
+        return this.projectile + this.melee + this.explosion + this.electricity + this.fire + this.drill + this.slice + this.ice + this.healing + this.physics_hit + this.radioactive + this.poison + this.overeating + this.curse + this.holy;
+    }
+
     // setters
     public void setProjectile(double projectile){
         this.projectile = projectile;

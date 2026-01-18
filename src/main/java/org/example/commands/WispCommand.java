@@ -137,7 +137,6 @@ public class WispCommand implements Command{
             String outputPath = Global.getPathOutput();
 
             if(spellOption != null){
-                System.out.println("sort");
                 spellsInput = spellOption.getAsString();
                 spell = spellListRelatedProjectile.getSpell(spellsInput);
                 if(spell != null){
@@ -164,7 +163,6 @@ public class WispCommand implements Command{
                 nbModifier = Math.min(Math.max(nbModifierOption.getAsInt(), 0), 21);
             }
 
-            System.out.println((lifetimeMaxOption != null) + " && " + (lifetimeMinOption != null) + " || " + validSpellFound + " = " + (lifetimeMaxOption != null && lifetimeMinOption != null || validSpellFound));
             if(lifetimeMinOption != null && lifetimeMaxOption != null || validSpellFound){
                 message.deleteOriginal().queue();
             }else{
@@ -172,12 +170,9 @@ public class WispCommand implements Command{
                 return;
             }
 
-            System.out.println("ici");
             if(validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
-                System.out.println("valide");
                 event.getChannel().sendMessage("Recherche de wisps pour le sort " + spell.getName() + ", lifetime: [" + lifetimeMin + ", " + lifetimeMax + "], max modifier: " + nbModifier).queue();
             }else{
-                System.out.println("pas valide");
                 event.getChannel().sendMessage("Recherche de wisps pour le lifetime: [" + lifetimeMin + ", " + lifetimeMax + "], max modifier: " + nbModifier).queue();
             }
 
@@ -194,10 +189,6 @@ public class WispCommand implements Command{
             }
             Modifier[] modifiers = modifiersList.toArray(new Modifier[0]);
 
-            /*for(int i=0; i < modifiers.length; i++){
-                System.out.println(modifiers[i].name + ", " + modifiers[i].lifetime);
-            }*/
-
             int[][] result = getValues(modifiers, lifetimeMin, lifetimeMax, nbModifier);
 
             event.getChannel().sendMessage(result.length + " solutions trouvées").queue();
@@ -211,13 +202,6 @@ public class WispCommand implements Command{
                 if (a[N] != b[N]) return Integer.compare(a[N], b[N]);
                 else return Integer.compare(a[N-1], b[N-1]);
             });
-
-            /*for(int i=0; i < result.length; i++){
-                for(int j=0; j < result[i].length; j++){
-                    System.out.print(result[i][j] + ", ");
-                }
-                System.out.println();
-            }*/
 
             try{
                 FileWriter FW = new FileWriter(outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv");

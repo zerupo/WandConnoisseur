@@ -35,7 +35,6 @@ public class SpellInfoCommand implements Command{
         if(nameOption != null){
             spellString = nameOption.getAsString().trim().toLowerCase();
         }
-        System.out.println(spellString);
         if(fileOption != null){
             file = fileOption.getAsBoolean();
         }

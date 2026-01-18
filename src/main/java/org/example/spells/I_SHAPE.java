@@ -14,14 +14,14 @@ public class I_SHAPE extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.5, 0.3, 0, 0, 0, 0, 0, 0, 0);
         this.price = 30;
         this.autoStat = false;
-        this.patern = 180;
+        this.pattern = 180;
         this.spread = -5.0;
     }
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         cardPool.draw(2, true, castState);
-        castState.setPatern(this.patern);
+        castState.setPattern(this.pattern);
         castState.addSpread(this.spread);
     }
 }

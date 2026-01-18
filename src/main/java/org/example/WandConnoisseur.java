@@ -14,6 +14,8 @@ import org.example.spells.Spell;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 import java.util.EnumSet;
 
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -74,7 +76,7 @@ public class WandConnoisseur{
     // shuffle
     // refactoring wand (delay)
     // fix charges removal
-    // coder tout les spells
+    // code every spell
     // list of 1k wands
     // put on the raspberry
     // create parameter for standalone with deck evaluation
@@ -129,95 +131,159 @@ public class WandConnoisseur{
         }
 
         jda.addEventListener(new ListenerAdapter(){
-            @Override
-            public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event){
-                List<net.dv8tion.jda.api.interactions.commands.Command.Choice> options = new ArrayList<>();
-                String currentInput = event.getFocusedOption().getValue().toLowerCase();
-                String previousSpells;
-                String[] validSpells;
-                Pattern p = Pattern.compile("^(inf|max|[0-9]+):(.*)$");
-                Matcher m;
+        @Override
+        public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event){
+            List<net.dv8tion.jda.api.interactions.commands.Command.Choice> options = new ArrayList<>();
+            String currentInput = event.getFocusedOption().getValue().toLowerCase();
+            String preInput = "";
+            String postInput = "";
+            String[] validSpells;
+            Pattern p;
+            Matcher m;
+            int maxOutput = 25;
 
-                if(currentInput.strip().equalsIgnoreCase("quoi")){
-                    options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("Feur", "Feur"));
-                    event.replyChoices(options).queue();
-                    return;
-                }
+            if(currentInput.strip().equalsIgnoreCase("quoi")){
+                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("Feur", "Feur"));
+                event.replyChoices(options).queue();
+                return;
+            }
 
-                switch(event.getName()){
-                    case "wisp":
-                        if(event.getFocusedOption().getName().equals("sort")){
-                            currentInput = currentInput.strip().toLowerCase();
+            if(Arrays.asList(new String[]{"sorts_", "sorts", "propriete", "tri"}).contains(event.getFocusedOption().getName())){
+                preInput = currentInput.substring(0, currentInput.lastIndexOf(',') + 1) + " ";
+                currentInput = currentInput.substring(currentInput.lastIndexOf(',') + 1).strip();
+            }
+
+            switch(event.getName()){
+                case "wisp":
+                    if(event.getFocusedOption().getName().equals("sort")){
+                        currentInput = currentInput.strip();
+                        if(currentInput.equals("")){
+                            validSpells = Arrays.copyOf(Global.getAliasListRelatedProjectile(), Math.min(maxOutput, Global.getAliasListRelatedProjectile().length));
+                        }else{
+                            validSpells = getSpellAutocomplete(Global.getAliasListRelatedProjectile(), currentInput, maxOutput);
+                        }
+
+                        for(int i=0; i < validSpells.length; i++){
+                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(validSpells[i], validSpells[i]));
+                        }
+                        break;
+                    }
+                    break;
+                default:
+                    switch(event.getFocusedOption().getName()){
+                        case "propriete":
                             if(currentInput.equals("")){
-                                break;
+                                validSpells = Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length));
+                            }else{
+                                validSpells = getSpellAutocomplete(Global.getSpellStringProperties(), currentInput, maxOutput);
                             }
-                            validSpells = getSpellAutocomplete(Global.getAliasListRelatedProjectile(), currentInput, 25);
+
+                            for(int i=0; i < validSpells.length; i++){
+                                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(preInput + validSpells[i], preInput + validSpells[i]));
+                            }
+                            break;
+                        case "condition":
+                            int charId = Math.max(Math.max(currentInput.lastIndexOf(' '), currentInput.lastIndexOf('(')), currentInput.lastIndexOf(')'));
+                            preInput = currentInput.substring(0, charId + 1);
+                            currentInput = currentInput.substring(charId + 1).strip();
+
+                            if(currentInput.equals("")){
+                                validSpells = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
+                            }else{
+                                validSpells = getSpellAutocomplete(Global.getSpellProperties(), currentInput, maxOutput);
+                            }
+
+                            for(int i=0; i < validSpells.length; i++){
+                                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice( preInput + validSpells[i], preInput + validSpells[i]));
+                            }
+                            break;
+                        case "tri":
+                            if(currentInput.equals("")){
+                                validSpells = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
+                            }else{
+                                p = Pattern.compile("^ *(?i)([a-z0-9_]+) *(|ASC|DESC) *$");
+                                m = p.matcher(currentInput);
+                                if(m.find()){
+                                    currentInput = m.group(1);
+                                    postInput += m.group(2).equalsIgnoreCase("DESC") ? " DESC" : "";
+                                }
+                                if(currentInput.equals("")){
+                                    validSpells = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
+                                }else{
+                                    validSpells = getSpellAutocomplete(Global.getSpellProperties(), currentInput, maxOutput);
+                                }
+                            }
+
+                            for(int i=0; i < validSpells.length; i++){
+                                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(preInput + validSpells[i] + postInput, preInput + validSpells[i] + postInput));
+                            }
+                            break;
+                        case "sorts_":
+                        case "sorts":
+                            if(currentInput.equals("")){
+                                validSpells = Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length));
+                            }else{
+                                p = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
+                                m = p.matcher(currentInput);
+                                if(m.find()){
+                                    currentInput = m.group(2);
+                                    if(m.group(1) != null){
+                                        preInput += m.group(1) + ":";
+                                    }
+                                    if(m.group(3) != null){
+                                        postInput += ":" + m.group(3);
+                                    }
+                                }
+                                if(currentInput.equals("")){
+                                    validSpells = Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length));
+                                }else{
+                                    validSpells = getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput);
+                                }
+                            }
+
+                            for(int i=0; i < validSpells.length; i++){
+                                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(preInput + validSpells[i] + postInput, preInput + validSpells[i] + postInput));
+                            }
+                            break;
+                        case "nom":
+                            currentInput = currentInput.strip();
+                            if(currentInput.equals("")){
+                                validSpells = Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length));
+                            }else{
+                                validSpells = getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput);
+                            }
+
                             for(int i=0; i < validSpells.length; i++){
                                 options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(validSpells[i], validSpells[i]));
                             }
                             break;
-                        }
-                        break;
-                    default:
-                        switch(event.getFocusedOption().getName()){
-                            case "sorts_":
-                            case "sorts":
-                                previousSpells = currentInput.substring(0, currentInput.lastIndexOf(',') + 1).strip();
-                                currentInput = currentInput.substring(currentInput.lastIndexOf(',') + 1).strip().toLowerCase();
-                                m = p.matcher(currentInput);
-                                if(m.find()){
-                                    currentInput = m.group(2);
-                                    previousSpells += m.group(1) + ":";
-                                }
-                                System.out.println("\"" + previousSpells + "\" + \"" + currentInput + "\"");
-                                if(currentInput.equals("")){
-                                    break;
-                                }
-                                validSpells = getSpellAutocomplete(Global.getAliasList(), currentInput, 25);
-                                /*for(int i=0; i < validSpells.length; i++){
-                                    System.out.println("valid: " + validSpells[i]);
-                                }*/
-                                for(int i=0; i < validSpells.length; i++){
-                                    options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(previousSpells + validSpells[i], previousSpells + validSpells[i]));
-                                }
-                                break;
-                            case "nom":
-                                currentInput = currentInput.strip().toLowerCase();
-                                if(currentInput.equals("")){
-                                    break;
-                                }
-                                validSpells = getSpellAutocomplete(Global.getAliasList(), currentInput, 25);
-                                for(int i=0; i < validSpells.length; i++){
-                                    options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(validSpells[i], validSpells[i]));
-                                }
-                                break;
-                            case "font":
-                                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("pixel", "pixel"));
-                                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("title", "title"));
-                                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("glyph", "glyph"));
-                                break;
-                            case "commande":
-                                RestAction<List<net.dv8tion.jda.api.interactions.commands.Command>> commandList = jda.retrieveCommands();
-                                String commandInput = currentInput.strip().toLowerCase();
-                                commandList.queue(commands -> {
-                                    for(net.dv8tion.jda.api.interactions.commands.Command command : commands){
-                                        if(commandInput.equals("") || command.getName().contains(commandInput)){
-                                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(command.getName(), command.getName()));
-                                        }
+                        case "font":
+                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("pixel", "pixel"));
+                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("title", "title"));
+                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("glyph", "glyph"));
+                            break;
+                        case "commande":
+                            RestAction<List<net.dv8tion.jda.api.interactions.commands.Command>> commandList = jda.retrieveCommands();
+                            String commandInput = currentInput.strip();
+                            commandList.queue(commands -> {
+                                for(net.dv8tion.jda.api.interactions.commands.Command command : commands){
+                                    if(commandInput.equals("") || command.getName().contains(commandInput)){
+                                        options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(command.getName(), command.getName()));
                                     }
-                                    event.replyChoices(options).queue();
-                                }, failure -> {
-                                    System.out.println("Failed to retrieve commands: " + failure.getMessage());
-                                });
-                                return;
-                        }
-                        break;
-                }
-                if(event.getFocusedOption().getType() == OptionType.BOOLEAN){
-                    options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("true", "true"));
-                    options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("false", "false"));
-                }
-                event.replyChoices(options).queue();
+                                }
+                                event.replyChoices(options).queue();
+                            }, failure -> {
+                                System.out.println("Failed to retrieve commands: " + failure.getMessage());
+                            });
+                            return;
+                    }
+                    break;
+            }
+            if(event.getFocusedOption().getType() == OptionType.BOOLEAN){
+                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("true", "true"));
+                options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("false", "false"));
+            }
+            event.replyChoices(options).queue();
             }
         });
 
@@ -228,7 +294,9 @@ public class WandConnoisseur{
             Commands.slash("echo", "Répond avec votre message.")
                 .addOption(OptionType.STRING, "texte", "Le texte à renvoyer.", true),
             Commands.slash("liste_sorts", "Renvoie la liste des sorts disponibles.")
-                .addOption(OptionType.BOOLEAN, "alias", "Renvoyer tout les alias de chaque sort (defaut: false).", false),
+                .addOption(OptionType.STRING, "propriete", "Liste des propriétés à afficher, spérarées par des \",\"", false, true)
+                .addOption(OptionType.STRING, "condition", "Condition de sélection des sorts.", false, true)
+                .addOption(OptionType.STRING, "tri", "Ordre d'affichage des sorts.", false, true),
             Commands.slash("flowchart_texte", "Renvoie la flowchart sous forme textuelle.")
                 .addOption(OptionType.STRING, "sorts_", "Sorts à séparer par des \",\", précéder par 0: max: ou inf: pour modifier les charges (défaut: inf:).", true, true)
                 .addOption(OptionType.INTEGER, "draw", "Nombre de sorts/lancer de la baguette (défaut: 1).", false)

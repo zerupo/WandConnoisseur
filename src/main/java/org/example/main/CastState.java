@@ -51,7 +51,7 @@ public class CastState{
     private DamageComponent damageComponent = new DamageComponent();
     private int lifetime = 0;
     private int critRate = 0;
-    private int patern = 0;
+    private int pattern = 0;
     private double spread = 0;
 
     public CastState(){
@@ -79,8 +79,8 @@ public class CastState{
         return this.critRate;
     }
 
-    public int getPatern(){
-        return this.patern;
+    public int getPattern(){
+        return this.pattern;
     }
 
     public double getSpread(){
@@ -104,8 +104,8 @@ public class CastState{
         this.critRate = critRate;
     }
 
-    public void setPatern(int patern){
-        this.patern = patern;
+    public void setPattern(int pattern){
+        this.pattern = pattern;
     }
 
     public void setSpread(double spread){
@@ -129,8 +129,8 @@ public class CastState{
         this.critRate += critRate;
     }
 
-    public void addPatern(int patern){
-        this.patern += patern;
+    public void addPattern(int pattern){
+        this.pattern += pattern;
     }
 
     public void addSpread(double spread){

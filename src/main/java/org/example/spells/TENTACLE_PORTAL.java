@@ -16,6 +16,7 @@ public class TENTACLE_PORTAL extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.4, 0.4, 0.5, 0, 0, 0, 0, 0, 0.2);
         this.price = 220;
         this.manaCost = 140;
+        this.hasCharges = true;
         this.maxCharges = 5;
         this.castDelay = 30;
     }

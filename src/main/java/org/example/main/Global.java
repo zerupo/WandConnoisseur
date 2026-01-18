@@ -1,5 +1,6 @@
 package org.example.main;
 
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.example.spells.*;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,9 @@ import java.util.Comparator;
 
 public class Global{
     private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
+    private final static SpellFilter spellFilter = new SpellFilter();
+    private final static String[] spellProperties = SpellFilter.PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
+    private final static String[] spellStringProperties = SpellFilter.STRING_PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
     private final static SpellList spellList = new SpellList();
     private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
     private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
@@ -27,6 +31,18 @@ public class Global{
     // getters
     public static String getPathOutput(){
         return pathOutput;
+    }
+
+    public static SpellFilter getSpellFilter(){
+        return spellFilter;
+    }
+
+    public static String[] getSpellProperties(){
+        return spellProperties;
+    }
+
+    public static String[] getSpellStringProperties(){
+        return spellStringProperties;
     }
 
     public static SpellList getSpellList(){
@@ -130,5 +146,26 @@ public class Global{
             System.out.println("image not found: \"" + path + "\"");
         }
         return result;
+    }
+
+    public static void sendMessage(String message, MessageChannelUnion channel, boolean ansiFormatting){
+        int chunkSize = 1970;
+        String chunk = "";
+        String[] lines = message.split("\\r?\\n");
+        for(int i=0; i < lines.length; i++){
+            if(chunk.length() + lines[i].length() > chunkSize){
+                if(chunk.length() <= chunkSize){
+                    channel.sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+                }else{
+                    channel.sendMessage(ansiFormatting ? "```ansi\nError message too long```" : "Error message too long").queue();
+                }
+                chunk = lines[i];
+            }else{
+                chunk += "\n" + lines[i];
+            }
+            if(i + 1 == lines.length && !chunk.equals("")){
+                channel.sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+            }
+        }
     }
 }

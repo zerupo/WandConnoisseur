@@ -4,7 +4,6 @@ import org.example.main.*;
 import org.example.projectiles.Projectile;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -46,7 +45,7 @@ public abstract class Spell{
     protected DamageComponent damageComponent = new DamageComponent();
     protected int lifetime = 0;
     protected int critRate = 0;
-    protected int patern = 0;
+    protected int pattern = 0;
     protected double spread = 0;
     protected double recoil = 0.0;
     protected double screenshake = 0.0;
@@ -105,7 +104,7 @@ public abstract class Spell{
         newSpell.damageComponent = new DamageComponent(this.damageComponent); // clone
         newSpell.lifetime = this.lifetime;
         newSpell.critRate = this.critRate;
-        newSpell.patern = this.patern;
+        newSpell.pattern = this.pattern;
         newSpell.spread = this.spread;
         newSpell.recoil = this.recoil;
         newSpell.screenshake = this.screenshake;
@@ -133,6 +132,19 @@ public abstract class Spell{
 
     public String[] getAlias(){
         return this.alias;
+    }
+
+    public String getAliasString(){
+        String result = "[";
+
+        if(this.alias.length > 0){
+            result += "\"" + this.alias[0] + "\"";
+        }
+        for(int i=1; i < this.alias.length; i++){
+            result += ", \"" + this.alias[i] + "\"";
+        }
+
+        return result + "]";
     }
 
     public String getFullImagePath(){
@@ -203,8 +215,24 @@ public abstract class Spell{
         return newLabel;
     }
 
+    public boolean getRecursive(){
+        return this.recursive;
+    }
+
+    public int getPrice(){
+        return this.price;
+    }
+
     public boolean getHasCharges(){
         return this.hasCharges;
+    }
+
+    public int getMaxCharges(){
+        return this.maxCharges;
+    }
+
+    public boolean getNeverUnlimited(){
+        return this.neverUnlimited;
     }
 
     public int getChargesLeft(){
@@ -213,6 +241,18 @@ public abstract class Spell{
 
     public int getManaCost(){
         return this.manaCost;
+    }
+
+    public int getCastDelay(){
+        return this.castDelay;
+    }
+
+    public int getRechargeTime(){
+        return this.rechargeTime;
+    }
+
+    public DamageComponent getDamageComponent(){
+        return this.damageComponent;
     }
 
     public BufferedImage getImage(){
@@ -225,6 +265,26 @@ public abstract class Spell{
 
     public int getLifetime(){
         return this.lifetime;
+    }
+
+    public int getCritRate(){
+        return this.critRate;
+    }
+
+    public int getPattern(){
+        return this.pattern;
+    }
+
+    public double getSpread(){
+        return this.spread;
+    }
+
+    public double getRecoil(){
+        return this.recoil;
+    }
+
+    public double getScreenshake(){
+        return this.screenshake;
     }
 
     public int getLastIteration(){
@@ -322,8 +382,8 @@ public abstract class Spell{
             result.append("Crit rate: ").append(this.critRate).append("%\n");
             space = true;
         }
-        if(this.patern != 0){
-            result.append("Patern: ").append(this.patern).append("\n");
+        if(this.pattern != 0){
+            result.append("Pattern: ").append(this.pattern).append("\n");
             space = true;
         }
         if(this.spread != 0){
@@ -663,8 +723,8 @@ public abstract class Spell{
         if(this.critRate != 0){
             castState.addCritRate(this.critRate);
         }
-        if(this.patern != 0){
-            castState.addPatern(this.patern);
+        if(this.pattern != 0){
+            castState.addPattern(this.pattern);
         }
         if(this.spread != 0){
             castState.addSpread(this.spread);

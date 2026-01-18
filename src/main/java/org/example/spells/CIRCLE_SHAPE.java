@@ -15,14 +15,14 @@ public class CIRCLE_SHAPE extends Spell{
         this.price = 50;
         this.manaCost = 6;
         this.autoStat = false;
-        this.patern = 180;
+        this.pattern = 180;
         this.spread = -15.0;
     }
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         cardPool.draw(6, true, castState);
-        castState.setPatern(this.patern);
+        castState.setPattern(this.pattern);
         castState.addSpread(this.spread);
     }
 }

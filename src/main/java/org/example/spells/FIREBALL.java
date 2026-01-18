@@ -17,6 +17,8 @@ public class FIREBALL extends Spell{
         this.price = 220;
         this.manaCost = 70;
         this.castDelay = 50;
+        this.hasCharges = true;
+        this.maxCharges = 15;
         this.spread = 4;
         this.recoil = 20.0;
     }

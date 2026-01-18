@@ -75,10 +75,10 @@ public class TextCommand implements Command{
             if(m.find()){
                 System.out.println(couleurOption.getAsString().toLowerCase() + " is matching, alpha = " + (m.group(4) != null));
                 if(m.group(4) != null){
-                    System.out.println("RGBA");
+                    // RGBA
                     couleur = new Color(Integer.parseInt(m.group(1), 16), Integer.parseInt(m.group(2), 16), Integer.parseInt(m.group(3), 16), Integer.parseInt(m.group(4), 16));
                 }else{
-                    System.out.println("RGB");
+                    // RGB
                     couleur = new Color(Integer.parseInt(m.group(1), 16), Integer.parseInt(m.group(2), 16), Integer.parseInt(m.group(3), 16), 255);
                 }
             }

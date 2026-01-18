@@ -13,11 +13,7 @@ import java.util.Random;
 
 import static org.example.main.Global.*;
 
-enum RangeType{
-    BETWEEN,
-    GREATER_OR_EQUAL,
-    LESS_OR_EQUAL
-}
+enum RangeType{BETWEEN, GREATER_OR_EQUAL, LESS_OR_EQUAL}
 
 class IntRange{
     private final int min;

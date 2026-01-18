@@ -8,6 +8,7 @@ import org.example.spells.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
@@ -50,7 +51,9 @@ public class ImageFlowchartCommand implements Command{
             String outputPath = Global.getPathOutput();
             String fileName = event.getId() + ".png";
             String unknownSpell = "";
-            Spell currentSpell;
+            Spell currentSpell = null;
+            int currentSpellCount = 1;
+            ArrayList<Spell> spells = new ArrayList<>();
             String[] spellsString;
             Wand wand;
             JPanel wandJPanel;
@@ -58,7 +61,7 @@ public class ImageFlowchartCommand implements Command{
             File wandStatImage = null;
             File wandImage = null;
             File flowchartImage;
-            Pattern p = Pattern.compile("^(inf|max|[0-9]+):(.*)$");
+            Pattern p = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
             Matcher m;
 
             if(drawOption != null){
@@ -97,26 +100,27 @@ public class ImageFlowchartCommand implements Command{
             for(int i=0; i < spellsString.length; i++){
                 spellsString[i] = spellsString[i].trim().toLowerCase();
             }
-            wand = new Wand(draw, castDelay, rechargeTime, manaMax, manaRegen, spellsString.length, spread, speed);
+
             for(int i=0; i < spellsString.length; i++){
                 m = p.matcher(spellsString[i]);
                 if(m.find()){
                     currentSpell = spellList.getSpell(m.group(2));
                     if(currentSpell != null){
-                        switch(m.group(1)){
+                        switch((m.group(1) != null) ? m.group(1) : "inf"){
                             case "inf" -> currentSpell.makeInfinite();
                             case "max" -> currentSpell.refillCharges();
                             default -> currentSpell.setCharges(Integer.parseInt(m.group(1)));
                         }
                     }
+                    currentSpellCount = (m.group(3) != null) ? Integer.parseInt(m.group(3)) : 1;
                 }else{
-                    currentSpell = spellList.getSpell(spellsString[i]);
-                    if(currentSpell != null){
-                        currentSpell.makeInfinite();
-                    }
+                    currentSpell = null;
                 }
                 if(currentSpell != null){
-                    wand.putSpell(currentSpell, i);
+                    spells.add(currentSpell);
+                    for(int j=1; j < currentSpellCount; j++){
+                        spells.add(currentSpell.clone());
+                    }
                 }else{
                     if(unknownSpell.equals("")){
                         unknownSpell += "\"" + spellsString[i] + "\"";
@@ -124,6 +128,10 @@ public class ImageFlowchartCommand implements Command{
                         unknownSpell += ", \"" + spellsString[i] + "\"";
                     }
                 }
+            }
+            wand = new Wand(draw, castDelay, rechargeTime, manaMax, manaRegen, spells.size(), spread, speed);
+            for(Spell spell : spells){
+                wand.putSpellEnd(spell);
             }
 
             if(statChanged){
@@ -136,7 +144,7 @@ public class ImageFlowchartCommand implements Command{
                     try{
                         ImageIO.write(bi,"png",new File(outputPath + "wandstats_" + fileName));
                     }catch(Exception e){
-                        // nothing
+                        System.out.println("Error writing file \"" + outputPath + "wandstats_" + fileName + "\" " + e.getMessage());
                     }
                     wandStatImage = new File(outputPath + "wandstats_" + fileName);
                 }
@@ -151,7 +159,7 @@ public class ImageFlowchartCommand implements Command{
                 try{
                     ImageIO.write(bi,"png",new File(outputPath + "wand_" + fileName));
                 }catch(Exception e){
-                    // nothing
+                    System.out.println("Error writing file \"" + outputPath + "wand_" + fileName + "\" " + e.getMessage());
                 }
                 wandImage = new File(outputPath + "wand_" + fileName);
             }

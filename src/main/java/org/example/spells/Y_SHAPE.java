@@ -15,14 +15,14 @@ public class Y_SHAPE extends Spell{
         this.price = 30;
         this.manaCost = 2;
         this.autoStat = false;
-        this.patern = 45;
+        this.pattern = 45;
         this.spread = -8.0;
     }
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         cardPool.draw(2, true, castState);
-        castState.setPatern(this.patern);
+        castState.setPattern(this.pattern);
         castState.addSpread(this.spread);
     }
 }

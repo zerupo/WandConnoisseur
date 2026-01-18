@@ -21,7 +21,7 @@ public class DIVIDE_10 extends Spell{
         this.hasCharges = true;
         this.maxCharges = 5;
         this.damageComponent.setProjectile(-37.5);
-        this.patern = 5;
+        this.pattern = 5;
     }
 
     // TODO
@@ -79,7 +79,7 @@ public class DIVIDE_10 extends Spell{
         if (c.explosion_radius < 0) then
             c.explosion_radius = 0
         end*/
-        castState.setPatern(this.patern);
+        castState.setPattern(this.pattern);
         this.lastIteration = iter_max;
     }
 

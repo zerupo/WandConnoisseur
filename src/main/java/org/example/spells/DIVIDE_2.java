@@ -18,7 +18,7 @@ public class DIVIDE_2 extends Spell{
         this.manaCost = 35;
         this.castDelay = 20;
         this.damageComponent.setProjectile(-5.0);
-        this.patern = 5;
+        this.pattern = 5;
     }
 
     // TODO
@@ -76,7 +76,7 @@ public class DIVIDE_2 extends Spell{
         if (c.explosion_radius < 0) then
             c.explosion_radius = 0
         end*/
-        castState.setPatern(this.patern);
+        castState.setPattern(this.pattern);
         this.lastIteration = iter_max;
     }
 

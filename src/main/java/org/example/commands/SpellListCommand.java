@@ -1,6 +1,7 @@
 package org.example.commands;
 
 import org.example.main.Global;
+import org.example.main.SpellFilter;
 import org.example.spells.*;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -18,60 +19,78 @@ public class SpellListCommand implements Command{
     }
 
     public void executeSlash(SlashCommandInteractionEvent event){
-        Spell[] spellList = Global.getSpellList().getSpells();
-        StringBuilder result = new StringBuilder();
-        boolean alias = false;
-        String[] aliasList;
-        OptionMapping aliasOption = event.getOption("alias");
+        event.deferReply(true).queue(message -> {
+            OptionMapping propertyOption = event.getOption("propriete");
+            OptionMapping filterOption = event.getOption("condition");
+            OptionMapping sortOption = event.getOption("tri");
+            String propertyFilter = "";
+            String filter = "";
+            String sort = "";
+            String[][] properties = new String[0][0];
+            Spell[] spellList = Global.getSpellList().getSpells();
+            SpellFilter spellFilter = Global.getSpellFilter();
+            StringBuilder result = new StringBuilder();
+            String[] aliasList;
 
-        if(aliasOption != null){
-            alias = aliasOption.getAsBoolean();
-        }
+            if(propertyOption != null){
+                propertyFilter = propertyOption.getAsString();
+            }
+            if(filterOption != null){
+                filter = filterOption.getAsString();
+            }
+            if(sortOption != null){
+                sort = sortOption.getAsString();
+            }
 
-        for(int i=0; i < spellList.length; i++){
-            result.append(spellList[i].getEmote() + " " + spellList[i].getName());
-            if(alias){
-                aliasList = spellList[i].getAlias();
-                if(aliasList.length > 0){
-                    result.append(" (");
+            if(filterOption != null){
+                try{
+                    spellList = spellFilter.filter(spellList, filter);
+                }catch(IllegalArgumentException e){
+                    event.getHook().editOriginal(e.getMessage()).queue();
+                    return;
                 }
-                for(int j=0; j < aliasList.length; j++){
-                    if(j == 0){
-                        result.append("\"" + aliasList[j] + "\"");
-                    }else{
-                        result.append(", \"" + aliasList[j] + "\"");
+                if(spellList.length == 0){
+                    event.getHook().editOriginal("Aucun sort de respect la condition `" + filter + "`").queue();
+                    return;
+                }
+                result.append("Liste des sorts respectant la condition `").append(filter).append("`");
+            }else{
+                result.append("Liste de tout les sorts disponibles");
+            }
+            if(sortOption != null){
+                try{
+                    spellList = spellFilter.sort(spellList, sort);
+                }catch(IllegalArgumentException e){
+                    event.getHook().editOriginal(e.getMessage()).queue();
+                    return;
+                }
+                result.append(", triée par `").append(sort).append("`");
+            }
+            if(propertyOption != null){
+                try{
+                    properties = spellFilter.getStringProperties(spellList, propertyFilter);
+                }catch(IllegalArgumentException e){
+                    event.getHook().editOriginal(e.getMessage()).queue();
+                    return;
+                }
+            }
+            result.append(" :\n");
+
+            message.deleteOriginal().queue();
+
+            for(int i=0; i < spellList.length; i++){
+                if(i != 0){
+                    result.append("\n");
+                }
+                result.append(spellList[i].getEmote()).append(" ").append(spellList[i].getName());
+                if(propertyOption != null){
+                    for(int j=0; j < properties.length; j++){
+                        result.append("\n- **").append(properties[j][0]).append("**: ").append(properties[j][i + 1]);
                     }
                 }
-                if(aliasList.length > 0){
-                    result.append(")");
-                }
             }
-            if(i + 1 != spellList.length){
-                result.append("\n");
-            }
-        }
 
-        int chunkSize = 1980;
-        String chunk = "";
-        String[] lines = result.toString().split("\\r?\\n");
-        for(int i=0; i < lines.length; i++){
-            if(chunk.length() + lines[i].length() > chunkSize){
-                if(chunk.length() <= chunkSize){
-                    event.getChannel().sendMessage(chunk).queue();
-                }else{
-                    event.getChannel().sendMessage("```ansi\nError message too long```").queue();
-                }
-                chunk = lines[i];
-            }else{
-                chunk += "\n" + lines[i];
-            }
-            if(i + 1 == lines.length && !chunk.equals("")){
-                event.getChannel().sendMessage(chunk).queue();
-            }
-        }
-
-        event.reply("OK").setEphemeral(true).queue(message -> {
-            message.deleteOriginal().queue();
+            Global.sendMessage(result.toString(), event.getChannel(), false);
         });
     }
 }

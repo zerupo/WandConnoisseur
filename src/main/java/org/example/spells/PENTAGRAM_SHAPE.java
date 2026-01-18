@@ -15,14 +15,14 @@ public class PENTAGRAM_SHAPE extends Spell{
         this.price = 50;
         this.manaCost = 5;
         this.autoStat = false;
-        this.patern = 180;
+        this.pattern = 180;
         this.spread = -12.0;
     }
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         cardPool.draw(5, true, castState);
-        castState.setPatern(this.patern);
+        castState.setPattern(this.pattern);
         castState.addSpread(this.spread);
     }
 }
