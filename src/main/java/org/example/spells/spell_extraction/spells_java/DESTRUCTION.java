@@ -9,7 +9,7 @@ public class DESTRUCTION extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "destruction.png";
         //this.emote = "";
-        this.description = "Instantly decimates foes around you";
+        this.description = "Instantly decimates foes around you, at the cost of your maximum HP";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
         this.price = 600;

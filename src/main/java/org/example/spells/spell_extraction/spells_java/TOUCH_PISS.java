@@ -9,7 +9,7 @@ public class TOUCH_PISS extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "touch_piss.png";
         //this.emote = "";
-        this.description = "Transmutes everything in a short radius into urine";
+        this.description = "Transmutes everything in a short radius into urine, including walls, creatures... and you";
         this.type = SpellType.material;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.035, 0.035, 0.035, 0, 0, 0.1);
         this.price = 360;

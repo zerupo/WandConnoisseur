@@ -9,7 +9,7 @@ public class FREEZE extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "freeze.png";
         //this.emote = "";
-        this.description = "Gives a projectile a frozen charge";
+        this.description = "Gives a projectile a frozen charge, that it will release on impact";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 1, 0, 1, 0.9, 0.8, 0, 0, 0, 0, 0);
         this.price = 140;

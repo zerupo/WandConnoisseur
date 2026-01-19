@@ -9,7 +9,7 @@ public class BUCKSHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "buckshot.png";
         //this.emote = "";
-        this.description = "A formation of three small";
+        this.description = "A formation of three small, fast bolts";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(1, 1, 0.9, 0.9, 0.6, 0, 0, 0, 0, 0, 0);
         this.price = 160;

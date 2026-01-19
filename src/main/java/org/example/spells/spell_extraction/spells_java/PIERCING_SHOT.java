@@ -9,7 +9,7 @@ public class PIERCING_SHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "piercing_shot.png";
         //this.emote = "";
-        this.description = "Makes a projectile fly through enemies";
+        this.description = "Makes a projectile fly through enemies, but harmful to the caster";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.5, 0.6, 0.6, 0.4, 0, 0, 0, 0);
         this.price = 190;

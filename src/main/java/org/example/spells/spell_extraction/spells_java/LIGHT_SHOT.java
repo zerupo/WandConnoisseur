@@ -9,7 +9,7 @@ public class LIGHT_SHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "light_shot.png";
         //this.emote = "";
-        this.description = "Makes a projectile move considerably faster";
+        this.description = "Makes a projectile move considerably faster, but deal less damage";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.3, 0.5, 0.4, 0, 0, 0, 0, 0, 0);
         this.price = 60;

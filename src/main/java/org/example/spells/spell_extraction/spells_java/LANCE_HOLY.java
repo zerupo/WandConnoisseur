@@ -9,7 +9,7 @@ public class LANCE_HOLY extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "lance_holy.png";
         //this.emote = "";
-        this.description = "A fast-flying";
+        this.description = "A fast-flying, penetrating lance that glows with power";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.5, 0, 0.8, 1, 0, 0, 0, 0);
         this.price = 250;

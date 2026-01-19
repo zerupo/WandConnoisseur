@@ -9,7 +9,7 @@ public class I_SHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "i_shot.png";
         //this.emote = "";
-        this.description = "Casts a copy of a projectile behind you";
+        this.description = "Casts a copy of a projectile behind you, but the copy still cost mana";
         this.type = SpellType.utility;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.1, 0.2, 0.5, 0, 0, 0, 0, 0, 0, 0);
         this.price = 130;

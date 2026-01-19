@@ -9,7 +9,7 @@ public class TELEPORT_PROJECTILE_STATIC extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "teleport_projectile_static.png";
         //this.emote = "";
-        this.description = "After a period of time";
+        this.description = "After a period of time, you'll be returned to where you cast this spell";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0.6, 0.6, 0.6, 0, 0.4, 0.4, 0.4, 0, 0, 0, 0);
         this.price = 90;

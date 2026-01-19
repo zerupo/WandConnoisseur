@@ -9,7 +9,7 @@ public class HEAVY_SPREAD extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "heavy_spread.png";
         //this.emote = "";
-        this.description = "Gives a projectile a much lower cast delay";
+        this.description = "Gives a projectile a much lower cast delay, but no respect to your aim";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0.6, 0.7, 0.8, 0, 0.8, 0.8, 0.6, 0, 0, 0, 0);
         this.price = 100;

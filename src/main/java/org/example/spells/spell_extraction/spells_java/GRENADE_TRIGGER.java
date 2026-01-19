@@ -9,7 +9,7 @@ public class GRENADE_TRIGGER extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade_trigger.png";
         //this.emote = "";
-        this.description = "A bouncy";
+        this.description = "A bouncy, explosive bolt that that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0.5, 0.5, 0.2, 0.5, 0.5, 1, 0, 0, 0, 0, 0);
         this.price = 210;

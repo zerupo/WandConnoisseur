@@ -9,7 +9,7 @@ public class FIREBOMB extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "firebomb.png";
         //this.emote = "";
-        this.description = "Slow";
+        this.description = "Slow, fiery bolt";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 1, 0.9, 0.7, 0, 0, 0, 0, 0, 0, 0);
         this.price = 90;

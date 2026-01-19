@@ -9,7 +9,7 @@ public class T_SHAPE extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "t_shape.png";
         //this.emote = "";
-        this.description = "Casts 3 spells - ahead";
+        this.description = "Casts 3 spells - ahead, above and below the caster";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.5, 0.4, 0.3, 0, 0, 0, 0, 0, 0);
         this.price = 30;

@@ -9,7 +9,7 @@ public class ANTIHEAL extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "antiheal.png";
         //this.emote = "";
-        this.description = "A projectile that at first deals damage";
+        this.description = "A projectile that at first deals damage, then heals over time";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.3, 0.3, 0.3, 0, 0, 0, 0, 0);
         this.price = 200;

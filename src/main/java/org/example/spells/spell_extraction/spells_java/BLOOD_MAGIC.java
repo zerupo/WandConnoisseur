@@ -9,7 +9,7 @@ public class BLOOD_MAGIC extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "blood_magic.png";
         //this.emote = "";
-        this.description = "Reduces a spell's mana cost and recharge time greatly";
+        this.description = "Reduces a spell's mana cost and recharge time greatly, at the costs of four health points";
         this.type = SpellType.utility;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0.5);
         this.price = 150;

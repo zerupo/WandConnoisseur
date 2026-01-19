@@ -9,7 +9,7 @@ public class BUBBLESHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bubbleshot.png";
         //this.emote = "";
-        this.description = "A bouncy";
+        this.description = "A bouncy, inaccurate spell";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(1, 0.6, 1, 0.5, 0, 0, 0, 0, 0, 0, 0);
         this.price = 100;

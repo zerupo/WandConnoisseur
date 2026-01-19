@@ -9,7 +9,7 @@ public class ELECTRIC_CHARGE extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "electric_charge.png";
         //this.emote = "";
-        this.description = "Gives a projectile an electric charge";
+        this.description = "Gives a projectile an electric charge, that it will release on impact";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 1, 1, 0, 0.8, 0.7, 0, 0, 0, 0, 0);
         this.price = 150;

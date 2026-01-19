@@ -9,7 +9,7 @@ public class SUPER_TELEPORT_CAST extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "super_teleport_cast.png";
         //this.emote = "";
-        this.description = "Makes a spell immediately jump a long distance";
+        this.description = "Makes a spell immediately jump a long distance, stopped by walls";
         this.type = SpellType.utility;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0, 0.6, 0.8, 0.8, 0, 0, 0, 0);
         this.price = 160;

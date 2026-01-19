@@ -18,15 +18,98 @@ if [ ! -f "$COMMON_FILE" ]; then
 fi
 
 mkdir -p "$OUTPUT_DIR"
-echo "📝 Génération des classes Java..."
-echo "📂 Fichier de traductions: $COMMON_FILE"
+echo "🔨 Génération des classes Java..."
+echo "📚 Fichier de traductions: $COMMON_FILE"
 echo "📁 Dossier de sortie: $OUTPUT_DIR"
 echo ""
 
-# Fonction pour chercher une traduction
+# Fonction pour échapper les caractères spéciaux pour Java
+escape_java_string() {
+    local value="$1"
+    # Échapper les guillemets, retours à la ligne, etc.
+    value="${value//\\/\\\\}"  # Backslash
+    value="${value//\"/\\\"}"  # Guillemets
+    value="${value//$'\n'/\\n}"  # Retours à la ligne
+    value="${value//$'\r'/\\r}"  # Retours chariot
+    value="${value//$'\t'/\\t}"  # Tabulations
+    echo "$value"
+}
+
+# Fonction pour chercher une traduction dans common.csv
 get_translation() {
     local key="$1"
-    grep "^${key}," "$COMMON_FILE" | cut -d',' -f2 | tr -d '"' | head -1
+    local file="$2"
+    
+    awk -v search_key="$key" '
+    BEGIN { FS = "," }
+    NR == 1 { 
+        # Parser le header pour trouver l''index de la colonne "en"
+        in_quotes = 0
+        field_num = 0
+        field_value = ""
+        
+        for (i = 1; i <= length($0); i++) {
+            char = substr($0, i, 1)
+            
+            if (char == "\"") {
+                in_quotes = !in_quotes
+            } else if (char == "," && !in_quotes) {
+                field_num++
+                fields[field_num] = field_value
+                field_value = ""
+            } else {
+                field_value = field_value char
+            }
+        }
+        field_num++
+        fields[field_num] = field_value
+        
+        # Trouver l''index de la colonne English
+        for (i = 1; i <= field_num; i++) {
+            col = fields[i]
+            gsub(/"/, "", col)
+            if (col == "en") {
+                english_col = i
+                break
+            }
+        }
+        next
+    }
+    
+    {
+        # Parser chaque ligne en respectant les guillemets
+        in_quotes = 0
+        field_num = 0
+        field_value = ""
+        
+        for (i = 1; i <= length($0); i++) {
+            char = substr($0, i, 1)
+            
+            if (char == "\"") {
+                in_quotes = !in_quotes
+            } else if (char == "," && !in_quotes) {
+                field_num++
+                fields[field_num] = field_value
+                field_value = ""
+            } else {
+                field_value = field_value char
+            }
+        }
+        field_num++
+        fields[field_num] = field_value
+        
+        # Extraire la clé et la traduction
+        key = fields[1]
+        gsub(/"/, "", key)
+        
+        if (key == search_key && english_col > 0) {
+            translation = fields[english_col]
+            gsub(/"/, "", translation)
+            print translation
+            exit
+        }
+    }
+    ' "$file"
 }
 
 # Fonction pour convertir le type Noita en type Java
@@ -143,18 +226,22 @@ NR == 1 { next }  # Skip header
     sprite_file=$(basename "$sprite_path")
     
     # Obtenir les traductions
-    name=$(get_translation "${name_key#\$}")
+    name=$(get_translation "${name_key#\$}" "$COMMON_FILE")
     if [ -z "$name" ]; then
         name=$(echo "$id" | sed 's/_/ /g' | sed 's/\b\(.\)/\U\1/g')
     fi
     
-    description=$(get_translation "${desc_key#\$}")
+    description=$(get_translation "${desc_key#\$}" "$COMMON_FILE")
     if [ -z "$description" ]; then
         description="$name"
     fi
     
-    # Convertir le type
+    # Convertir le type Noita en type Java
     spell_type=$(convert_spell_type "$type_field")
+    
+    # Échapper les chaînes pour Java
+    name_escaped=$(escape_java_string "$name")
+    description_escaped=$(escape_java_string "$description")
     
     # Construire les probabilités de spawn
     spawn_probs=$(build_spawn_probabilities "$spawn_level" "$spawn_prob")
@@ -178,11 +265,11 @@ import org.example.main.*;
 public class ${id} extends Spell{
     @Override
     protected void initialization(){
-        this.name = "${name}";
+        this.name = "${name_escaped}";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "${sprite_file}";
         //this.emote = "";
-        this.description = "${description}";
+        this.description = "${description_escaped}";
         this.type = SpellType.${spell_type};
         this.spawnProbabilities = new SpawnProbabilities(${spawn_probs});
         this.price = ${price};
@@ -215,4 +302,4 @@ echo "=================================================="
 echo "✅ Génération terminée!"
 file_count=$(ls -1 "${OUTPUT_DIR}"/*.java 2>/dev/null | wc -l)
 echo "📄 Fichiers Java générés: $file_count"
-echo "📁 Localisation: $OUTPUT_DIR"
+echo "📍 Localisation: $OUTPUT_DIR"

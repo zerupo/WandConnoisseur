@@ -9,7 +9,7 @@ public class PHASING_ARC extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "phasing_arc.png";
         //this.emote = "";
-        this.description = "Makes a projectile fly much slower";
+        this.description = "Makes a projectile fly much slower, but teleport short distances over its flight";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.3, 0.6, 0.1, 0, 0, 0, 0, 0);
         this.price = 170;

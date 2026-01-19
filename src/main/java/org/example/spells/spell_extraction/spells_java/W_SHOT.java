@@ -9,7 +9,7 @@ public class W_SHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "w_shot.png";
         //this.emote = "";
-        this.description = "Casts copies of a projectile in a trifurcated pattern";
+        this.description = "Casts copies of a projectile in a trifurcated pattern, but the copies still cost mana";
         this.type = SpellType.utility;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.1, 0.2, 0, 0.5, 0.4, 0, 0, 0, 0);
         this.price = 180;

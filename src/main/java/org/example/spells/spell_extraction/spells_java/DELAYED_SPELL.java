@@ -9,7 +9,7 @@ public class DELAYED_SPELL extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "delayed_spell.png";
         //this.emote = "";
-        this.description = "A static";
+        this.description = "A static, magical phenomenon that casts 3 extra spells after a short while";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0.8, 0.8, 1, 0, 0.7, 0.5, 0.4, 0, 0, 0, 0);
         this.price = 240;

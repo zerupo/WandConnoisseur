@@ -9,7 +9,7 @@ public class DARKFLAME extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "darkflame.png";
         //this.emote = "";
-        this.description = "A trail of dark";
+        this.description = "A trail of dark, deadly flames";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 1, 0, 0.9, 0.8, 0, 0, 0, 0);
         this.price = 180;

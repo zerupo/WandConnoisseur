@@ -9,7 +9,7 @@ public class RANDOM_SPELL extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "random_spell.png";
         //this.emote = "";
-        this.description = "Casts a spell";
+        this.description = "Casts a spell, any spell, at random!";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.2, 0.3, 0.2, 0.1, 0, 0, 0, 0.5);
         this.price = 100;

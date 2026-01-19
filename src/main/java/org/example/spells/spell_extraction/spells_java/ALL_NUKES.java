@@ -9,7 +9,7 @@ public class ALL_NUKES extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "all_nukes.png";
         //this.emote = "";
-        this.description = "Transforms every projectile currently in the air into a nuke";
+        this.description = "Transforms every projectile currently in the air into a nuke, not a good idea";
         this.type = SpellType.utility;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0, 0.1, 0, 0, 0, 1);
         this.price = 600;

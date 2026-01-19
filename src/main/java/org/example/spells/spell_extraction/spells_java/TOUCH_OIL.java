@@ -9,7 +9,7 @@ public class TOUCH_OIL extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "touch_oil.png";
         //this.emote = "";
-        this.description = "Transmutes everything in a short radius into oil";
+        this.description = "Transmutes everything in a short radius into oil, including walls, creatures... and you";
         this.type = SpellType.material;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0, 0, 0.4);
         this.price = 380;

@@ -9,7 +9,7 @@ public class STATIC_TO_SAND extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "static_to_sand.png";
         //this.emote = "";
-        this.description = "Makes any hard";
+        this.description = "Makes any hard, solid materials within a projectile's range turn into sand";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.3, 0.3, 0.3, 0, 0, 0, 0, 0, 0.2);
         this.price = 140;

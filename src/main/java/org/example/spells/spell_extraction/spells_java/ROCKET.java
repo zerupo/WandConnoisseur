@@ -9,7 +9,7 @@ public class ROCKET extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "rocket.png";
         //this.emote = "";
-        this.description = "A fiery";
+        this.description = "A fiery, explosive projectile";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 1, 1, 1, 0.5, 0.3, 0, 0, 0, 0, 0);
         this.price = 220;

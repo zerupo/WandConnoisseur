@@ -9,7 +9,7 @@ public class PENTA_SHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "penta_shot.png";
         //this.emote = "";
-        this.description = "Casts 5 copies of a projectile in a pentagonal pattern";
+        this.description = "Casts 5 copies of a projectile in a pentagonal pattern, but the copies still cost mana";
         this.type = SpellType.utility;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.1, 0.2, 0.5, 0.5, 0, 0, 0, 0.2);
         this.price = 250;

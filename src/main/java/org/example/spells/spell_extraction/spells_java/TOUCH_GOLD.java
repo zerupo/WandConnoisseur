@@ -9,7 +9,7 @@ public class TOUCH_GOLD extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "touch_gold.png";
         //this.emote = "";
-        this.description = "Transmutes everything in a short radius into gold";
+        this.description = "Transmutes everything in a short radius into gold, including walls, creatures... and you";
         this.type = SpellType.material;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0, 0, 0.5);
         this.price = 480;

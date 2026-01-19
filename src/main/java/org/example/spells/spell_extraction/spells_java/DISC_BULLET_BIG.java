@@ -9,7 +9,7 @@ public class DISC_BULLET_BIG extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "disc_bullet_big.png";
         //this.emote = "";
-        this.description = "Summons a large";
+        this.description = "Summons a large, serrated disc with a curious flight pattern";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0.6, 0, 0.7, 0, 0.8, 0, 0, 0, 0, 0, 0);
         this.price = 180;
