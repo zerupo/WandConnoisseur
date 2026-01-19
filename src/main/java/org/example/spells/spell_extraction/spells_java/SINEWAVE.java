@@ -9,7 +9,7 @@ public class SINEWAVE extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "sinewave.png";
         //this.emote = "";
-        this.description = "Makes a projectile move rapidly in a slithering manner";
+        this.description = "Makes a projectile move rapidly in a slithering manner, like a snake";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0, 0.55, 0, 0.4, 0, 0, 0, 0);
         this.price = 10;

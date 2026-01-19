@@ -9,7 +9,7 @@ public class HOMING_AREA extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "homing_area.png";
         //this.emote = "";
-        this.description = "If a valid target appears somewhere in the proximity of a projectile";
+        this.description = "If a valid target appears somewhere in the proximity of a projectile, the projectile will teleport right on top of the target";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.4, 0.6, 0.7, 0.4, 0, 0, 0, 0);
         this.price = 175;

@@ -9,7 +9,7 @@ public class GRENADE extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade.png";
         //this.emote = "";
-        this.description = "A bouncy";
+        this.description = "A bouncy, explosive bolt";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(1, 1, 0.5, 0.25, 0.2, 0, 0, 0, 0, 0, 0);
         this.price = 170;

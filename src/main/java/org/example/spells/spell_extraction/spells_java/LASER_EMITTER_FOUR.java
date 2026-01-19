@@ -9,7 +9,7 @@ public class LASER_EMITTER_FOUR extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "laser_emitter_four.png";
         //this.emote = "";
-        this.description = "Four deadly plasma beams in a cross-shape. Look out";
+        this.description = "Four deadly plasma beams in a cross-shape. Look out, they can hurt you as well!";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0.9, 0.3, 0.5, 1, 0, 0, 0, 0, 0);
         this.price = 200;

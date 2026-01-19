@@ -9,7 +9,7 @@ public class DAMAGE_FOREVER extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "damage_forever.png";
         //this.emote = "";
-        this.description = "If the wand has more than 50 mana";
+        this.description = "If the wand has more than 50 mana, all mana over that is converted into additional damage";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.3, 0.6, 0.5, 0.2, 0, 0, 0, 0.2);
         this.price = 240;

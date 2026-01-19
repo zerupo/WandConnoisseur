@@ -9,7 +9,7 @@ public class BLOODLUST extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bloodlust.png";
         //this.emote = "";
-        this.description = "A projectile gains a hefty damage boost";
+        this.description = "A projectile gains a hefty damage boost, but is also able to hurt you";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0, 0.3, 0.6, 0.7, 0.3, 0, 0, 0, 0);
         this.price = 160;

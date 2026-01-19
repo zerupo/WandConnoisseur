@@ -9,7 +9,7 @@ public class HEAVY_SHOT extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "heavy_shot.png";
         //this.emote = "";
-        this.description = "Greatly increases the damage done by a projectile";
+        this.description = "Greatly increases the damage done by a projectile, at the cost of its speed";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.4, 0.5, 0, 0, 0, 0, 0, 0);
         this.price = 150;

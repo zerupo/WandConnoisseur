@@ -9,7 +9,7 @@ public class BOUNCY_ORB extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bouncy_orb.png";
         //this.emote = "";
-        this.description = "A fast";
+        this.description = "A fast, arcing projectile";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0);
         this.price = 120;

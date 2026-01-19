@@ -9,7 +9,7 @@ public class GRENADE_ANTI extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade_anti.png";
         //this.emote = "";
-        this.description = "A somewhat peculiar bouncy";
+        this.description = "A somewhat peculiar bouncy, explosive bolt";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0.4, 0.4, 0.7, 0.4, 0.4, 0.4, 0, 0, 0, 0, 0);
         this.price = 170;

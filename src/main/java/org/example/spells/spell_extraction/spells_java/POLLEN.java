@@ -9,7 +9,7 @@ public class POLLEN extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "pollen.png";
         //this.emote = "";
-        this.description = "A small";
+        this.description = "A small, floating projectile that homes towards nearby creatures";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0.6, 1, 0, 1, 0.6, 0, 0, 0, 0, 0, 0);
         this.price = 110;

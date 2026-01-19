@@ -9,7 +9,7 @@ public class DEATH_CROSS_BIG extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "death_cross_big.png";
         //this.emote = "";
-        this.description = "A giant";
+        this.description = "A giant, deadly energy cross that explodes after a short time";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.5, 0.55, 0.3, 0.4, 0, 0, 0, 0.2);
         this.price = 310;

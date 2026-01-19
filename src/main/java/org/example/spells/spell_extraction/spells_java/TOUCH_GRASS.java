@@ -9,7 +9,7 @@ public class TOUCH_GRASS extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "touch_grass.png";
         //this.emote = "";
-        this.description = "Transmutes everything in a short radius into Earth";
+        this.description = "Transmutes everything in a short radius into Earth, including walls, creatures... and you. Unless…";
         this.type = SpellType.material;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0, 0, 0.2);
         this.price = 360;

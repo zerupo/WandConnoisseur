@@ -9,7 +9,7 @@ public class LASER_LUMINOUS_DRILL extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "luminous_drill_timer.png";
         //this.emote = "";
-        this.description = "A pinpointed";
+        this.description = "A pinpointed, short-ranged beam of concentrated light that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(1, 0, 1, 0, 0, 0, 0.2, 0, 0, 0, 0.1);
         this.price = 220;

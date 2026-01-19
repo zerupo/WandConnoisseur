@@ -9,7 +9,7 @@ public class HORIZONTAL_ARC extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "horizontal_arc.png";
         //this.emote = "";
-        this.description = "Forces a projectile on a horizontal path";
+        this.description = "Forces a projectile on a horizontal path, but increases its damage";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0, 0.4, 0, 0.4, 0, 0, 0, 0, 0);
         this.price = 20;

@@ -9,7 +9,7 @@ public class LASER_EMITTER extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "laser_emitter.png";
         //this.emote = "";
-        this.description = "An instantaneous";
+        this.description = "An instantaneous, dangerous beam of light";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0.8, 1, 0.5, 0, 0, 0, 0, 0, 0);
         this.price = 180;

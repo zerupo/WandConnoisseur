@@ -9,7 +9,7 @@ public class IF_ELSE extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "if_else.png";
         //this.emote = "";
-        this.description = "If a Requirement spell before this succeeds";
+        this.description = "If a Requirement spell before this succeeds, the next spell is skipped";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
         this.price = 10;

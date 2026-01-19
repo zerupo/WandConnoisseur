@@ -9,7 +9,7 @@ public class WALL_HORIZONTAL extends Spell{
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "wall_horizontal.png";
         //this.emote = "";
-        this.description = "A thin";
+        this.description = "A thin, horizontal barrier that harms passing creatures, including you";
         this.type = SpellType.projectile;
         this.spawnProbabilities = new SpawnProbabilities(0.4, 0.4, 0.6, 0, 0.5, 0.2, 0, 0, 0, 0, 0);
         this.price = 160;
