@@ -18,8 +18,8 @@ public class GRENADE_TIER_3 extends Spell{
         this.manaCost = 90;
         this.hasCharges = true;
         this.maxCharges = 20;
-        this.autoStat = false;
         this.castDelay = 80;
+        this.setRecoil = true;
         this.recoil = 140.0;
         this.screenshake = 15.0;
     }
@@ -27,9 +27,6 @@ public class GRENADE_TIER_3 extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        castState.addCastDelay(this.castDelay);
-        cardPool.addScreenshake(this.screenshake);
-        cardPool.setRecoil(this.recoil);
         // c.child_speed_multiplier = c.child_speed_multiplier * 0.9
         castState.addProjectile(this.relatedProjectile.clone());
     }

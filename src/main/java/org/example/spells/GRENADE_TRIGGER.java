@@ -20,6 +20,7 @@ public class GRENADE_TRIGGER extends Spell{
         this.hasCharges = true;
         this.maxCharges = 25;
         this.autoStat = false;
+        this.setRecoil = true;
         this.castDelay = 30;
         this.recoil = 80.0;
         this.screenshake = 4.0;

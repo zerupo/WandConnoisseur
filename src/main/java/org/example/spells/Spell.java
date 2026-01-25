@@ -21,7 +21,7 @@ public abstract class Spell{
     protected String imagePath = "./src/main/java/org/example/image/spell/";
     protected String imageFile = "_unidentified.png";
     protected String typeFile = "item_bg_other.png";
-    protected String emote = "<:_unidentified:1413201253672157304>";
+    protected String emote = "<:_unidentified:1464974832608477288>";
     protected String defaultImage = "_unidentified.png";
     protected String description = "this spell does things";
     protected JLabel imageLabel = null;
@@ -47,6 +47,7 @@ public abstract class Spell{
     protected int critRate = 0;
     protected int pattern = 0;
     protected double spread = 0;
+    protected boolean setRecoil = false;
     protected double recoil = 0.0;
     protected double screenshake = 0.0;
 
@@ -704,7 +705,11 @@ public abstract class Spell{
             cardPool.addRechargeTime(this.rechargeTime);
         }
         if(this.recoil != 0){
-            cardPool.addRecoil(this.recoil);
+            if(this.setRecoil){
+                cardPool.setRecoil(this.recoil);
+            }else{
+                cardPool.addRecoil(this.recoil);
+            }
         }
         if(this.screenshake != 0){
             cardPool.addScreenshake(this.screenshake);

@@ -16,15 +16,13 @@ public class EXPANDING_ORB extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.5, 0.5, 1, 1, 0.5, 0, 0, 0, 0);
         this.price = 200;
         this.manaCost = 70;
-        this.autoStat = false;
         this.castDelay = 30;
+        this.setRecoil = true;
         this.recoil = 20.0;
     }
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        castState.addCastDelay(this.castDelay);
-        cardPool.setRecoil(this.recoil);
         castState.addProjectile(this.relatedProjectile.clone());
     }
 }

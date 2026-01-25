@@ -18,8 +18,8 @@ public class GRENADE_LARGE extends Spell{
         this.manaCost = 80;
         this.hasCharges = true;
         this.maxCharges = 35;
-        this.autoStat = false;
         this.castDelay = 40;
+        this.setRecoil = true;
         this.recoil = 80.0;
         this.screenshake = 5.0;
     }
@@ -27,9 +27,6 @@ public class GRENADE_LARGE extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        castState.addCastDelay(this.castDelay);
-        cardPool.setRecoil(this.recoil);
-        cardPool.addScreenshake(this.screenshake);
         // c.child_speed_multiplier = c.child_speed_multiplier * 0.75
         castState.addProjectile(this.relatedProjectile.clone());
     }

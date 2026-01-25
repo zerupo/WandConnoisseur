@@ -73,13 +73,18 @@ public class WandConnoisseur{
     }
 
     // TODO
+    // frame or sec for delay input
+    // better autocomplete
+    // add more stats for query
+    // add cast states with menu
+    // mob quizz (audio ?)
     // shuffle
     // refactoring wand (delay)
     // fix charges removal
     // code every spell
     // list of 1k wands
     // put on the raspberry
-    // create parameter for standalone with deck evaluation
+    // create parameter for standalone with deck evaluation, might be possible with menu instead ?
     public static void main(String[] args){
         String botToken = BotConfig.getBotToken();
         boolean generateEmotes = false;

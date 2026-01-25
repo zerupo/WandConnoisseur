@@ -153,7 +153,7 @@ public class Global{
         String chunk = "";
         String[] lines = message.split("\\r?\\n");
         for(int i=0; i < lines.length; i++){
-            if(chunk.length() + lines[i].length() > chunkSize){
+            if(chunk.length() + lines[i].length() + 1 > chunkSize){
                 if(chunk.length() <= chunkSize){
                     channel.sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
                 }else{

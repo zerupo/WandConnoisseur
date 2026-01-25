@@ -18,8 +18,8 @@ public class GRENADE_ANTI extends Spell{
         this.manaCost = 50;
         this.hasCharges = true;
         this.maxCharges = 25;
-        this.autoStat = false;
         this.castDelay = 30;
+        this.setRecoil = true;
         this.recoil = 80.0;
         this.screenshake = 4.0;
     }
@@ -27,9 +27,6 @@ public class GRENADE_ANTI extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        castState.addCastDelay(this.castDelay);
-        cardPool.addScreenshake(this.screenshake);
-        cardPool.setRecoil(this.recoil);
         // c.child_speed_multiplier = c.child_speed_multiplier * 0.75
         castState.addProjectile(this.relatedProjectile.clone());
     }
