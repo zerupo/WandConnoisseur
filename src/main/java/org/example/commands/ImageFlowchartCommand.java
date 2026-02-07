@@ -61,7 +61,7 @@ public class ImageFlowchartCommand implements Command{
             File wandStatImage = null;
             File wandImage = null;
             File flowchartImage;
-            Pattern p = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
+            Pattern pSpell = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
             Matcher m;
 
             if(drawOption != null){
@@ -72,11 +72,21 @@ public class ImageFlowchartCommand implements Command{
                 spellsInput = spellsOption.getAsString();
             }
             if(castDelayOption != null){
-                castDelay = castDelayOption.getAsInt();
+                try{
+                    castDelay = Global.stringToDelay(castDelayOption.getAsString());
+                }catch(Exception e){
+                    event.getHook().editOriginal("cast_delay: " + e.getMessage()).queue();
+                    return;
+                }
                 statChanged = true;
             }
             if(rechargeTimeOption != null){
-                rechargeTime = rechargeTimeOption.getAsInt();
+                try{
+                    rechargeTime = Global.stringToDelay(rechargeTimeOption.getAsString());
+                }catch(Exception e){
+                    event.getHook().editOriginal("recharge_time: " + e.getMessage()).queue();
+                    return;
+                }
                 statChanged = true;
             }
             if(manaMaxOption != null){
@@ -102,7 +112,7 @@ public class ImageFlowchartCommand implements Command{
             }
 
             for(int i=0; i < spellsString.length; i++){
-                m = p.matcher(spellsString[i]);
+                m = pSpell.matcher(spellsString[i]);
                 if(m.find()){
                     currentSpell = spellList.getSpell(m.group(2));
                     if(currentSpell != null){

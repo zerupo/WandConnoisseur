@@ -30,7 +30,7 @@ public class StringFlowchartCommand implements Command{
     public void executeSlash(SlashCommandInteractionEvent event){
         event.deferReply(true).queue(message -> {
             SpellList spellList = Global.getSpellList();
-            OptionMapping spellsOption = event.getOption("sorts_");
+            OptionMapping spellsOption = event.getOption("sorts");
             OptionMapping drawOption = event.getOption("draw");
             OptionMapping castDelayOption = event.getOption("cast_delay");
             OptionMapping rechargeTimeOption = event.getOption("recharge_time");
@@ -69,11 +69,21 @@ public class StringFlowchartCommand implements Command{
                 spellsInput = spellsOption.getAsString();
             }
             if(castDelayOption != null){
-                castDelay = castDelayOption.getAsInt();
+                try{
+                    castDelay = Global.stringToDelay(castDelayOption.getAsString());
+                }catch(Exception e){
+                    event.getHook().editOriginal("cast_delay: " + e.getMessage()).queue();
+                    return;
+                }
                 statChanged = true;
             }
             if(rechargeTimeOption != null){
-                rechargeTime = rechargeTimeOption.getAsInt();
+                try{
+                    rechargeTime = Global.stringToDelay(rechargeTimeOption.getAsString());
+                }catch(Exception e){
+                    event.getHook().editOriginal("recharge_time: " + e.getMessage()).queue();
+                    return;
+                }
                 statChanged = true;
             }
             if(manaMaxOption != null){

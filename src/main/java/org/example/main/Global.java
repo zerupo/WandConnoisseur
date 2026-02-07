@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Global{
     private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
@@ -27,6 +29,7 @@ public class Global{
     private final static int baseIconSize = 7;
     private final static int imageScaleFactor = 5;
     private final static int margin = 4*getImageScaleFactor();
+    private final static Pattern delayPattern = Pattern.compile("^ *([+-]?[0-9]+(|\\.[0-9]+)?)(?: *(|[fs]))? *$");
 
     // getters
     public static String getPathOutput(){
@@ -87,6 +90,10 @@ public class Global{
 
     public static int getMargin(){
         return margin;
+    }
+
+    public static Pattern getDelayPattern(){
+        return delayPattern;
     }
 
     private Global(){
@@ -167,5 +174,33 @@ public class Global{
                 channel.sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
             }
         }
+    }
+
+    public static int stringToDelay(String input){
+        Matcher m = delayPattern.matcher(input);
+        int result;
+
+        if(m.find()){
+            switch(m.group(3)){
+                case "s" -> result = (int)(Double.parseDouble(m.group(1))*60.0);
+                case "f" -> {
+                    if(!m.group(2).equals("")){
+                        throw new IllegalArgumentException("\"" + input + "\" -> une valeur en frame doit être un entier");
+                    }
+                    result = Integer.parseInt(m.group(1));
+                }
+                default -> {
+                    if(m.group(2).equals("")){
+                        result = Integer.parseInt(m.group(1));
+                    }else{
+                        result = (int)(Double.parseDouble(m.group(1))*60.0);
+                    }
+                }
+            }
+        }else{
+            throw new IllegalArgumentException("\"" + input + "\" n'est pas un délais valide");
+        }
+
+        return result;
     }
 }
