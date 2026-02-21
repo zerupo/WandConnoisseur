@@ -237,17 +237,17 @@ public class Flowchart{
         }
     }
 
-    public String toString(boolean formating){
+    public String toString(boolean formatting){
         if(this.isRoot){
             this.flowchartString = new StringBuilder(this.rootName + "\n");
-            this.toString(this.flowchartString, "", formating);
+            this.toString(this.flowchartString, "", formatting);
             return this.flowchartString.toString();
         }else{
-            return this.root.toString(formating);
+            return this.root.toString(formatting);
         }
     }
 
-    private void toString(StringBuilder sb, String currentFlow, boolean formating){
+    private void toString(StringBuilder sb, String currentFlow, boolean formatting){
         Flowchart[] flowchartArray = this.spells.toArray(new Flowchart[0]);
         Flowchart currentFlowchart;
         boolean last = false;
@@ -276,7 +276,7 @@ public class Flowchart{
             }
 
             sb.append(currentFlow);
-            if(formating){
+            if(formatting){
                 if(failed){
                     sb.append(this.getFailedColor());
                 }else if(copy){
@@ -289,12 +289,12 @@ public class Flowchart{
                 sb.append("\u251c");
             }
             sb.append("\u2500".repeat(this.getWidth()));
-            if(formating && (copy || failed)){
+            if(formatting && (copy || failed)){
                 sb.append(this.getResetColor());
             }
             if(currentFlowchart.myself != null){
                 if(currentFlowchart.copyFailed){
-                    if(formating){
+                    if(formatting){
                         sb.append(this.getFailedColor() + currentFlowchart.myself.getName() + this.getResetColor());
                     }else{
                         sb.append("(" + currentFlowchart.myself.getName() + ")");
@@ -313,14 +313,14 @@ public class Flowchart{
                 sb.append("X\n");
             }
             if(last){
-                currentFlowchart.toString(sb, currentFlow + " ".repeat(this.getWidth() + 1), formating);
+                currentFlowchart.toString(sb, currentFlow + " ".repeat(this.getWidth() + 1), formatting);
             }else{
-                if(formating && flowchartArray[i+1].myself == null){
-                    currentFlowchart.toString(sb, currentFlow + this.getFailedColor() + "\u2502" + this.getResetColor() + " ".repeat(this.getWidth()), formating);
-                }else if(formating && flowchartArray[i+1].isCopy){
-                    currentFlowchart.toString(sb, currentFlow + this.getCopyColor() + "\u2502" + this.getResetColor() + " ".repeat(this.getWidth()), formating);
+                if(formatting && flowchartArray[i+1].myself == null){
+                    currentFlowchart.toString(sb, currentFlow + this.getFailedColor() + "\u2502" + this.getResetColor() + " ".repeat(this.getWidth()), formatting);
+                }else if(formatting && flowchartArray[i+1].isCopy){
+                    currentFlowchart.toString(sb, currentFlow + this.getCopyColor() + "\u2502" + this.getResetColor() + " ".repeat(this.getWidth()), formatting);
                 }else{
-                    currentFlowchart.toString(sb, currentFlow + "\u2502" + " ".repeat(this.getWidth()), formating);
+                    currentFlowchart.toString(sb, currentFlow + "\u2502" + " ".repeat(this.getWidth()), formatting);
                 }
             }
         }

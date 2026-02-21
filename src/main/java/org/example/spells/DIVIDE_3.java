@@ -7,7 +7,7 @@ public class DIVIDE_3 extends Spell{
 
     @Override
     protected void initialization(){
-        this.name = "Divide by 3";
+        this.name = "Divide By 3";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "d3"};
         this.imageFile = "divide_3.png";
         this.emote = "<:divide_3:1433949647600091276>";

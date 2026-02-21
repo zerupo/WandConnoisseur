@@ -73,7 +73,7 @@ public class SpellListCommand implements Command{
                     return;
                 }
             }
-            result.append(" :\n");
+            result.append(" :\n\n");
 
             message.deleteOriginal().queue();
 
@@ -84,7 +84,7 @@ public class SpellListCommand implements Command{
                 result.append(spellList[i].getEmote()).append(" ").append(spellList[i].getName());
                 if(propertyOption != null){
                     for(int j=0; j < properties.length; j++){
-                        result.append("\n- **").append(properties[j][0]).append("**: ").append(properties[j][i + 1]);
+                        result.append("\n\u200E        \u2022 **").append(properties[j][0]).append("**: ").append(properties[j][i + 1]);
                     }
                 }
             }

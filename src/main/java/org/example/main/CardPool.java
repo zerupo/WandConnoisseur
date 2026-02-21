@@ -141,9 +141,9 @@ public class CardPool{
         return this.autoCardHistory;
     }
 
-    public String getFlowchartString(boolean formating){
+    public String getFlowchartString(boolean formatting){
         this.flowchart.refactor();
-        return this.flowchart.toString(formating);
+        return this.flowchart.toString(formatting);
     }
 
     public String getCardHistoryString(){

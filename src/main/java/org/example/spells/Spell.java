@@ -176,6 +176,24 @@ public abstract class Spell{
         return this.relatedProjectileCount;
     }
 
+    public double[] getSpawnProbability(){
+        return this.spawnProbabilities.getSpawnProbability();
+    }
+
+    public String getTierString(){
+        double[] tier = this.spawnProbabilities.getSpawnProbability();
+        String result = "[";
+
+        if(tier.length > 0){
+            result += "T0: " + String.format("%1$3.1f", tier[0]);
+        }
+        for(int i=1; i < tier.length; i++){
+            result += "; T" + i + ": " + String.format("%1$3.1f", tier[i]);
+        }
+
+        return result + "]";
+    }
+
     public int getImageScaleFactor(){
         return this.imageScaleFactor;
     }
@@ -240,6 +258,23 @@ public abstract class Spell{
         return this.chargesLeft;
     }
 
+    public String getChargeString(){
+        String result = "";
+
+        if(this.hasCharges){
+            result += this.maxCharges;
+            if(this.neverUnlimited){
+                result += " (never infinite)";
+            }else{
+                result += " (can be infinite)";
+            }
+        }else{
+            result = "infinite";
+        }
+
+        return result;
+    }
+
     public int getManaCost(){
         return this.manaCost;
     }
@@ -284,6 +319,10 @@ public abstract class Spell{
         return this.recoil;
     }
 
+    public boolean getSetRecoil(){
+        return this.setRecoil;
+    }
+
     public double getScreenshake(){
         return this.screenshake;
     }
@@ -294,130 +333,53 @@ public abstract class Spell{
 
     public String getInfoString(){
         StringBuilder result = new StringBuilder();
-        boolean space = false;
-        double[] spawnProbabilities;
+        StringBuilder innerString = new StringBuilder();
 
-        result.append("Name: \"").append(this.name).append("\"\n");
-        result.append("Description: \"").append(this.description).append("\"\n");
-        result.append("Type: ").append(this.type).append("\n");
-        if(this.hasCharges){
-            result.append("Charges: ").append(this.maxCharges);
-            if(this.neverUnlimited) {
-                result.append(" (never infinite)");
-            }else{
-                result.append(" (can be infinite)");
-            }
-            result.append("\n");
-        }else{
-            result.append("Charges: infinite\n");
-        }
-        result.append("Mana cost: ").append(this.manaCost).append("\n");
-        result.append(String.format("Cast delay: %1$df (%2$3.2fs)\n", this.castDelay, this.castDelay/60.0));
-        result.append(String.format("Recharge time: %1$df (%2$3.2fs)\n", this.rechargeTime, this.rechargeTime/60.0));
-        result.append("\n");
-        if(this.damageComponent.getProjectile() != 0){
-            result.append("Damage: ").append(this.damageComponent.getProjectile()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getMelee() != 0){
-            result.append("Melee damage: ").append(this.damageComponent.getMelee()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getExplosion() != 0){
-            result.append("Explosion damage: ").append(this.damageComponent.getExplosion()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getElectricity() != 0){
-            result.append("Electricity damage: ").append(this.damageComponent.getElectricity()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getFire() != 0){
-            result.append("Fire damage: ").append(this.damageComponent.getFire()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getDrill() != 0){
-            result.append("Drill damage: ").append(this.damageComponent.getDrill()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getSlice() != 0){
-            result.append("Slice damage: ").append(this.damageComponent.getSlice()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getIce() != 0){
-            result.append("Ice damage: ").append(this.damageComponent.getIce()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getHealing() != 0){
-            result.append("Healing damage: ").append(this.damageComponent.getHealing()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getPhysics_hit() != 0){
-            result.append("Physics_hit damage: ").append(this.damageComponent.getPhysics_hit()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getRadioactive() != 0){
-            result.append("Radioactive damage: ").append(this.damageComponent.getRadioactive()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getPoison() != 0){
-            result.append("Poison damage: ").append(this.damageComponent.getPoison()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getOvereating() != 0){
-            result.append("Overeating damage: ").append(this.damageComponent.getOvereating()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getCurse() != 0){
-            result.append("Curse damage: ").append(this.damageComponent.getCurse()).append("\n");
-            space = true;
-        }
-        if(this.damageComponent.getHealing() != 0){
-            result.append("Holy damage: ").append(this.damageComponent.getHealing()).append("\n");
-            space = true;
-        }
-        if(this.lifetime != 0){
-            result.append("lifetime: ").append(this.lifetime).append("\n");
-            space = true;
-        }
-        if(this.critRate != 0){
-            result.append("Crit rate: ").append(this.critRate).append("%\n");
-            space = true;
-        }
-        if(this.pattern != 0){
-            result.append("Pattern: ").append(this.pattern).append("\n");
-            space = true;
-        }
-        if(this.spread != 0){
-            result.append("Spread: ").append(this.spread).append("\n");
-            space = true;
-        }
-        if(this.recoil != 0){
-            result.append("Recoil: ").append(this.recoil).append("\n");
-            space = true;
-        }
-        if(this.screenshake != 0){
-            result.append("Screen shake: ").append(this.screenshake).append("\n");
-            space = true;
-        }
-        if(space){
-            result.append("\n");
+        result.append("Name: \"").append(this.name).append("\"");
+        result.append("\nDescription: \"").append(this.description).append("\"");
+        result.append("\nType: ").append(this.type);
+        result.append("\nCharges: ").append(this.getChargeString());
+        result.append("\nRecursive: ").append(this.recursive ? "Yes" : "No");
+        result.append("\nMana cost: ").append(this.manaCost);
+        result.append("\nSpawn probabilities: ").append(this.getTierString());
+        result.append("\nPrice: ").append(this.price);
+
+        // cast state
+        if(this.castDelay != 0){innerString.append(String.format("\nCast delay: %1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
+        if(this.rechargeTime != 0){innerString.append(String.format("\nRecharge time: %1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
+        if(this.damageComponent.getProjectile() != 0){innerString.append("\nProjectile damage: ").append(this.damageComponent.getProjectile());}
+        if(this.damageComponent.getMelee() != 0){innerString.append("\nMelee damage: ").append(this.damageComponent.getMelee());}
+        if(this.damageComponent.getExplosion() != 0){innerString.append("\nExplosion damage: ").append(this.damageComponent.getExplosion());}
+        if(this.damageComponent.getElectricity() != 0){innerString.append("\nElectricity damage: ").append(this.damageComponent.getElectricity());}
+        if(this.damageComponent.getFire() != 0){innerString.append("\nFire damage: ").append(this.damageComponent.getFire());}
+        if(this.damageComponent.getDrill() != 0){innerString.append("\nDrill damage: ").append(this.damageComponent.getDrill());}
+        if(this.damageComponent.getSlice() != 0){innerString.append("\nSlice damage: ").append(this.damageComponent.getSlice());}
+        if(this.damageComponent.getIce() != 0){innerString.append("\nIce damage: ").append(this.damageComponent.getIce());}
+        if(this.damageComponent.getHealing() != 0){innerString.append("\nHealing damage: ").append(this.damageComponent.getHealing());}
+        if(this.damageComponent.getPhysics_hit() != 0){innerString.append("\nPhysics_hit damage: ").append(this.damageComponent.getPhysics_hit());}
+        if(this.damageComponent.getRadioactive() != 0){innerString.append("\nRadioactive damage: ").append(this.damageComponent.getRadioactive());}
+        if(this.damageComponent.getPoison() != 0){innerString.append("\nPoison damage: ").append(this.damageComponent.getPoison());}
+        if(this.damageComponent.getOvereating() != 0){innerString.append("\nOvereating damage: ").append(this.damageComponent.getOvereating());}
+        if(this.damageComponent.getCurse() != 0){innerString.append("\nCurse damage: ").append(this.damageComponent.getCurse());}
+        if(this.damageComponent.getHealing() != 0){innerString.append("\nHoly damage: ").append(this.damageComponent.getHealing());}
+        if(this.lifetime != 0){innerString.append("\nLifetime: ").append(this.lifetime).append("f");}
+        if(this.critRate != 0){innerString.append("\nCrit rate: ").append(this.critRate).append("%");}
+        if(this.pattern != 0){innerString.append("\nPattern: ").append(this.pattern).append("°");}
+        if(this.spread != 0){innerString.append("\nSpread: ").append(this.spread).append("°");}
+        if(this.recoil != 0){innerString.append("\nRecoil: ").append(this.setRecoil ? "=" : "").append(this.recoil);}
+        if(this.screenshake != 0){innerString.append("\nScreen shake: ").append(this.screenshake);}
+
+        if(!innerString.isEmpty()){
+            result.append("\n\n# Cast state").append(innerString);
+            innerString.setLength(0);
         }
 
-        spawnProbabilities = this.spawnProbabilities.getSpawnProbability();
-        result.append("Spawn probabilities: [");
-        for(int i=0; i < spawnProbabilities.length; i++){
-            if(i != 0){
-                result.append(", ");
-            }
-            result.append("T").append(i).append(": ").append(spawnProbabilities[i]);
+        // related projectile
+        if(this.relatedProjectile != null){
+            result.append("\n\n# Related Projectile");
+            result.append("\nLifetime: ").append(this.relatedProjectile.getLifetimeString());
+            result.append("\nSpeed: ").append(this.relatedProjectile.getSpeedString());
         }
-        result.append("]\n");
-        if(this.recursive){
-            result.append("Recursive: Yes\n");
-        }else{
-            result.append("Recursive: No\n");
-        }
-        result.append("Price: ").append(this.price);
 
         return result.toString();
     }

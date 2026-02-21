@@ -1,8 +1,8 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_PIPE_BOMB;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_PIPE_BOMB;
 
 public class PIPE_BOMB_DEATH_TRIGGER extends Spell{
     @Override

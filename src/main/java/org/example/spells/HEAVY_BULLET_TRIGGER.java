@@ -7,7 +7,7 @@ import org.example.projectiles.PROJECTILE_HEAVY_BULLET;
 public class HEAVY_BULLET_TRIGGER extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Magic bolt with trigger";
+        this.name = "Magic Bolt With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "magic bolt trigger"};
         this.imageFile = "heavy_bullet_trigger.png";
         this.emote = "<:heavy_bullet_trigger:1464974854930567250>";

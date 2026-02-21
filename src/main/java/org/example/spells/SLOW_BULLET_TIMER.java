@@ -1,8 +1,8 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_SLOW_BULLET;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_SLOW_BULLET;
 
 public class SLOW_BULLET_TIMER extends Spell{
     @Override

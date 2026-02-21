@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_ROCKET_TIER_2;
 public class ROCKET_TIER_2 extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Large magic missile";
+        this.name = "Large Magic Missile";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "rocket_tier_2.png";
         this.emote = "<:rocket_tier_2:1464974874610106504>";

@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_LUMINOUS_DRILL;
 public class LUMINOUS_DRILL extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Luminous drill";
+        this.name = "Luminous Drill";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lumi"};
         this.imageFile = "luminous_drill.png";
         this.emote = "<:luminous_drill:1464974864749432955>";

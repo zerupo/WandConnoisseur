@@ -1,10 +1,10 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_FIREWORK_PINK;
-import org.example.projectiles.PROJECTILE_FIREWORK_GREEN;
 import org.example.projectiles.PROJECTILE_FIREWORK_BLUE;
+import org.example.projectiles.PROJECTILE_FIREWORK_GREEN;
 import org.example.projectiles.PROJECTILE_FIREWORK_ORANGE;
+import org.example.projectiles.PROJECTILE_FIREWORK_PINK;
 
 import java.util.Random;
 

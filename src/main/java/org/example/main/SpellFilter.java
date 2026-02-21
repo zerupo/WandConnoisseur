@@ -357,6 +357,7 @@ public class SpellFilter{
             entry("has_related_projectile", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getRelatedProjectile() != null)),
             entry("never_unlimited", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getNeverUnlimited())),
             entry("recursive", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getRecursive())),
+            entry("set_recoil", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetRecoil())),
 
             // int
             entry("cast_delay", spell -> new TypedProperty(PropertyType.INT, spell.getCastDelay())),
@@ -369,6 +370,7 @@ public class SpellFilter{
             entry("projectile_count", spell -> new TypedProperty(PropertyType.INT, spell.getRelatedProjectileCount())),
             entry("projectile_lifetime_max", spell -> {Projectile projectile = spell.getRelatedProjectile(); return new TypedProperty(PropertyType.INT, projectile != null ? projectile.getLifetimeMax() : null);}),
             entry("projectile_lifetime_min", spell -> {Projectile projectile = spell.getRelatedProjectile(); return new TypedProperty(PropertyType.INT, projectile != null ? projectile.getLifetimeMin() : null);}),
+            entry("projectile_lifetime_randomness", spell -> {Projectile projectile = spell.getRelatedProjectile(); return new TypedProperty(PropertyType.INT, projectile != null ? projectile.getLifetimeRandomness() : null);}),
             entry("recharge_time", spell -> new TypedProperty(PropertyType.INT, spell.getRechargeTime())),
 
             // double
@@ -388,33 +390,51 @@ public class SpellFilter{
             entry("damage_projectile", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getDamageComponent().getProjectile())),
             entry("damage_radioactive", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getDamageComponent().getRadioactive())),
             entry("damage_slice", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getDamageComponent().getSlice())),
+            entry("projectile_speed_min", spell -> {Projectile projectile = spell.getRelatedProjectile(); return new TypedProperty(PropertyType.DOUBLE, projectile != null ? projectile.getSpeedMin() : null);}),
+            entry("projectile_speed_max", spell -> {Projectile projectile = spell.getRelatedProjectile(); return new TypedProperty(PropertyType.DOUBLE, projectile != null ? projectile.getSpeedMax() : null);}),
             entry("recoil", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getRecoil())),
             entry("screenshake", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getScreenshake())),
-            entry("spread", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpread()))
+            entry("spread", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpread())),
+            entry("t0", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[0])),
+            entry("t1", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[1])),
+            entry("t2", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[2])),
+            entry("t3", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[3])),
+            entry("t4", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[4])),
+            entry("t5", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[5])),
+            entry("t6", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[6])),
+            entry("t7", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[7])),
+            entry("t8", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[8])),
+            entry("t9", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[9])),
+            entry("t10", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[10]))
     );
 
     public static final Map<String, Function<Spell, String>> STRING_PROPERTY_RESOLVERS = Map.ofEntries(
             // string
             entry("alias", Spell::getAliasString),
+            entry("charge", Spell::getChargeString),
+            entry("projectile_lifetime", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? projectile.getLifetimeString() : "<null>";}),
+            entry("projectile_speed", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? projectile.getSpeedString() : "<null>";}),
+            entry("tier", Spell::getTierString),
 
             // boolean
             entry("has_charges", spell -> String.valueOf(spell.getHasCharges())),
             entry("has_related_projectile", spell -> String.valueOf(spell.getRelatedProjectile() != null)),
             entry("never_unlimited", spell -> String.valueOf(spell.getNeverUnlimited())),
             entry("recursive", spell -> String.valueOf(spell.getRecursive())),
+            entry("set_recoil", spell -> String.valueOf(spell.getSetRecoil())),
 
             // int
             entry("cast_delay", spell -> String.format("%1$df (%2$3.2fs)", spell.getCastDelay(), spell.getCastDelay()/60.0)),
-            entry("crit_rate", spell -> String.valueOf(spell.getCritRate())),
+            entry("crit_rate", spell -> String.valueOf(spell.getCritRate()) + "%"),
             entry("lifetime", spell -> String.format("%1$df (%2$3.2fs)", spell.getLifetime(), spell.getLifetime()/60.0)),
             entry("mana", spell -> String.valueOf(spell.getManaCost())),
             entry("max_charges", spell -> String.valueOf(spell.getMaxCharges())),
             entry("pattern", spell -> spell.getPattern() + "°"),
             entry("price", spell -> String.valueOf(spell.getPrice())),
             entry("projectile_count", spell -> String.valueOf(spell.getRelatedProjectileCount())),
-            entry("projectile_lifetime", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getLifetimeString()) : "<null>";}),
             entry("projectile_lifetime_max", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getLifetimeMax()) : "<null>";}),
             entry("projectile_lifetime_min", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getLifetimeMin()) : "<null>";}),
+            entry("projectile_lifetime_randomness", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getLifetimeRandomness()) : "<null>";}),
             entry("recharge_time", spell -> String.format("%1$df (%2$3.2fs)", spell.getRechargeTime(), spell.getRechargeTime()/60.0)),
 
             // double
@@ -434,9 +454,22 @@ public class SpellFilter{
             entry("damage_projectile", spell -> String.valueOf(spell.getDamageComponent().getProjectile())),
             entry("damage_radioactive", spell -> String.valueOf(spell.getDamageComponent().getRadioactive())),
             entry("damage_slice", spell -> String.valueOf(spell.getDamageComponent().getSlice())),
-            entry("recoil", spell -> String.valueOf(spell.getRecoil())),
+            entry("projectile_speed_min", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getSpeedMin()) : "<null>";}),
+            entry("projectile_speed_max", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getSpeedMax()) : "<null>";}),
+            entry("recoil", spell -> (spell.getSetRecoil() ? "=" : "") + String.valueOf(spell.getRecoil())),
             entry("screenshake", spell -> String.valueOf(spell.getScreenshake())),
-            entry("spread", spell -> spell.getSpread() + "°")
+            entry("spread", spell -> String.valueOf(spell.getSpread()) + "°"),
+            entry("t0", spell -> String.valueOf(spell.getSpawnProbability()[0])),
+            entry("t1", spell -> String.valueOf(spell.getSpawnProbability()[1])),
+            entry("t2", spell -> String.valueOf(spell.getSpawnProbability()[2])),
+            entry("t3", spell -> String.valueOf(spell.getSpawnProbability()[3])),
+            entry("t4", spell -> String.valueOf(spell.getSpawnProbability()[4])),
+            entry("t5", spell -> String.valueOf(spell.getSpawnProbability()[5])),
+            entry("t6", spell -> String.valueOf(spell.getSpawnProbability()[6])),
+            entry("t7", spell -> String.valueOf(spell.getSpawnProbability()[7])),
+            entry("t8", spell -> String.valueOf(spell.getSpawnProbability()[8])),
+            entry("t9", spell -> String.valueOf(spell.getSpawnProbability()[9])),
+            entry("t10", spell -> String.valueOf(spell.getSpawnProbability()[10]))
     );
 
     public SpellFilter(){

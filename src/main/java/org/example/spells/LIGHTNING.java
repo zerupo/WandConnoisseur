@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_LIGHTNING;
 public class LIGHTNING extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Lightning bolt";
+        this.name = "Lightning Bolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "lightning.png";
         this.emote = "<:lightning:1464974863671361772>";

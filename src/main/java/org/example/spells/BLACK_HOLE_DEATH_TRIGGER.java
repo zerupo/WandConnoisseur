@@ -1,13 +1,13 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_BLACK_HOLE;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_BLACK_HOLE;
 
 public class BLACK_HOLE_DEATH_TRIGGER extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Black Hole with Death Trigger";
+        this.name = "Black Hole With Death Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bh timer", "bh expiration"};
         this.imageFile = "black_hole_timer.png";
         this.emote = "<:black_hole_death_trigger:1447276639837753556>";

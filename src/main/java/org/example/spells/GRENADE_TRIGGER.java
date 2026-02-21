@@ -1,8 +1,8 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_GRENADE;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_GRENADE;
 
 public class GRENADE_TRIGGER extends Spell{
     @Override

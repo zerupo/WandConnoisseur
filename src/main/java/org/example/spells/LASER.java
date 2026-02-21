@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_LASER;
 public class LASER extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Concentrated light";
+        this.name = "Concentrated Light";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "conc light"};
         this.imageFile = "laser.png";
         this.emote = "<:laser:1464974861364629610>";

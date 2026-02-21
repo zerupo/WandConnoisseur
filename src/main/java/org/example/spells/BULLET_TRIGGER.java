@@ -7,7 +7,7 @@ import org.example.projectiles.PROJECTILE_BULLET;
 public class BULLET_TRIGGER extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Magic arrow with trigger";
+        this.name = "Magic Arrow With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "magic arrow trigger"};
         this.imageFile = "bullet_trigger.png";
         this.emote = "<:bullet_trigger:1464974841512726700>";

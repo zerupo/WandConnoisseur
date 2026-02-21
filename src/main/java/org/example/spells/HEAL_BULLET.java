@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_HEAL_BULLET;
 public class HEAL_BULLET extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Healing bolt";
+        this.name = "Healing Bolt";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "heal"};
         this.imageFile = "heal_bullet.png";
         this.emote = "<:heal_bullet:1464974850807304284>";

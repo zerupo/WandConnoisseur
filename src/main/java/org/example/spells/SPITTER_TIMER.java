@@ -1,8 +1,8 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_SPITTER;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_SPITTER;
 
 public class SPITTER_TIMER extends Spell{
     @Override

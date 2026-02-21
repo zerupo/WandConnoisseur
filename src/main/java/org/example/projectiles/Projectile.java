@@ -133,8 +133,27 @@ public abstract class Projectile{
         return this.lifetime + this.lifetimeRandomness;
     }
 
+    public int getLifetimeRandomness(){
+        return this.lifetimeRandomness;
+    }
+
     public String getLifetimeString(){
-        return "[" + (this.lifetime - this.lifetimeRandomness) + "; " + (this.lifetime + this.lifetimeRandomness) + "]";
+        int lifetimeMin = this.lifetime - this.lifetimeRandomness;
+        int lifetimeMax = this.lifetime + this.lifetimeRandomness;
+
+        return lifetimeMin == lifetimeMax ? "" + lifetimeMin : "[" + lifetimeMin + "; " + lifetimeMax + "]";
+    }
+
+    public double getSpeedMin(){
+        return this.speedMin;
+    }
+
+    public double getSpeedMax(){
+        return this.speedMax;
+    }
+
+    public String getSpeedString(){
+        return this.speedMin == this.speedMax ? "" + this.speedMin : "[" + this.speedMin + "; " + this.speedMax + "]";
     }
 
     protected abstract void initialization();

@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_MIST_RADIOACTIVE;
 public class MIST_RADIOACTIVE extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Toxic mist";
+        this.name = "Toxic Mist";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mist_radioactive.png";
         this.emote = "<:mist_radioactive:1464974870898278633>";

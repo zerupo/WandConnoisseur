@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_THUNDERBALL;
 public class THUNDERBALL extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Thunder charge";
+        this.name = "Thunder Charge";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "thunderball.png";
         this.emote = "<:thunderball:1464974877164306494>";

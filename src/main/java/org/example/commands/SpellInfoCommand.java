@@ -44,15 +44,12 @@ public class SpellInfoCommand implements Command{
             event.reply("Sort \"" + spellString + "\" inconnu").setEphemeral(true).queue();
             return;
         }
-        event.reply("OK").setEphemeral(true).queue(message -> {
-            message.deleteOriginal().queue();
-        });
 
         if(file){
             textFile = new File(spellPath + spell.getClass().getSimpleName() + ".java");
-            event.getChannel().sendFiles(FileUpload.fromData(textFile, spell.getClass().getSimpleName() + ".java")).queue();
+            event.reply("").addFiles(FileUpload.fromData(textFile, spell.getClass().getSimpleName() + ".java")).queue();
         }else{
-            event.getChannel().sendMessage(spell.getEmote()).queue();
+            event.reply(spell.getEmote()).queue();
             event.getChannel().sendMessage(spell.getInfoString()).queue();
         }
     }

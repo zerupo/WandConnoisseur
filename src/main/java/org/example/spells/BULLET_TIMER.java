@@ -7,7 +7,7 @@ import org.example.projectiles.PROJECTILE_BULLET;
 public class BULLET_TIMER extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Magic arrow with timer";
+        this.name = "Magic Arrow With Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "magic arrow timer"};
         this.imageFile = "bullet_timer.png";
         this.emote = "<:bullet_timer:1464974839558177034>";

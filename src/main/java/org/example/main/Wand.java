@@ -122,8 +122,8 @@ public class Wand{
         return this.cardPool;
     }
 
-    public String getCurrentFlowchartString(boolean formating){
-        return this.cardPool.getFlowchartString(formating);
+    public String getCurrentFlowchartString(boolean formatting){
+        return this.cardPool.getFlowchartString(formatting);
     }
 
     public BufferedImage getCurrentFlowchartImage(){
@@ -391,7 +391,7 @@ public class Wand{
         return result;
     }
 
-    /*public String getFlowchartString(boolean allCasts, boolean formating){
+    /*public String getFlowchartString(boolean allCasts, boolean formatting){
         String result = "";
         Spell[] spellsCopy = new Spell[this.spells.length];
         CardPool cardPoolCopy;
@@ -419,16 +419,16 @@ public class Wand{
                 recharged = true;
             }
             if(!recharged && nbCast < this.nbSlot){
-                result += nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating) + "\n";
+                result += nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting) + "\n";
             }else{
-                result += nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
+                result += nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
             }
         }
         return result;
     }*/
 
     // TODO répercuter
-    public String getFlowchartString(boolean allCasts, boolean formating){
+    public String getFlowchartString(boolean allCasts, boolean formatting){
         String result = "";
         Spell[] spellsCopy = new Spell[this.spells.length];
         CardPool cardPoolCopy = new CardPool();
@@ -463,9 +463,9 @@ public class Wand{
             if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
                 //System.out.println(currentCastDelay + " " + currentRechargeTime + " " + waitingTime);
                 if(currentCastDelay > currentRechargeTime){
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time (cast delay): " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time (cast delay): " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
                 }else{
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time: " + String.format("%1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time: " + String.format("%1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
                 }
                 waitingTime += Math.max(Math.max(currentCastDelay, currentRechargeTime), 0);
                 currentCastDelay = 0;
@@ -473,9 +473,9 @@ public class Wand{
                 recharged = true;
             }else{
                 if(allCasts) {
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating) + "\n";
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting) + "\n";
                 }else{
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
                 }
                 waitingTime += Math.max(currentCastDelay, 0);
                 currentCastDelay = 0;

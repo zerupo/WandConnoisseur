@@ -6,7 +6,7 @@ import org.example.projectiles.PROJECTILE_MAGIC_SHIELD;
 public class MAGIC_SHIELD extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Magic guard";
+        this.name = "Magic Guard";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "magic_shield.png";
         this.emote = "<:magic_shield:1464974866079027270>";

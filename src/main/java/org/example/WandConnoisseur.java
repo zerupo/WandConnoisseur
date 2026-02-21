@@ -72,7 +72,6 @@ public class WandConnoisseur{
 
     // TODO
     // better autocomplete for conditions
-    // add more stats for query
     // add cast states with menu
     // mob quizz (audio ?)
     // shuffle

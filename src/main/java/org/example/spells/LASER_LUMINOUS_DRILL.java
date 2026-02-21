@@ -1,13 +1,13 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_LUMINOUS_DRILL;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_LUMINOUS_DRILL;
 
 public class LASER_LUMINOUS_DRILL extends Spell{
     @Override
     protected void initialization(){
-        this.name = "Luminous drill with timer";
+        this.name = "Luminous Drill With Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lumi timer"};
         this.imageFile = "luminous_drill_timer.png";
         this.emote = "<:laser_luminous_drill:1464974862576779416>";

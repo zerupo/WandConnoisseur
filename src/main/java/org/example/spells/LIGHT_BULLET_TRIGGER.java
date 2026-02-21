@@ -1,8 +1,8 @@
 package org.example.spells;
 
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_LIGHT_BULLET;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_LIGHT_BULLET;
 
 public class LIGHT_BULLET_TRIGGER extends Spell{
     @Override
