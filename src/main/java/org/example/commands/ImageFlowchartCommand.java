@@ -139,6 +139,14 @@ public class ImageFlowchartCommand implements Command{
                     }
                 }
             }
+
+            if(!unknownSpell.equals("")){
+                event.getHook().editOriginal("Sorts inconnus: " + unknownSpell).queue();
+                if(spells.size() == 0){
+                    return;
+                }
+            }
+
             wand = new Wand(draw, castDelay, rechargeTime, manaMax, manaRegen, spells.size(), spread, speed);
             for(Spell spell : spells){
                 wand.putSpellEnd(spell);
@@ -177,6 +185,10 @@ public class ImageFlowchartCommand implements Command{
             wand.saveFlowchartImage(outputPath + "flowchart_" + fileName, true);
             flowchartImage = new File(outputPath + "flowchart_" + fileName);
 
+            if(unknownSpell.equals("")){
+                message.deleteOriginal().queue();
+            }
+
             if(wandStatImage != null){
                 event.getChannel().sendFiles(FileUpload.fromData(wandStatImage, "wandstats.png")).queue();
             }
@@ -184,12 +196,6 @@ public class ImageFlowchartCommand implements Command{
                 event.getChannel().sendFiles(FileUpload.fromData(wandImage, "wand.png")).queue();
             }
             event.getChannel().sendFiles(FileUpload.fromData(flowchartImage, "flowchart.png")).queue();
-
-            if(unknownSpell.equals("")){
-                message.deleteOriginal().queue();
-            }else{
-                event.getHook().editOriginal("Sorts inconnus: " + unknownSpell).queue();
-            }
 
             if(wandStatImage != null){
                 if(!wandStatImage.delete()){

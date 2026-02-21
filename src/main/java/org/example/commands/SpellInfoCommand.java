@@ -1,14 +1,13 @@
 package org.example.commands;
 
-import net.dv8tion.jda.api.utils.FileUpload;
 import org.example.main.Global;
 import org.example.main.SpellList;
 import org.example.spells.Spell;
 
+import java.io.File;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-
-import java.io.File;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 public class SpellInfoCommand implements Command{
     @Override

@@ -1,11 +1,11 @@
 package org.example.main;
 
 import java.awt.*;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.awt.geom.Path2D;
+import javax.imageio.ImageIO;
 
 public class ImageBuilder{
     private int margin = 20;

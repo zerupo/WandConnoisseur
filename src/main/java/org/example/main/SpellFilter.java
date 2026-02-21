@@ -5,13 +5,13 @@ import org.example.spells.Spell;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import static java.util.Map.entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.util.Map.entry;
 
 enum Operator{GREATER, GREATER_OR_EQUAL, LOWER, LOWER_OR_EQUAL, EQUALS, DIFFERENT}
 enum LogicGate{AND, OR}
@@ -455,9 +455,7 @@ public class SpellFilter{
         for(int i=0; i < spells.length; i++){
             currentResult = expression.evaluate(spells[i]);
             switch(currentResult.getState()){
-                case TRUE -> {
-                    result.add(spells[i]);
-                }
+                case TRUE -> result.add(spells[i]);
                 case INVALID -> throw new IllegalArgumentException("Erreur lors de l'évaluation : " + currentResult.getError());
             }
         }

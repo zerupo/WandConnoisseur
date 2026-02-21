@@ -1,30 +1,28 @@
 package org.example;
 
-import net.dv8tion.jda.api.requests.RestAction;
 import org.example.config.BotConfig;
 import org.example.listeners.CommandListener;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.example.main.Global;
 import org.example.main.WandList;
 import org.example.spells.Spell;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.EnumSet;
-
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.RestAction;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WandConnoisseur{
     private static final Logger logger = LoggerFactory.getLogger(WandConnoisseur.class);
@@ -73,8 +71,7 @@ public class WandConnoisseur{
     }
 
     // TODO
-    // frame or sec for delay input
-    // better autocomplete
+    // better autocomplete for conditions
     // add more stats for query
     // add cast states with menu
     // mob quizz (audio ?)
@@ -146,6 +143,7 @@ public class WandConnoisseur{
                 Pattern p;
                 Matcher m;
                 int maxOutput = 25;
+                //System.out.println("receiving " + event.getName() + ":" + event.getFocusedOption().getName() + " -> " + currentInput);
 
                 if(currentInput.strip().equalsIgnoreCase("quoi")){
                     options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("Feur", "Feur"));

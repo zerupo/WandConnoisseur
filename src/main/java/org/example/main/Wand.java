@@ -2,9 +2,9 @@ package org.example.main;
 
 import org.example.spells.*;
 
-import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import javax.swing.JPanel;
 
 public class Wand{
     private boolean shuffle;
@@ -463,9 +463,9 @@ public class Wand{
             if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
                 //System.out.println(currentCastDelay + " " + currentRechargeTime + " " + waitingTime);
                 if(currentCastDelay > currentRechargeTime){
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time (cast delay): " + String.format("%1$3.2f s (%2$df)", currentCastDelay/60.0, currentCastDelay) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time (cast delay): " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
                 }else{
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time: " + String.format("%1$3.2f s (%2$df)", currentRechargeTime/60.0, currentRechargeTime) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time: " + String.format("%1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
                 }
                 waitingTime += Math.max(Math.max(currentCastDelay, currentRechargeTime), 0);
                 currentCastDelay = 0;
@@ -473,9 +473,9 @@ public class Wand{
                 recharged = true;
             }else{
                 if(allCasts) {
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$3.2f s (%2$df)", currentCastDelay/60.0, currentCastDelay) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating) + "\n";
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating) + "\n";
                 }else{
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$3.2f s (%2$df)", currentCastDelay/60.0, currentCastDelay) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
+                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formating);
                 }
                 waitingTime += Math.max(currentCastDelay, 0);
                 currentCastDelay = 0;

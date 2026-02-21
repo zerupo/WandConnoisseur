@@ -1,7 +1,7 @@
 package org.example.main;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import static org.example.main.Global.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
@@ -10,8 +10,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.IllegalFormatException;
 import java.util.Random;
-
-import static org.example.main.Global.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 enum RangeType{BETWEEN, GREATER_OR_EQUAL, LESS_OR_EQUAL}
 
@@ -638,17 +638,17 @@ public class WandList{
                     stop = true;
                 }
             }
-            System.out.println("range found: [" + min + ";" + max + "]");
+            //System.out.println("range found: [" + min + ";" + max + "]");
         }
 
-        System.out.println("valid wands:");
+        /*System.out.println("valid wands:");
         for(int i=min; i <= max; i++){
             System.out.println(this.wandList[i].toString());
-        }
+        }*/
 
         Random random = new Random();
         int randomNumber = random.nextInt(max + 1 - min) + min;
-        System.out.println("wand N°" + randomNumber + " " + this.wandList[randomNumber].getSprite());
+        //System.out.println("wand N°" + randomNumber + " " + this.wandList[randomNumber].getSprite());
         return this.wandList[randomNumber].getSprite();
     }
 }

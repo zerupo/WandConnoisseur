@@ -2,13 +2,12 @@ package org.example.main;
 
 import org.example.spells.*;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.awt.Point;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.image.BufferedImage;
-import java.awt.Color;
-
-import java.awt.Point;
 
 public class Flowchart{
     private Spell myself;

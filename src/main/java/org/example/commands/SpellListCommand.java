@@ -30,7 +30,6 @@ public class SpellListCommand implements Command{
             Spell[] spellList = Global.getSpellList().getSpells();
             SpellFilter spellFilter = Global.getSpellFilter();
             StringBuilder result = new StringBuilder();
-            String[] aliasList;
 
             if(propertyOption != null){
                 propertyFilter = propertyOption.getAsString();

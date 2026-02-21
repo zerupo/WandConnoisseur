@@ -2,11 +2,11 @@ package org.example.main;
 
 import org.example.spells.*;
 
+import java.awt.image.BufferedImage;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.awt.image.BufferedImage;;
 
 public class CardPool{
     private List<Spell> startingDeck;
@@ -364,8 +364,6 @@ public class CardPool{
     }
 
     private void wrap(){
-        //System.out.println(this.toString());
-        //System.out.println("WRAP !");
         while(!this.discard.isEmpty()){
             this.deck.add(this.discard.remove(0));
         }
@@ -374,7 +372,6 @@ public class CardPool{
         if(this.autoCardHistory){
             this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
         }
-        //System.out.println(this.toString());
     }
 
     public void draw(int nbDraw, CastState castState, boolean wrapAllowed, Flowchart currentNode){

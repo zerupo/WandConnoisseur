@@ -1,14 +1,13 @@
 package org.example.commands;
 
+import static org.example.WandConnoisseur.jda;
+
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.example.WandConnoisseur.jda;
+import java.util.List;
 
 public class HelpCommand implements Command{
     @Override
@@ -62,13 +61,10 @@ public class HelpCommand implements Command{
                     }
                 }
             }else{
-                event.reply("OK").setEphemeral(true).queue(message -> {
-                    message.deleteOriginal().queue();
-                });
                 if(commandeOption == null){
-                    event.getChannel().sendMessage("Liste des commandes disponibles:\n\n" + String.join("\n", result)).queue();
+                    event.reply("Liste des commandes disponibles:\n\n" + String.join("\n", result)).queue();
                 }else{
-                    event.getChannel().sendMessage("Liste des options disponibles pour la commande **" + commandName + "**:\n\n" + String.join("\n", result)).queue();
+                    event.reply("Liste des options disponibles pour la commande **" + commandName + "**:\n\n" + String.join("\n", result)).queue();
                 }
             }
         }, failure -> {

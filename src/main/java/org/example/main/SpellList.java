@@ -4,7 +4,6 @@ import org.example.spells.*;
 
 import java.util.*;
 import java.util.function.Predicate;
-
 import org.reflections.Reflections;
 
 public class SpellList{

@@ -1,19 +1,18 @@
 package org.example.commands;
 
-import net.dv8tion.jda.api.utils.FileUpload;
 import org.example.main.Global;
 import org.example.main.SpellList;
 import org.example.main.Wand;
 import org.example.spells.*;
-
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 public class StringFlowchartCommand implements Command{
     @Override
@@ -139,6 +138,14 @@ public class StringFlowchartCommand implements Command{
                     }
                 }
             }
+
+            if(!unknownSpell.equals("")){
+                event.getHook().editOriginal("Sorts inconnus: " + unknownSpell).queue();
+                if(spells.size() == 0){
+                    return;
+                }
+            }
+
             wand = new Wand(draw, castDelay, rechargeTime, manaMax, manaRegen, spells.size(), spread, speed);
             for(Spell spell : spells){
                 wand.putSpellEnd(spell);
@@ -156,9 +163,6 @@ public class StringFlowchartCommand implements Command{
 
             if(unknownSpell.equals("")){
                 message.deleteOriginal().queue();
-            }else{
-                event.getHook().editOriginal("Sorts inconnus: " + unknownSpell).queue();
-                return;
             }
 
             if(file){

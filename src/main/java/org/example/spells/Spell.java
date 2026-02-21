@@ -4,14 +4,14 @@ import org.example.main.*;
 import org.example.projectiles.Projectile;
 
 import java.awt.*;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import javax.swing.*;
-import java.awt.Graphics;
 import java.io.InputStream;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public abstract class Spell{
     public enum SpellType {projectile, static_projectile, passif, utility, modifier, material, multicast, other};
@@ -312,8 +312,8 @@ public abstract class Spell{
             result.append("Charges: infinite\n");
         }
         result.append("Mana cost: ").append(this.manaCost).append("\n");
-        result.append(String.format("Cast delay: %1$3.2f s (%2$df)\n", this.castDelay/60.0, this.castDelay));
-        result.append(String.format("Recharge time: %1$3.2f s (%2$df)\n", this.rechargeTime/60.0, this.rechargeTime));
+        result.append(String.format("Cast delay: %1$df (%2$3.2fs)\n", this.castDelay, this.castDelay/60.0));
+        result.append(String.format("Recharge time: %1$df (%2$3.2fs)\n", this.rechargeTime, this.rechargeTime/60.0));
         result.append("\n");
         if(this.damageComponent.getProjectile() != 0){
             result.append("Damage: ").append(this.damageComponent.getProjectile()).append("\n");

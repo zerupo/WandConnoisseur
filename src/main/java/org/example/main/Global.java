@@ -1,9 +1,7 @@
 package org.example.main;
 
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.example.spells.*;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -12,6 +10,8 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 
 public class Global{
     private final static String pathOutput = "./src/main/java/org/example/fileOutput/";

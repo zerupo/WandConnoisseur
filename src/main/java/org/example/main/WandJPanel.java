@@ -2,11 +2,11 @@ package org.example.main;
 
 import org.example.spells.*;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class WandJPanel{
     private Wand wand;
@@ -122,8 +122,8 @@ public class WandJPanel{
             statValues[0] = "No";
         }
         statValues[1] = String.valueOf(this.wand.getNbDraw());
-        statValues[2] = String.format("%1$3.2f s (%2$df)", this.wand.getCastDelay()/60.0, this.wand.getCastDelay());
-        statValues[3] = String.format("%1$3.2f s (%2$df)", this.wand.getRechargeTime()/60.0, this.wand.getRechargeTime());
+        statValues[2] = String.format("%1$df (%2$3.2fs)", this.wand.getCastDelay(), this.wand.getCastDelay()/60.0);
+        statValues[3] = String.format("%1$df (%2$3.2fs)", this.wand.getRechargeTime(), this.wand.getRechargeTime()/60.0);
         statValues[4] = String.valueOf(this.wand.getMaxMana());
         statValues[5] = String.valueOf(this.wand.getRegenMana());
         statValues[6] = String.valueOf(this.wand.getNbSlot());
