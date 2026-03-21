@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_CURSED_ORB extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Cursed Sphere";
+        this.emote = "<:cursed_orb:1447276646980784209>";
         this.gravityY = 0;
         this.airFriction = -6;
         this.mass = 0.04;

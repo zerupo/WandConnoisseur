@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_LIGHT_BULLET extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Spark Bolt";
+        this.emote = "<:light_bullet:1433949664469712967>";
         this.gravityY = 200;
         this.airFriction = 1.7;
         this.mass = 0.04;

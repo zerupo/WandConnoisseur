@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_DEATH_CROSS extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Death Cross";
+        this.emote = "<:death_cross:1447276648109052084>";
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.08;

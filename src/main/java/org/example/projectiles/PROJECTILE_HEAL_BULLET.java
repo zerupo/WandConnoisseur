@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_HEAL_BULLET extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Healing Bolt";
+        this.emote = "<:heal_bullet:1464974850807304284>";
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.05;

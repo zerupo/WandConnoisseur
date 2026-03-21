@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_LASER_EMITTER_FOUR extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Plasma Beam Cross";
+        this.emote = "<:laser_emitter_four:1447276652857135105>";
         this.gravityY = 0;
         this.airFriction = 7;
         this.mass = 0.05;

@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_LASER extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Concentrated Light";
+        this.emote = "<:laser:1464974861364629610>";
         this.gravityY = 0;
         this.airFriction = -9.0;
         this.mass = 0.04;

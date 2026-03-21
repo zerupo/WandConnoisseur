@@ -16,16 +16,17 @@ public class CommandListener extends ListenerAdapter{
     private final Map<String, Command> commands = new HashMap<>();
 
     public CommandListener(){
-        commands.put("ping", new PingCommand());
+        commands.put("cast_state", new CastStateCommand());
         commands.put("echo", new EchoCommand());
-        commands.put("liste_sorts", new SpellListCommand());
-        commands.put("flowchart_texte", new StringFlowchartCommand());
-        commands.put("flowchart_image", new ImageFlowchartCommand());
-        commands.put("sort_info", new SpellInfoCommand());
-        commands.put("wisp", new WispCommand());
-        commands.put("texte", new TextCommand());
-        commands.put("help", new HelpCommand());
         commands.put("feur", new FeurCommand());
+        commands.put("flowchart_image", new ImageFlowchartCommand());
+        commands.put("flowchart_texte", new StringFlowchartCommand());
+        commands.put("help", new HelpCommand());
+        commands.put("liste_sorts", new SpellListCommand());
+        commands.put("ping", new PingCommand());
+        commands.put("sort_info", new SpellInfoCommand());
+        commands.put("texte", new TextCommand());
+        commands.put("wisp", new WispCommand());
         logger.info("Registered {} commands.", commands.size());
     }
 

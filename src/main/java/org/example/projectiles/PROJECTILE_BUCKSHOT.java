@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_BUCKSHOT extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Triplicate Bolt";
+        this.emote = "<:buckshot:1433949550917455893>";
         this.lifetime = 120;
         this.lifetimeRandomness = 7;
     }

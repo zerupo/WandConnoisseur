@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_LIGHTNING extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Lightning Bolt";
+        this.emote = "<:lightning:1464974863671361772>";
         this.lifetime = 2;
         this.lifetimeRandomness = 0;
     }

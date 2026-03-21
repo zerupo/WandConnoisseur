@@ -4,6 +4,8 @@ public class PROJECTILE_BOMB_HOLY_GIGA extends Projectile{
     // TODO custom xml, wtf is this ?
     @Override
     protected void initialization(){
+        this.name = "Giga Holy Bomb";
+        this.emote = "<:bomb_holy_giga:1464974837247119392>";
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.07;

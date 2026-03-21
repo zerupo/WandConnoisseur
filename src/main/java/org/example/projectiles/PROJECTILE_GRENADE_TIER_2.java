@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_GRENADE_TIER_2 extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Large Firebolt";
+        this.emote = "<:grenade_tier_2:1453399901672181945>";
         this.mass = 0.065;
 
         this.speedMin = 250;

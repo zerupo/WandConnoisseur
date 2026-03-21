@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_BLACK_HOLE extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Black Hole";
+        this.emote = "<:black_hole:1433949520550428862>";
         this.lifetime = 120;
         this.lifetimeRandomness = 7;
     }

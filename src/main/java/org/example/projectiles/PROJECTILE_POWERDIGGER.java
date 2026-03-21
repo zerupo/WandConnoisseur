@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_POWERDIGGER extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Digging Blast";
+        this.emote = "<:powerdigger:1447276654920597605>";
         this.speedMin = 0;
         this.speedMax = 0;
         this.lifetime = 2;

@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_OCARINA_D extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Ocarina - Note D";
+        this.emote = "<:ocarina_d:1451342043359215790>";
         this.gravityY = 0;
         this.airFriction = 8;
         this.mass = 0.01;

@@ -12,7 +12,7 @@ public class FIREWORK extends Spell{
     @Override
     protected void initialization(){
         this.name = "Fireworks!";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "fireworks"};
         this.imageFile = "fireworks.png";
         this.emote = "<:firework:1464974845556297738>";
         this.description = "A fiery, explosive projectile";
@@ -30,19 +30,14 @@ public class FIREWORK extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Random random = new Random(12345L); // TODO get frame
+        Random random = new Random(Global.getCurrentFrame());
         switch(random.nextInt(4)){
-            case 0:
-                castState.addProjectile(new PROJECTILE_FIREWORK_PINK());
-            case 1:
-                castState.addProjectile(new PROJECTILE_FIREWORK_GREEN());
-            case 2:
-                castState.addProjectile(new PROJECTILE_FIREWORK_BLUE());
-            case 3:
-                castState.addProjectile(new PROJECTILE_FIREWORK_ORANGE());
+            case 0 -> castState.addProjectile(new PROJECTILE_FIREWORK_PINK());
+            case 1 -> castState.addProjectile(new PROJECTILE_FIREWORK_GREEN());
+            case 2 -> castState.addProjectile(new PROJECTILE_FIREWORK_BLUE());
+            case 3 -> castState.addProjectile(new PROJECTILE_FIREWORK_ORANGE());
         }
         //c.ragdoll_fx = 2
-
     }
 }
 

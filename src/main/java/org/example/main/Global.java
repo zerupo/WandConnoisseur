@@ -1,5 +1,6 @@
 package org.example.main;
 
+import org.example.menu.MenuManager;
 import org.example.spells.*;
 
 import java.awt.*;
@@ -7,14 +8,22 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import javax.swing.*;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class Global{
     private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
+    private final static String pathAutoDelete = "./src/main/java/org/example/fileOutput/autoDelete/";
     private final static SpellFilter spellFilter = new SpellFilter();
     private final static String[] spellProperties = SpellFilter.PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
     private final static String[] spellStringProperties = SpellFilter.STRING_PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
@@ -30,10 +39,16 @@ public class Global{
     private final static int imageScaleFactor = 5;
     private final static int margin = 4*getImageScaleFactor();
     private final static Pattern delayPattern = Pattern.compile("^ *([+-]?[0-9]+(|\\.[0-9]+)?)(?: *(|[fs]))? *$");
+    public final static MenuManager menuManager = new MenuManager();
+    public static long currentFrame = 0;
 
     // getters
     public static String getPathOutput(){
         return pathOutput;
+    }
+
+    public static String getPathAutoDelete(){
+        return pathAutoDelete;
     }
 
     public static SpellFilter getSpellFilter(){
@@ -96,6 +111,31 @@ public class Global{
         return delayPattern;
     }
 
+    public static long getCurrentFrame(){
+        return currentFrame;
+    }
+
+    public static void nextFrame(){
+        if(currentFrame == Long.MAX_VALUE){
+            currentFrame = 0;
+        }else{
+            currentFrame++;
+        }
+    }
+
+    public static void nextFrame(int nb){
+        if(nb < 0){
+            nb = -nb;
+        }
+
+        if(currentFrame > Long.MAX_VALUE - nb){
+            // overflow
+            currentFrame = - Long.MAX_VALUE + currentFrame + nb;
+        }else{
+            currentFrame += nb;
+        }
+    }
+
     private Global(){
         throw new UnsupportedOperationException("This class cannot be instantiated.");
     }
@@ -155,7 +195,7 @@ public class Global{
         return result;
     }
 
-    public static void sendMessage(String message, MessageChannelUnion channel, boolean ansiFormatting){
+    public static void sendMessage(String message, SlashCommandInteractionEvent event, boolean replyEvent, boolean ansiFormatting){
         int chunkSize = 1970;
         String chunk = "";
         String[] lines = message.split("\\r?\\n");
@@ -163,18 +203,137 @@ public class Global{
         for(int i=0; i < lines.length; i++){
             if(chunk.length() + lines[i].length() + 1 > chunkSize){
                 if(chunk.length() <= chunkSize){
-                    channel.sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+                    if(replyEvent){
+                        event.getHook().editOriginal(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+                        replyEvent = false;
+                    }else{
+                        event.getChannel().sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+                    }
                 }else{
-                    channel.sendMessage(ansiFormatting ? "```ansi\nError message too long```" : "Error message too long").queue();
+                    if(replyEvent){
+                        event.getHook().editOriginal(ansiFormatting ? "```ansi\nError message too long```" : "Error message too long").queue();
+                        replyEvent = false;
+                    }else{
+                        event.getChannel().sendMessage(ansiFormatting ? "```ansi\nError message too long```" : "Error message too long").queue();
+                    }
                 }
                 chunk = lines[i];
             }else{
                 chunk += chunk.isEmpty() ? lines[i] : "\n" + lines[i];
             }
             if(i + 1 == lines.length && !chunk.equals("")){
-                channel.sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+                if(replyEvent){
+                    event.getHook().editOriginal(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+                    replyEvent = false;
+                }else{
+                    event.getChannel().sendMessage(ansiFormatting ? "```ansi\n" + chunk + "```" : chunk).queue();
+                }
             }
         }
+    }
+
+    public static Wand slashInteractionToWand(SlashCommandInteractionEvent event){
+        SpellList spellList = Global.getSpellList();
+        OptionMapping spellsOption = event.getOption("sorts");
+        OptionMapping drawOption = event.getOption("draw");
+        OptionMapping castDelayOption = event.getOption("cast_delay");
+        OptionMapping rechargeTimeOption = event.getOption("recharge_time");
+        OptionMapping manaMaxOption = event.getOption("mana_max");
+        OptionMapping manaRegenOption = event.getOption("mana_regen");
+        OptionMapping spreadOption = event.getOption("spread");
+        OptionMapping speedOption = event.getOption("speed");
+        String spellsInput = "";
+        StringBuilder unknownSpells = new StringBuilder();
+        int draw = 1;
+        int castDelay = 0;
+        int rechargeTime = 0;
+        int manaMax = 1000000;
+        int manaRegen = 1000000;
+        double spread = 0.0;
+        double speed = 1.0;
+        Spell currentSpell = null;
+        int currentSpellCount = 1;
+        ArrayList<Spell> spells = new ArrayList<>();
+        String[] spellsString;
+        Wand wand;
+        Pattern pSpell = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
+        Matcher m;
+
+        if(drawOption != null){
+            draw = Math.max(drawOption.getAsInt(), 1);
+        }
+        if(spellsOption != null){
+            spellsInput = spellsOption.getAsString();
+        }
+        if(castDelayOption != null){
+            try{
+                castDelay = Global.stringToDelay(castDelayOption.getAsString());
+            }catch(Exception e){
+                event.reply("cast_delay: " + e.getMessage()).setEphemeral(true).queue();
+                return null;
+            }
+        }
+        if(rechargeTimeOption != null){
+            try{
+                rechargeTime = Global.stringToDelay(rechargeTimeOption.getAsString());
+            }catch(Exception e){
+                event.reply("recharge_time: " + e.getMessage()).setEphemeral(true).queue();
+                return null;
+            }
+        }
+        if(manaMaxOption != null){
+            manaMax = manaMaxOption.getAsInt();
+        }
+        if(manaRegenOption != null){
+            manaRegen = manaRegenOption.getAsInt();
+        }
+        if(spreadOption != null){
+            spread = spreadOption.getAsDouble();
+        }
+        if(speedOption != null){
+            speed = speedOption.getAsDouble();
+        }
+
+        spellsString = spellsInput.split(",");
+        for(int i=0; i < spellsString.length; i++){
+            spellsString[i] = spellsString[i].trim().toLowerCase();
+        }
+
+        for(int i=0; i < spellsString.length; i++){
+            m = pSpell.matcher(spellsString[i]);
+            if(m.find()){
+                currentSpell = spellList.getSpell(m.group(2));
+                if(currentSpell != null){
+                    switch((m.group(1) != null) ? m.group(1) : "inf"){
+                        case "inf" -> currentSpell.makeInfinite();
+                        case "max" -> currentSpell.refillCharges();
+                        default -> currentSpell.setCharges(Integer.parseInt(m.group(1)));
+                    }
+                }
+                currentSpellCount = (m.group(3) != null) ? Integer.parseInt(m.group(3)) : 1;
+            }else{
+                currentSpell = null;
+            }
+            if(currentSpell != null){
+                spells.add(currentSpell);
+                for(int j=1; j < currentSpellCount; j++){
+                    spells.add(currentSpell.clone());
+                }
+            }else{
+                unknownSpells.append(unknownSpells.isEmpty() ? "" : ", ").append("\"").append(spellsString[i]).append("\"");
+            }
+        }
+
+        if(!unknownSpells.isEmpty()){
+            event.reply("Sorts inconnus: " + unknownSpells).setEphemeral(true).queue();
+            return null;
+        }
+
+        wand = new Wand(draw, castDelay, rechargeTime, manaMax, manaRegen, spells.size(), spread, speed);
+        for(Spell spell : spells){
+            wand.putSpellEnd(spell);
+        }
+        return wand;
     }
 
     public static int stringToDelay(String input){
@@ -203,5 +362,37 @@ public class Global{
         }
 
         return result;
+    }
+
+    public static void autoDeleteFiles(){
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(pathAutoDelete))){
+            for(Path file : stream){
+                if(Files.isRegularFile(file)){
+                    Files.deleteIfExists(file);
+                }
+            }
+        }catch(Exception e){
+            System.out.println("failed to auto delete folder content \"" + pathAutoDelete + "\" " + e.getMessage());
+        }
+    }
+
+    public static File JPanelToFile(JPanel jPanel, String filePath){
+        if(jPanel == null || jPanel.getSize().width <= 0 || jPanel.getSize().height <= 0){
+            return null;
+        }
+
+        BufferedImage bi = new BufferedImage(jPanel.getSize().width, jPanel.getSize().height, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = bi.createGraphics();
+        jPanel.paint(g);
+        g.dispose();
+
+        try{
+            ImageIO.write(bi,"png",new File(filePath));
+        }catch(Exception e){
+            System.out.println("Error writing file \"" + filePath + "\" " + e.getMessage());
+            return null;
+        }
+
+        return new File(filePath);
     }
 }

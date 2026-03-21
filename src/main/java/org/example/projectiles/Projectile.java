@@ -8,6 +8,8 @@ public abstract class Projectile{
     protected TriggerType triggerType = TriggerType.none;
     protected int timer = 0;
     protected CastState triggerCastState = null;
+    protected String name = "projectile_name";
+    protected String emote = "<:_unidentified:1464974832608477288>";
 
     // velocity component
     protected double gravityX = 0.0;
@@ -123,6 +125,14 @@ public abstract class Projectile{
 
     public CastState getTriggerCastState(){
         return this.triggerCastState;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public String getEmote(){
+        return this.emote;
     }
 
     public int getLifetimeMin(){

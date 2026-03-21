@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_GLUE_SHOT extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Glue Ball";
+        this.emote = "<:glue_shot:1464974849431830659>";
         this.gravityY = 200;
         this.airFriction = 1.0;
         this.mass = 0.06;

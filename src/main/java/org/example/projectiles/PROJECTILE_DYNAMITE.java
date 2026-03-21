@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_DYNAMITE extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Dynamite";
+        this.emote = "<:dynamite:1453399894239744010>";
         this.speedMin = 800;
         this.speedMax = 800;
         this.lifetime = 50;

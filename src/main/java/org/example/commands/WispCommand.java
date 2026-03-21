@@ -122,122 +122,117 @@ public class WispCommand implements Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
-        event.deferReply(true).queue(message -> {
-            SpellList spellListRelatedProjectile = Global.getSpellListRelatedProjectile();
-            OptionMapping spellOption = event.getOption("sort");
-            OptionMapping lifetimeMinOption = event.getOption("lifetime_min");
-            OptionMapping lifetimeMaxOption = event.getOption("lifetime_max");
-            OptionMapping nbModifierOption = event.getOption("nb_modifier");
-            String spellsInput = "";
-            Spell spell = null;
-            int lifetimeMin = 0;
-            int lifetimeMax = 0;
-            int nbModifier = 11;
-            boolean validSpellFound = false;
-            String outputPath = Global.getPathOutput();
+        SpellList spellListRelatedProjectile = Global.getSpellListRelatedProjectile();
+        OptionMapping spellOption = event.getOption("sort");
+        OptionMapping lifetimeMinOption = event.getOption("lifetime_min");
+        OptionMapping lifetimeMaxOption = event.getOption("lifetime_max");
+        OptionMapping nbModifierOption = event.getOption("nb_modifier");
+        StringBuilder stringResult = new StringBuilder();
+        String spellsInput = "";
+        Spell spell = null;
+        int lifetimeMin = 0;
+        int lifetimeMax = 0;
+        int nbModifier = 11;
+        boolean validSpellFound = false;
+        String outputPath = Global.getPathOutput();
 
-            if(spellOption != null){
-                spellsInput = spellOption.getAsString();
-                spell = spellListRelatedProjectile.getSpell(spellsInput);
-                if(spell != null){
-                    // get spell lifetime
-                    Projectile relatedProjectile = spell.getRelatedProjectile();
-                    if(relatedProjectile != null){
-                        lifetimeMin = relatedProjectile.getLifetimeMin();
-                        lifetimeMax = relatedProjectile.getLifetimeMax();
-                        validSpellFound = true;
-                    }
+        if(spellOption != null){
+            spellsInput = spellOption.getAsString();
+            spell = spellListRelatedProjectile.getSpell(spellsInput);
+            if(spell != null){
+                // get spell lifetime
+                Projectile relatedProjectile = spell.getRelatedProjectile();
+                if(relatedProjectile != null){
+                    lifetimeMin = relatedProjectile.getLifetimeMin();
+                    lifetimeMax = relatedProjectile.getLifetimeMax();
+                    validSpellFound = true;
                 }
             }
-            // lifetime override
-            if(lifetimeMinOption != null){
-                System.out.println("lifetime min");
-                lifetimeMin = lifetimeMinOption.getAsInt();
-            }
-            if(lifetimeMaxOption != null){
-                System.out.println("lifetime max");
-                lifetimeMax = lifetimeMaxOption.getAsInt();
-            }
-            if(nbModifierOption != null){
-                System.out.println("nb modifier");
-                nbModifier = Math.min(Math.max(nbModifierOption.getAsInt(), 0), 21);
-            }
+        }
+        // lifetime override
+        if(lifetimeMinOption != null){
+            lifetimeMin = lifetimeMinOption.getAsInt();
+        }
+        if(lifetimeMaxOption != null){
+            lifetimeMax = lifetimeMaxOption.getAsInt();
+        }
+        if(nbModifierOption != null){
+            nbModifier = Math.min(Math.max(nbModifierOption.getAsInt(), 0), 21);
+        }
 
-            if(lifetimeMinOption != null && lifetimeMaxOption != null || validSpellFound){
-                message.deleteOriginal().queue();
+        if(!validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
+            event.reply("Sort \"" + spellsInput + "\" inconnu, si vous ne renseignez aucun sort valide, vous devez saisir le lifetime manuellement").setEphemeral(true).queue();
+            return;
+        }
+
+        if(validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
+            stringResult.append("Recherche de wisps pour le sort ").append(spell.getName()).append(", lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("], max modifier: ").append(nbModifier);
+        }else{
+            stringResult.append("Recherche de wisps pour le lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("], max modifier: ").append(nbModifier);
+        }
+        event.reply(stringResult.toString()).queue();
+
+        Spell[] spellsLifetimeModifier = Global.getSpellListLifetimeModifier().getSpells();
+
+        List<Modifier> modifiersList = new ArrayList<>();
+        for(int i = 0; i < spellsLifetimeModifier.length; i++){
+            if(i > 0 && spellsLifetimeModifier[i].getLifetime() == spellsLifetimeModifier[i - 1].getLifetime()){
+                Modifier last = modifiersList.get(modifiersList.size() - 1);
+                last.name += "/" + spellsLifetimeModifier[i].getName();
             }else{
-                event.getHook().editOriginal("Sort \"" + spellsInput + "\" inconnu, si vous ne renseignez aucun sort valide, vous devez saisir le lifetime manuellement").queue();
-                return;
+                modifiersList.add(new Modifier(spellsLifetimeModifier[i].getName(), spellsLifetimeModifier[i].getLifetime()));
             }
+        }
+        Modifier[] modifiers = modifiersList.toArray(new Modifier[0]);
 
-            if(validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
-                event.getChannel().sendMessage("Recherche de wisps pour le sort " + spell.getName() + ", lifetime: [" + lifetimeMin + ", " + lifetimeMax + "], max modifier: " + nbModifier).queue();
-            }else{
-                event.getChannel().sendMessage("Recherche de wisps pour le lifetime: [" + lifetimeMin + ", " + lifetimeMax + "], max modifier: " + nbModifier).queue();
+        int[][] result = getValues(modifiers, lifetimeMin, lifetimeMax, nbModifier);
+        stringResult.append("\n\n").append(result.length).append(" solutions trouvées");
+
+        if(result.length == 0){
+            return;
+        }
+
+        final int N = result[0].length - 1;
+        Arrays.sort(result, (a, b) -> {
+            if (a[N] != b[N]) return Integer.compare(a[N], b[N]);
+            else return Integer.compare(a[N-1], b[N-1]);
+        });
+
+        try{
+            FileWriter FW = new FileWriter(outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv");
+            FW.write("lifetime:;" + lifetimeMin + "; -> ;" + lifetimeMax + "\n");
+            for(int i=0; i < modifiers.length; i++){
+                FW.write(modifiers[i].name + ";");
             }
-
-            Spell[] spellsLifetimeModifier = Global.getSpellListLifetimeModifier().getSpells();
-
-            List<Modifier> modifiersList = new ArrayList<>();
-            for(int i = 0; i < spellsLifetimeModifier.length; i++){
-                if(i > 0 && spellsLifetimeModifier[i].getLifetime() == spellsLifetimeModifier[i - 1].getLifetime()){
-                    Modifier last = modifiersList.get(modifiersList.size() - 1);
-                    last.name += "/" + spellsLifetimeModifier[i].getName();
-                }else{
-                    modifiersList.add(new Modifier(spellsLifetimeModifier[i].getName(), spellsLifetimeModifier[i].getLifetime()));
+            FW.write("total modifiers;types of modifiers\n");
+            for(int i=0; i < modifiers.length; i++){
+                if(i != 0){
+                    FW.write(";");
                 }
+                FW.write(String.valueOf(modifiers[i].lifetime));
             }
-            Modifier[] modifiers = modifiersList.toArray(new Modifier[0]);
-
-            int[][] result = getValues(modifiers, lifetimeMin, lifetimeMax, nbModifier);
-
-            event.getChannel().sendMessage(result.length + " solutions trouvées").queue();
-
-            if(result.length == 0){
-                return;
-            }
-
-            final int N = result[0].length - 1;
-            Arrays.sort(result, (a, b) -> {
-                if (a[N] != b[N]) return Integer.compare(a[N], b[N]);
-                else return Integer.compare(a[N-1], b[N-1]);
-            });
-
-            try{
-                FileWriter FW = new FileWriter(outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv");
-                FW.write("lifetime:;" + lifetimeMin + "; -> ;" + lifetimeMax + "\n");
-                for(int i=0; i < modifiers.length; i++){
-                    FW.write(modifiers[i].name + ";");
-                }
-                FW.write("total modifiers;types of modifiers\n");
-                for(int i=0; i < modifiers.length; i++){
-                    if(i != 0){
+            FW.write("\n\n");
+            for(int i=0; i < result.length; i++){
+                for(int j=0; j < result[i].length; j++){
+                    if(j != 0){
                         FW.write(";");
                     }
-                    FW.write(String.valueOf(modifiers[i].lifetime));
+                    FW.write(String.valueOf(result[i][j]));
                 }
-                FW.write("\n\n");
-                for(int i=0; i < result.length; i++){
-                    for(int j=0; j < result[i].length; j++){
-                        if(j != 0){
-                            FW.write(";");
-                        }
-                        FW.write(String.valueOf(result[i][j]));
-                    }
-                    FW.write("\n");
-                }
-                FW.close();
-                System.out.println("\"wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv\" successfully written");
-
-                File csv = new File(outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv");
-                event.getChannel().sendFiles(FileUpload.fromData(csv, "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv")).queue();
-                if(!csv.delete()){
-                    System.out.println("\"" + outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv\" not deleted");
-                }
-            }catch(IOException e){
-                System.out.println("error writing the file");
-                e.printStackTrace();
+                FW.write("\n");
             }
-        });
+            FW.close();
+            System.out.println("\"wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv\" successfully written");
+
+            File csv = new File(outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv");
+            event.getHook().editOriginal(stringResult.toString()).setFiles(FileUpload.fromData(csv, "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv")).queue();
+            if(!csv.delete()){
+                System.out.println("\"" + outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv\" not deleted");
+            }
+        }catch(IOException e){
+            stringResult.append("\nErreur lors de l'écriture du fichier");
+            event.getHook().editOriginal(stringResult.toString()).queue();
+            System.out.println("error writing the file \"" + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv" + "\" " + e.getMessage());
+        }
     }
 }

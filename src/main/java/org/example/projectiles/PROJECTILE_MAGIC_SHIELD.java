@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_MAGIC_SHIELD extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Magic Guard";
+        this.emote = "<:magic_shield:1464974866079027270>";
         this.gravityY = 0;
         this.airFriction = 0.0;
 

@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_MIST_BLOOD extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Blood Mist";
+        this.emote = "<:mist_blood:1464974869811691707>";
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.0;

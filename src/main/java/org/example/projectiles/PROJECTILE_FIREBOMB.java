@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_FIREBOMB extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Firebomb";
+        this.emote = "<:firebomb:1464974844155400300>";
         this.gravityY = 0;
         this.airFriction = -0.1;
         this.mass = 0.03;

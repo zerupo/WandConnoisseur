@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_ROCKET_TIER_2 extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Large Magic Missile";
+        this.emote = "<:rocket_tier_2:1464974874610106504>";
         this.gravityY = 50;
         this.airFriction = -5.0;
         this.mass = 0.05;

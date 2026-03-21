@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_CHAIN_BOLT extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Chain Bolt";
+        this.emote = "<:chain_bolt:1447276645739266078>";
         this.gravityY = 0;
 
         this.speedMin = 40;

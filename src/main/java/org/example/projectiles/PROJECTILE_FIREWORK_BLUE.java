@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_FIREWORK_BLUE extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Blue Firework";
+        this.emote = "<:firework:1464974845556297738>";
         this.gravityY = 50;
         this.airFriction = -5.0;
         this.mass = 0.05;

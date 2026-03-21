@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_SPITTER extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Spitter Bolt";
+        this.emote = "<:spitter:1433949684245987378>";
         this.gravityY = 200;
         this.airFriction = 2.7;
         this.mass = 0.02;

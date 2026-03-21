@@ -1,20 +1,10 @@
 package org.example.commands;
 
 import org.example.main.Global;
-import org.example.main.SpellList;
 import org.example.main.Wand;
-import org.example.spells.*;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 public class ImageFlowchartCommand implements Command{
@@ -30,186 +20,61 @@ public class ImageFlowchartCommand implements Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
-        event.deferReply(true).queue(message -> {
-            SpellList spellList = Global.getSpellList();
-            OptionMapping spellsOption = event.getOption("sorts");
-            OptionMapping drawOption = event.getOption("draw");
-            OptionMapping castDelayOption = event.getOption("cast_delay");
-            OptionMapping rechargeTimeOption = event.getOption("recharge_time");
-            OptionMapping manaMaxOption = event.getOption("mana_max");
-            OptionMapping manaRegenOption = event.getOption("mana_regen");
-            OptionMapping spreadOption = event.getOption("spread");
-            OptionMapping speedOption = event.getOption("speed");
-            String spellsInput = "";
-            int draw = 1;
-            int castDelay = 0;
-            int rechargeTime = 0;
-            int manaMax = 1000000;
-            int manaRegen = 1000000;
-            double spread = 0.0;
-            double speed = 1.0;
-            String outputPath = Global.getPathOutput();
-            String fileName = event.getId() + ".png";
-            String unknownSpell = "";
-            Spell currentSpell = null;
-            int currentSpellCount = 1;
-            ArrayList<Spell> spells = new ArrayList<>();
-            String[] spellsString;
-            Wand wand;
-            JPanel wandJPanel;
-            boolean statChanged = false;
-            File wandStatImage = null;
-            File wandImage = null;
-            File flowchartImage;
-            Pattern pSpell = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
-            Matcher m;
+        String fileName = event.getId() + ".png";
+        File wandStatImage = null;
+        File wandImage;
+        File flowchartImage;
+        Wand wand = Global.slashInteractionToWand(event);
+        String[] statOptions = new String[]{"draw", "cast_delay", "recharge_time", "mana_max", "mana_regen", "spread", "speed"};
+        boolean statChanged = false;
+        boolean eventReplied = false;
 
-            if(drawOption != null){
-                draw = Math.max(drawOption.getAsInt(), 1);
+        if(wand == null){
+            return;
+        }
+        for(int i=0; i < statOptions.length; i++){
+            if(event.getOption(statOptions[i]) != null){
                 statChanged = true;
+                break;
             }
-            if(spellsOption != null){
-                spellsInput = spellsOption.getAsString();
-            }
-            if(castDelayOption != null){
-                try{
-                    castDelay = Global.stringToDelay(castDelayOption.getAsString());
-                }catch(Exception e){
-                    event.getHook().editOriginal("cast_delay: " + e.getMessage()).queue();
-                    return;
-                }
-                statChanged = true;
-            }
-            if(rechargeTimeOption != null){
-                try{
-                    rechargeTime = Global.stringToDelay(rechargeTimeOption.getAsString());
-                }catch(Exception e){
-                    event.getHook().editOriginal("recharge_time: " + e.getMessage()).queue();
-                    return;
-                }
-                statChanged = true;
-            }
-            if(manaMaxOption != null){
-                manaMax = manaMaxOption.getAsInt();
-                statChanged = true;
-            }
-            if(manaRegenOption != null){
-                manaRegen = manaRegenOption.getAsInt();
-                statChanged = true;
-            }
-            if(spreadOption != null){
-                spread = spreadOption.getAsDouble();
-                statChanged = true;
-            }
-            if(speedOption != null){
-                speed = speedOption.getAsDouble();
-                statChanged = true;
-            }
+        }
 
-            spellsString = spellsInput.split(",");
-            for(int i=0; i < spellsString.length; i++){
-                spellsString[i] = spellsString[i].trim().toLowerCase();
-            }
+        event.deferReply(false).queue();
 
-            for(int i=0; i < spellsString.length; i++){
-                m = pSpell.matcher(spellsString[i]);
-                if(m.find()){
-                    currentSpell = spellList.getSpell(m.group(2));
-                    if(currentSpell != null){
-                        switch((m.group(1) != null) ? m.group(1) : "inf"){
-                            case "inf" -> currentSpell.makeInfinite();
-                            case "max" -> currentSpell.refillCharges();
-                            default -> currentSpell.setCharges(Integer.parseInt(m.group(1)));
-                        }
-                    }
-                    currentSpellCount = (m.group(3) != null) ? Integer.parseInt(m.group(3)) : 1;
-                }else{
-                    currentSpell = null;
-                }
-                if(currentSpell != null){
-                    spells.add(currentSpell);
-                    for(int j=1; j < currentSpellCount; j++){
-                        spells.add(currentSpell.clone());
-                    }
-                }else{
-                    if(unknownSpell.equals("")){
-                        unknownSpell += "\"" + spellsString[i] + "\"";
-                    }else{
-                        unknownSpell += ", \"" + spellsString[i] + "\"";
-                    }
-                }
-            }
+        if(statChanged){
+            wandStatImage = Global.JPanelToFile(wand.getStatJPanel(), Global.getPathOutput() + "wandstats_" + fileName);
+        }
+        wandImage = Global.JPanelToFile(wand.getWandJPanel(), Global.getPathOutput() + "wand_" + fileName);
+        wand.saveFlowchartImage(Global.getPathOutput() + "flowchart_" + fileName, true);
+        flowchartImage = new File(Global.getPathOutput() + "flowchart_" + fileName);
 
-            if(!unknownSpell.equals("")){
-                event.getHook().editOriginal("Sorts inconnus: " + unknownSpell).queue();
-                if(spells.size() == 0){
-                    return;
-                }
+        if(wandStatImage != null){
+            event.getHook().editOriginal("").setFiles(FileUpload.fromData(wandStatImage, "wandstats.png")).queue();
+            if(!wandStatImage.delete()){
+                System.out.println("\"" + wandStatImage.getAbsolutePath() + "\" not deleted");
             }
+            eventReplied = true;
+        }
 
-            wand = new Wand(draw, castDelay, rechargeTime, manaMax, manaRegen, spells.size(), spread, speed);
-            for(Spell spell : spells){
-                wand.putSpellEnd(spell);
-            }
-
-            if(statChanged){
-                wandJPanel = wand.getStatJPanel();
-                if(wandJPanel != null && wandJPanel.getSize().width > 0 && wandJPanel.getSize().height > 0){
-                    BufferedImage bi = new BufferedImage(wandJPanel.getSize().width, wandJPanel.getSize().height, BufferedImage.TYPE_INT_ARGB);
-                    Graphics g = bi.createGraphics();
-                    wandJPanel.paint(g);
-                    g.dispose();
-                    try{
-                        ImageIO.write(bi,"png",new File(outputPath + "wandstats_" + fileName));
-                    }catch(Exception e){
-                        System.out.println("Error writing file \"" + outputPath + "wandstats_" + fileName + "\" " + e.getMessage());
-                    }
-                    wandStatImage = new File(outputPath + "wandstats_" + fileName);
-                }
-            }
-
-            wandJPanel = wand.getWandJPanel();
-            if(wandJPanel != null && wandJPanel.getSize().width > 0 && wandJPanel.getSize().height > 0){
-                BufferedImage bi = new BufferedImage(wandJPanel.getSize().width, wandJPanel.getSize().height, BufferedImage.TYPE_INT_ARGB);
-                Graphics g = bi.createGraphics();
-                wandJPanel.paint(g);
-                g.dispose();
-                try{
-                    ImageIO.write(bi,"png",new File(outputPath + "wand_" + fileName));
-                }catch(Exception e){
-                    System.out.println("Error writing file \"" + outputPath + "wand_" + fileName + "\" " + e.getMessage());
-                }
-                wandImage = new File(outputPath + "wand_" + fileName);
-            }
-
-            wand.saveFlowchartImage(outputPath + "flowchart_" + fileName, true);
-            flowchartImage = new File(outputPath + "flowchart_" + fileName);
-
-            if(unknownSpell.equals("")){
-                message.deleteOriginal().queue();
-            }
-
-            if(wandStatImage != null){
-                event.getChannel().sendFiles(FileUpload.fromData(wandStatImage, "wandstats.png")).queue();
-            }
-            if(wandImage != null){
+        if(wandImage != null){
+            if(eventReplied){
                 event.getChannel().sendFiles(FileUpload.fromData(wandImage, "wand.png")).queue();
+            }else{
+                event.getHook().editOriginal("").setFiles(FileUpload.fromData(wandImage, "wand.png")).queue();
             }
-            event.getChannel().sendFiles(FileUpload.fromData(flowchartImage, "flowchart.png")).queue();
+            if(!wandImage.delete()){
+                System.out.println("\"" + wandImage.getAbsolutePath() + "\" not deleted");
+            }
+            eventReplied = true;
+        }
 
-            if(wandStatImage != null){
-                if(!wandStatImage.delete()){
-                    System.out.println("\"" + outputPath + "wandstats_" + fileName + "\" not deleted");
-                }
-            }
-            if(wandImage != null){
-                if(!wandImage.delete()){
-                    System.out.println("\"" + outputPath + "wand_" + fileName + "\" not deleted");
-                }
-            }
-            if(!flowchartImage.delete()){
-                System.out.println("\"" + outputPath + "flowchart_" + fileName + "\" not deleted");
-            }
-        });
+        if(eventReplied){
+            event.getChannel().sendFiles(FileUpload.fromData(flowchartImage, "flowchart.png")).queue();
+        }else{
+            event.getHook().editOriginal("").setFiles(FileUpload.fromData(flowchartImage, "flowchart.png")).queue();
+        }
+        if(!flowchartImage.delete()){
+            System.out.println("\"" + flowchartImage.getAbsolutePath() + "\" not deleted");
+        }
     }
 }

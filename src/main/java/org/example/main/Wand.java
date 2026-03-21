@@ -4,7 +4,20 @@ import org.example.spells.*;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import javax.swing.JPanel;
+
+class InfoResult{
+    public CastState[] castStates;
+    public ImageBuilder flowchartImage;
+    public StringBuilder flowchartString;
+
+    public InfoResult(CastState[] castStates, ImageBuilder flowchartImage, StringBuilder flowchartString){
+        this.castStates = castStates;
+        this.flowchartImage = flowchartImage;
+        this.flowchartString = flowchartString;
+    }
+}
 
 public class Wand{
     private boolean shuffle;
@@ -244,7 +257,7 @@ public class Wand{
         this.cardPool.reset(this.spells);
     }
 
-    public CardHistory getTruc(boolean allCasts){
+    /*public CardHistory getTruc(boolean allCasts){
         Spell[] spellsCopy = new Spell[this.spells.length];
         CardPool cardPoolCopy;
         CardHistory cardHistory = null;
@@ -280,9 +293,9 @@ public class Wand{
             }
         }
         return cardHistory;
-    }
+    }*/
 
-    public String getHistoryString(boolean allCasts){
+    /*public String getHistoryString(boolean allCasts){
         String result = "";
         Spell[] spellsCopy = new Spell[this.spells.length];
         CardPool cardPoolCopy;
@@ -309,127 +322,90 @@ public class Wand{
             if(!allCasts){
                 recharged = true;
             }
-            /*if(!recharged && nbCast < this.nbSlot){
-                result += nbCast + ")\n" + cardPoolCopy.getHistoryString() + "\n";
-            }else{
-                result += nbCast + ")\n" + cardPoolCopy.getHistoryString();
-            }*/
-        }
-        return result;
-    }
-
-    public String getCallStackString(boolean allCasts){
-        String result = "";
-        Spell[] spellsCopy = new Spell[this.spells.length];
-        CardPool cardPoolCopy;
-        int nbCast = 0;
-        boolean recharged = false;
-
-        for(int i=0; i < spellsCopy.length; i++){
-            if(this.spells[i] != null){
-                spellsCopy[i] = this.spells[i].clone();
-            }
-        }
-
-        cardPoolCopy = new CardPool(spellsCopy);
-        cardPoolCopy.setAutoCardHistory(true);
-
-        while(!recharged && nbCast < this.nbSlot){
-            nbCast++;
-            cardPoolCopy.setStats(this.maxMana, this.rechargeTime);
-            cardPoolCopy.resetCardHistory();
-            cardPoolCopy.draw(this.nbDraw, false, new CastState());
-            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                recharged = true;
-            }
-            cardPoolCopy.endCast();
-            if(!allCasts){
-                recharged = true;
-            }
-            /*if(!recharged && nbCast < this.nbSlot){
-                result += nbCast + ")\n" + cardPoolCopy.getCallStackString() + "\n";
-            }else{
-                result += nbCast + ")\n" + cardPoolCopy.getCallStackString();
-            }*/
-        }
-        return result;
-    }
-
-    public String getCardHistoryString(boolean allCasts){
-        String result = "";
-        Spell[] spellsCopy = new Spell[this.spells.length];
-        CardPool cardPoolCopy;
-        int nbCast = 0;
-        boolean recharged = false;
-
-        for(int i=0; i < spellsCopy.length; i++){
-            if(this.spells[i] != null){
-                spellsCopy[i] = this.spells[i].clone();
-            }
-        }
-        cardPoolCopy = new CardPool(spellsCopy);
-        cardPoolCopy.setAutoCardHistory(true);
-
-        while(!recharged && nbCast < this.nbSlot){
-            nbCast++;
-            cardPoolCopy.setStats(this.maxMana, this.rechargeTime);
-            cardPoolCopy.resetCardHistory();
-            cardPoolCopy.draw(this.nbDraw, false, new CastState());
-            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                recharged = true;
-            }
-            cardPoolCopy.endCast();
-            if(!allCasts){
-                recharged = true;
-            }
-            /*if(!recharged && nbCast < this.nbSlot){
-                result += nbCast + ")\n" + cardPoolCopy.getCardHistoryString() + "\n";
-            }else{
-                result += nbCast + ")\n" + cardPoolCopy.getCardHistoryString();
-            }*/
-        }
-        return result;
-    }
-
-    /*public String getFlowchartString(boolean allCasts, boolean formatting){
-        String result = "";
-        Spell[] spellsCopy = new Spell[this.spells.length];
-        CardPool cardPoolCopy;
-        int nbCast = 0;
-        boolean recharged = false;
-
-        for(int i=0; i < spellsCopy.length; i++){
-            if(this.spells[i] != null){
-                spellsCopy[i] = this.spells[i].clone();
-            }
-        }
-        cardPoolCopy = new CardPool(spellsCopy);
-        cardPoolCopy.setAutoFlowchart(true);
-
-        while(!recharged && nbCast < this.nbSlot){
-            nbCast++;
-            cardPoolCopy.setStats(this.maxMana, this.rechargeTime);
-            cardPoolCopy.resetFlowchart();
-            cardPoolCopy.draw(this.nbDraw, false, new CastState());
-            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                recharged = true;
-            }
-            cardPoolCopy.endCast();
-            if(!allCasts){
-                recharged = true;
-            }
-            if(!recharged && nbCast < this.nbSlot){
-                result += nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting) + "\n";
-            }else{
-                result += nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
-            }
+            //if(!recharged && nbCast < this.nbSlot){
+            //    result += nbCast + ")\n" + cardPoolCopy.getHistoryString() + "\n";
+            //}else{
+            //    result += nbCast + ")\n" + cardPoolCopy.getHistoryString();
+            //}
         }
         return result;
     }*/
 
-    // TODO répercuter
-    public String getFlowchartString(boolean allCasts, boolean formatting){
+    /*public String getCallStackString(boolean allCasts){
         String result = "";
+        Spell[] spellsCopy = new Spell[this.spells.length];
+        CardPool cardPoolCopy;
+        int nbCast = 0;
+        boolean recharged = false;
+
+        for(int i=0; i < spellsCopy.length; i++){
+            if(this.spells[i] != null){
+                spellsCopy[i] = this.spells[i].clone();
+            }
+        }
+
+        cardPoolCopy = new CardPool(spellsCopy);
+        cardPoolCopy.setAutoCardHistory(true);
+
+        while(!recharged && nbCast < this.nbSlot){
+            nbCast++;
+            cardPoolCopy.setStats(this.maxMana, this.rechargeTime);
+            cardPoolCopy.resetCardHistory();
+            cardPoolCopy.draw(this.nbDraw, false, new CastState());
+            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
+                recharged = true;
+            }
+            cardPoolCopy.endCast();
+            if(!allCasts){
+                recharged = true;
+            }
+            //if(!recharged && nbCast < this.nbSlot){
+            //    result += nbCast + ")\n" + cardPoolCopy.getCallStackString() + "\n";
+            //}else{
+            //    result += nbCast + ")\n" + cardPoolCopy.getCallStackString();
+            //}
+        }
+        return result;
+    }*/
+
+    /*public String getCardHistoryString(boolean allCasts){
+        String result = "";
+        Spell[] spellsCopy = new Spell[this.spells.length];
+        CardPool cardPoolCopy;
+        int nbCast = 0;
+        boolean recharged = false;
+
+        for(int i=0; i < spellsCopy.length; i++){
+            if(this.spells[i] != null){
+                spellsCopy[i] = this.spells[i].clone();
+            }
+        }
+        cardPoolCopy = new CardPool(spellsCopy);
+        cardPoolCopy.setAutoCardHistory(true);
+
+        while(!recharged && nbCast < this.nbSlot){
+            nbCast++;
+            cardPoolCopy.setStats(this.maxMana, this.rechargeTime);
+            cardPoolCopy.resetCardHistory();
+            cardPoolCopy.draw(this.nbDraw, false, new CastState());
+            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
+                recharged = true;
+            }
+            cardPoolCopy.endCast();
+            if(!allCasts){
+                recharged = true;
+            }
+            //if(!recharged && nbCast < this.nbSlot){
+            //    result += nbCast + ")\n" + cardPoolCopy.getCardHistoryString() + "\n";
+            //}else{
+            //    result += nbCast + ")\n" + cardPoolCopy.getCardHistoryString();
+            //}
+        }
+        return result;
+    }*/
+
+    public void getAllInfo(boolean allCasts, InfoResult infoResult, boolean formatting){
+        ArrayList<CastState> castStateList = infoResult.castStates == null ? null : new ArrayList<>();
         Spell[] spellsCopy = new Spell[this.spells.length];
         CardPool cardPoolCopy = new CardPool();
         CastState primaryCastState;
@@ -439,6 +415,7 @@ public class Wand{
         int currentRechargeTime = 0;
         int nbCast = 0;
         boolean recharged = false;
+        int y = 0;
 
         for(int i=0; i < spellsCopy.length; i++){
             if(this.spells[i] != null){
@@ -446,7 +423,9 @@ public class Wand{
             }
         }
         cardPoolCopy.reset(spellsCopy);
-        cardPoolCopy.setAutoFlowchart(true);
+        if(infoResult.flowchartImage != null || infoResult.flowchartString != null){
+            cardPoolCopy.setAutoFlowchart(true);
+        }
 
         while(!recharged && nbCast < this.nbSlot){
             currentMana = Math.min(currentMana + this.regenMana*waitingTime, this.maxMana*60);
@@ -461,191 +440,80 @@ public class Wand{
             currentCastDelay += primaryCastState.getCastDelay();
             currentMana -= cardPoolCopy.getManaUsage()*60;
             if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                //System.out.println(currentCastDelay + " " + currentRechargeTime + " " + waitingTime);
-                if(currentCastDelay > currentRechargeTime){
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time (cast delay): " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
-                }else{
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Recharge time: " + String.format("%1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
+                if(infoResult.flowchartString != null){
+                    infoResult.flowchartString.append("Mana cost: ").append(cardPoolCopy.getManaUsage()).append("\n").append("Recharge time").append(currentCastDelay > currentRechargeTime ? " (cast delay): " : ": ").append(String.format("%1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime / 60.0)).append("\n").append(nbCast).append(")\n").append(cardPoolCopy.getFlowchartString(formatting));
                 }
                 waitingTime += Math.max(Math.max(currentCastDelay, currentRechargeTime), 0);
                 currentCastDelay = 0;
                 currentRechargeTime = 0;
                 recharged = true;
             }else{
-                if(allCasts) {
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting) + "\n";
-                }else{
-                    result += "Mana cost: " + cardPoolCopy.getManaUsage() + "\n" + "Cast delay: " + String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay/60.0) + "\n" + nbCast + ")\n" + cardPoolCopy.getFlowchartString(formatting);
+                if(infoResult.flowchartString != null){
+                    infoResult.flowchartString.append("Mana cost: ").append(cardPoolCopy.getManaUsage()).append("\n").append("Cast delay: ").append(String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay / 60.0)).append("\n").append(nbCast).append(")\n").append(cardPoolCopy.getFlowchartString(formatting)).append(allCasts ? "\n" : "");
                 }
                 waitingTime += Math.max(currentCastDelay, 0);
                 currentCastDelay = 0;
             }
+            Global.nextFrame(waitingTime);
             cardPoolCopy.endCast();
             if(!allCasts){
                 recharged = true;
             }
+            if(castStateList != null){
+                castStateList.add(primaryCastState);
+            }
+            if(infoResult.flowchartImage != null){
+                y = cardPoolCopy.computeFlowchartImage(infoResult.flowchartImage, 0, y);
+            }
         }
-        return result;
+
+        if(castStateList != null){
+            infoResult.castStates = castStateList.toArray(new CastState[0]);
+        }
     }
 
-    /*public BufferedImage getFlowchartImage(boolean allCasts){
-        ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
-        Spell[] spellsCopy = new Spell[this.spells.length];
-        CardPool cardPoolCopy = new CardPool();
-        int nbCast = 0;
-        boolean recharged = false;
-        int y = 0;
+    public String getFlowchartString(boolean allCasts, boolean formatting){
+        InfoResult result = new InfoResult(null, null, new StringBuilder());
+        this.getAllInfo(allCasts, result, formatting);
+        return result.flowchartString.toString();
+    }
 
-        for(int i=0; i < spellsCopy.length; i++){
-            if(this.spells[i] != null){
-                spellsCopy[i] = this.spells[i].clone();
-            }
-        }
-        cardPoolCopy.reset(spellsCopy);
-        cardPoolCopy.setAutoFlowchart(true);
-
-        while(!recharged && nbCast < this.nbSlot){
-            nbCast++;
-            cardPoolCopy.setStats(this.maxMana, this.rechargeTime);
-            cardPoolCopy.resetFlowchart();
-            cardPoolCopy.draw(this.nbDraw, false, new CastState());
-            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                recharged = true;
-            }
-            cardPoolCopy.endCast();
-            if(!allCasts){
-                recharged = true;
-            }
-            y = cardPoolCopy.computeFlowchartImage(image, 0, y);
-        }
-        return image.toImage();
-    }*/
+    public CastState[] getCastState(boolean allCasts){
+        InfoResult result = new InfoResult(new CastState[0], null, null);
+        this.getAllInfo(allCasts, result, false);
+        return result.castStates;
+    }
 
     public BufferedImage getFlowchartImage(boolean allCasts){
-        ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
-        Spell[] spellsCopy = new Spell[this.spells.length];
-        CardPool cardPoolCopy = new CardPool();
-        CastState primaryCastState;
-        int currentMana = this.maxMana*60;
-        int waitingTime = 0;
-        int currentCastDelay = 0;
-        int currentRechargeTime = 0;
-        int nbCast = 0;
-        boolean recharged = false;
-        int y = 0;
-
-        for(int i=0; i < spellsCopy.length; i++){
-            if(this.spells[i] != null){
-                spellsCopy[i] = this.spells[i].clone();
-            }
-        }
-        cardPoolCopy.reset(spellsCopy);
-        cardPoolCopy.setAutoFlowchart(true);
-
-        while(!recharged && nbCast < this.nbSlot){
-            currentMana = Math.min(currentMana + this.regenMana*waitingTime, this.maxMana*60);
-            waitingTime = 0;
-            nbCast++;
-            cardPoolCopy.setStats((int)Math.floor(currentMana/60.0), this.rechargeTime);
-            cardPoolCopy.resetFlowchart();
-            primaryCastState = new CastState();
-            primaryCastState.setCastDelay(this.castDelay);
-            cardPoolCopy.draw(this.nbDraw, false, primaryCastState);
-            currentRechargeTime += Math.max(0, cardPoolCopy.getRechargeTime());
-            currentCastDelay += primaryCastState.getCastDelay();
-            currentMana -= cardPoolCopy.getManaUsage()*60;
-            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                waitingTime += Math.max(currentCastDelay, currentRechargeTime);
-                currentCastDelay = 0;
-                currentRechargeTime = 0;
-                recharged = true;
-            }else{
-                waitingTime += currentCastDelay;
-                currentCastDelay = 0;
-            }
-            cardPoolCopy.endCast();
-            if(!allCasts){
-                recharged = true;
-            }
-            y = cardPoolCopy.computeFlowchartImage(image, 0, y);
-        }
-        return image.toImage();
+        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null);
+        this.getAllInfo(allCasts, result, false);
+        return result.flowchartImage.toImage();
     }
 
     public void saveFlowchartImage(String filename, boolean allCasts){
-        ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
-        Spell[] spellsCopy = new Spell[this.spells.length];
-        CardPool cardPoolCopy = new CardPool();
-        CastState primaryCastState;
-        int currentMana = this.maxMana*60;
-        int waitingTime = 0;
-        int currentCastDelay = 0;
-        int currentRechargeTime = 0;
-        int nbCast = 0;
-        boolean recharged = false;
-        int y = 0;
-
-        for(int i=0; i < spellsCopy.length; i++){
-            if(this.spells[i] != null){
-                spellsCopy[i] = this.spells[i].clone();
-            }
-        }
-        cardPoolCopy.reset(spellsCopy);
-        cardPoolCopy.setAutoFlowchart(true);
-
-        while(!recharged && nbCast < this.nbSlot){
-            //System.out.println("wait: " + waitingTime + " mana: " + currentMana/60.0 + "/" + this.maxMana);
-            currentMana = Math.min(currentMana + this.regenMana*waitingTime, this.maxMana*60);
-            waitingTime = 0;
-            //System.out.println("wait: " + waitingTime + " mana: " + currentMana/60.0 + "/" + this.maxMana);
-            nbCast++;
-
-            cardPoolCopy.setStats((int)Math.floor(currentMana/60.0), this.rechargeTime);
-            cardPoolCopy.resetFlowchart();
-            primaryCastState = new CastState();
-            primaryCastState.setCastDelay(this.castDelay);
-            cardPoolCopy.draw(this.nbDraw, false, primaryCastState);
-            currentRechargeTime += Math.max(0, cardPoolCopy.getRechargeTime());
-            currentCastDelay += primaryCastState.getCastDelay();
-            currentMana -= cardPoolCopy.getManaUsage()*60;
-
-            if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
-                waitingTime += Math.max(currentCastDelay, currentRechargeTime);
-                currentCastDelay = 0;
-                currentRechargeTime = 0;
-                recharged = true;
-            }else{
-                waitingTime += currentCastDelay;
-                currentCastDelay = 0;
-            }
-            cardPoolCopy.endCast();
-            if(!allCasts){
-                recharged = true;
-            }
-            y = cardPoolCopy.computeFlowchartImage(image, 0, y);
-            //System.out.println("wait: " + waitingTime + " mana: " + currentMana/60.0 + "/" + this.maxMana + "\n");
-        }
-        image.saveToFile(filename);
+        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null);
+        this.getAllInfo(allCasts, result, false);
+        result.flowchartImage.saveToFile(filename);
     }
 
     public boolean cast(){
-        if(this.waitingTime <= 0){
-            this.cardPool.setStats(this.currentMana/60, this.rechargeTime);
-            this.cardPool.resetFlowchart();
-            this.cardPool.draw(this.nbDraw, false, new CastState());
+        CastState castState = new CastState();
 
-            this.currentRechargeTime += Math.max(0, this.cardPool.getRechargeTime());
-            //System.out.println("CURRENT RECHARGE TIME " + this.cardPool.getRechargeTime());
+        if(this.waitingTime <= 0){
+            this.cardPool.setStats((int)Math.floor(currentMana/60.0), this.rechargeTime);
+            this.cardPool.resetFlowchart();
+            castState.setCastDelay(this.castDelay);
+            this.cardPool.draw(this.nbDraw, false, castState);
+            this.currentRechargeTime += this.cardPool.getRechargeTime();
+            this.currentCastDelay += castState.getCastDelay();
+            this.currentMana -= this.cardPool.getManaUsage()*60;
             if(this.cardPool.getWrappedThisCast() || this.cardPool.getDeckSize() <= 0){
-                this.waitingTime += Math.max(this.currentCastDelay, this.currentRechargeTime);
+                this.waitingTime += Math.max(Math.max(this.currentCastDelay, this.currentRechargeTime), 0);
                 this.currentCastDelay = 0;
                 this.currentRechargeTime = 0;
-                //System.out.println(this.cardPool.getWrappedThisCast() + " " + this.cardPool.getDeckSize());
-                //System.out.println("RECHARGE");
             }else{
-                this.waitingTime += this.currentCastDelay;
+                this.waitingTime += Math.max(this.currentCastDelay, 0);
                 this.currentCastDelay = 0;
-                //System.out.println("CAST DELAY");
             }
             this.cardPool.endCast();
             return true;
@@ -659,6 +527,7 @@ public class Wand{
         if(this.waitingTime > 0){
             this.waitingTime--;
         }
+        Global.nextFrame();
 
         this.currentMana += this.regenMana;
         if(this.currentMana > this.maxMana*60){
@@ -670,6 +539,7 @@ public class Wand{
         if(nbFrame < 1){
             return;
         }
+        Global.nextFrame(nbFrame);
         this.waitingTime = Math.max(this.waitingTime - nbFrame, 0);
 
         this.currentMana += this.regenMana*nbFrame;

@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_CHAINSAW extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Chainsaw";
+        this.emote = "<:chainsaw:1433949639866060862>";
         this.lifetime = 1;
         this.lifetimeRandomness = 0;
     }

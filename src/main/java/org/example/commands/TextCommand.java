@@ -138,10 +138,7 @@ public class TextCommand implements Command{
 
             File textFile = new File(outputPath + "text_" + event.getId() + ".png");
             ImageIO.write(image, "PNG", textFile);
-            event.reply("OK").setEphemeral(true).queue(message -> {
-                message.deleteOriginal().queue();
-            });
-            event.getChannel().sendFiles(FileUpload.fromData(textFile, "text.png")).queue();
+            event.replyFiles(FileUpload.fromData(textFile, "text.png")).queue();
             if(!textFile.delete()){
                 System.out.println("\"" + outputPath + "text_" + event.getId() + ".png\" not deleted");
             }

@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_KANTELE_DIS extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Kantele - Note D+";
+        this.emote = "<:kantele_dis:1451342034148266185>";
         this.gravityY = 0;
         this.airFriction = 8;
         this.mass = 0.01;

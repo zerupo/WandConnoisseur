@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_BOMB_CART extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Bomb Cart";
+        this.emote = "<:bomb_cart:1447276642337685597>";
         this.speedMin = 0;
         this.speedMax = 0;
         this.lifetime = 420;

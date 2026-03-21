@@ -681,7 +681,7 @@ public abstract class Spell{
         if(this.castDelay != 0){
             castState.addCastDelay(this.castDelay);
         }
-        if(this.damageComponent.zero()){
+        if(!this.damageComponent.zero()){
             castState.addDamageComponent(this.damageComponent);
         }
         if(this.lifetime != 0){

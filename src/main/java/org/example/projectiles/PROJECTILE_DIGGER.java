@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_DIGGER extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Digging Bolt";
+        this.emote = "<:digger:1433949644102303915>";
         this.speedMin = 0;
         this.speedMax = 0;
         this.lifetime = 2;

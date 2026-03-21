@@ -3,6 +3,8 @@ package org.example.projectiles;
 public class PROJECTILE_BALL_LIGHTNING extends Projectile{
     @Override
     protected void initialization(){
+        this.name = "Ball Lightning";
+        this.emote = "<:ball_lightning:1464974833799663707>";
         this.gravityY = 0;
         this.airFriction = 10.0;
 

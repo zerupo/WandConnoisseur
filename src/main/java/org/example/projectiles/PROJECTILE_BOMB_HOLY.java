@@ -4,6 +4,8 @@ public class PROJECTILE_BOMB_HOLY extends Projectile{
     // TODO custom xml, wtf is this ?
     @Override
     protected void initialization(){
+        this.name = "Holy Bomb";
+        this.emote = "<:bomb_holy:1464974835699679519>";
         this.lifetime = 260;
         this.lifetimeRandomness = 0;
     }
