@@ -39,6 +39,7 @@ public class Global{
     private final static int imageScaleFactor = 5;
     private final static int margin = 4*getImageScaleFactor();
     private final static Pattern delayPattern = Pattern.compile("^ *([+-]?[0-9]+(|\\.[0-9]+)?)(?: *(|[fs]))? *$");
+    private final static Pattern spellPattern = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
     public final static MenuManager menuManager = new MenuManager();
     public static long currentFrame = 0;
 
@@ -109,6 +110,10 @@ public class Global{
 
     public static Pattern getDelayPattern(){
         return delayPattern;
+    }
+
+    public static Pattern getSpellPattern(){
+        return spellPattern;
     }
 
     public static long getCurrentFrame(){
@@ -256,7 +261,6 @@ public class Global{
         ArrayList<Spell> spells = new ArrayList<>();
         String[] spellsString;
         Wand wand;
-        Pattern pSpell = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
         Matcher m;
 
         if(drawOption != null){
@@ -300,7 +304,7 @@ public class Global{
         }
 
         for(int i=0; i < spellsString.length; i++){
-            m = pSpell.matcher(spellsString[i]);
+            m = spellPattern.matcher(spellsString[i]);
             if(m.find()){
                 currentSpell = spellList.getSpell(m.group(2));
                 if(currentSpell != null){

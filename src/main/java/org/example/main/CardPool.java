@@ -92,7 +92,7 @@ public class CardPool{
     public Flowchart getCallStack(){
         Flowchart[] callStackArray = this.callStack.toArray(new Flowchart[0]);
 
-        if(callStackArray.length <= 0){
+        if(callStackArray.length == 0){
             return this.flowchart;
         }
         return callStackArray[callStackArray.length - 1];
@@ -146,17 +146,17 @@ public class CardPool{
         return this.flowchart.toString(formatting);
     }
 
-    public String getCardHistoryString(){
+    public String getHistoryString(){
         return this.cardHistory.toString();
     }
 
-    /*public String getCallStackString(){
+    public String getCallStackString(){
         return this.cardHistory.callStackToString();
-    }*/
+    }
 
-    /*public String getHistoryString(){
-        return this.cardHistory.historyToString();
-    }*/
+    public String getCardPoolString(){
+        return this.cardHistory.cardPoolToString();
+    }
 
     public BufferedImage getFlowchartImage(){
         this.flowchart.refactor();
@@ -313,12 +313,11 @@ public class CardPool{
         this.cardHistory.reset(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
     }
 
-    private void sortDeck(){
+    private boolean sortDeck(){
         List<Spell> newDeck = new ArrayList<>();
         ListIterator<Spell> sorter = this.startingDeck.listIterator();
         Spell currentSpell;
-
-        String oldCP = this.toString(); // test
+        boolean result;
 
         while(sorter.hasNext()){
             currentSpell = sorter.next();
@@ -327,20 +326,20 @@ public class CardPool{
             }
         }
 
+        result = !this.deck.equals(newDeck);
         this.deck = newDeck;
-        /*String newCP = this.toString(); // test
-        if(!oldCP.equals(newCP)){
-            System.out.println("reorder : " + oldCP + " -> " + newCP);
-        }*/
+        return result;
     }
 
     public void endCast(){
         while(!this.hand.isEmpty()){
             this.discard.add(this.hand.remove(0));
+            if(this.autoCardHistory){
+                this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+            }
         }
         if(this.wrappedThisCast || this.deck.isEmpty()){
-            this.deck = new ArrayList<Spell>(this.startingDeck);
-            this.hand.clear();
+            this.deck = new ArrayList<>(this.startingDeck);
             this.discard.clear();
             this.drawEnabled = true;
         }
@@ -366,12 +365,14 @@ public class CardPool{
     private void wrap(){
         while(!this.discard.isEmpty()){
             this.deck.add(this.discard.remove(0));
+            if(this.autoCardHistory){
+                this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+            }
         }
-        this.sortDeck();
-        this.wrappedThisCast = true;
-        if(this.autoCardHistory){
+        if(this.sortDeck() && this.autoCardHistory){
             this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
         }
+        this.wrappedThisCast = true;
     }
 
     public void draw(int nbDraw, CastState castState, boolean wrapAllowed, Flowchart currentNode){
@@ -448,12 +449,12 @@ public class CardPool{
         for(int i=0; i < nbDiscard; i++){
             if(!this.deck.isEmpty()){
                 this.discard.add(this.deck.remove(0));
+                if(this.autoCardHistory){
+                    this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+                }
             }else{
                 return;
             }
-        }
-        if(this.autoCardHistory){
-            this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
         }
     }
 

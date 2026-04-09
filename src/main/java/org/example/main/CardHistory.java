@@ -3,9 +3,10 @@ package org.example.main;
 import org.example.spells.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 import java.lang.StringBuilder;
 
-// used to be for deck evaluation but since it became a bot... maybe one day
 class StructHistory{
     private int[][] history;
     private ArrayList<int[]> callStackHistory;
@@ -15,7 +16,7 @@ class StructHistory{
         for(int i=0; i < callStack.length; i++){
             newCallStack[i] = callStack[i];
         }
-        this.callStackHistory = new ArrayList<int[]>();
+        this.callStackHistory = new ArrayList<>();
         this.callStackHistory.add(newCallStack);
 
         this.history = new int[3][];
@@ -34,7 +35,7 @@ class StructHistory{
     }
 
     public StructHistory(int[] discard, int[] hand, int[] deck){
-        this.callStackHistory = new ArrayList<int[]>();
+        this.callStackHistory = new ArrayList<>();
         this.history = new int[3][];
         this.history[0] = new int[discard.length];
         for(int i=0; i < discard.length; i++){
@@ -73,7 +74,6 @@ class StructHistory{
             }
         }
         return result;
-        //return this.callStackHistory.toArray(new int[this.callStackHistory.size()][]);
     }
 
     public int[][] getHistory(){
@@ -81,8 +81,6 @@ class StructHistory{
     }
 
     public int[] getCallStackHistory(int id){
-        int[] result;
-
         if(id < 0 || id >= this.callStackHistory.size()){
             return new int[0];
         }else if(this.callStackHistory.get(id).length == 1 && this.callStackHistory.get(id)[0] < 0){
@@ -95,7 +93,7 @@ class StructHistory{
     public void addCallStack(int[] callStack){
         int[] newCallStack;
         int[] currentCallStack;
-        boolean same = true;
+        boolean same;
 
         for(int i=0; i < callStackHistory.size(); i++){
             currentCallStack = callStackHistory.get(i);
@@ -108,6 +106,7 @@ class StructHistory{
                 }
                 if(same){
                     newCallStack = new int[]{-(i + 1)};
+                    this.callStackHistory.add(newCallStack);
                     return;
                 }
             }
@@ -120,26 +119,17 @@ class StructHistory{
         this.callStackHistory.add(newCallStack);
     }
 
-    /*public void historyToString(StringBuilder sb){
-        int[] currentCallStackHistory;
-
+    public void cardPoolToIdString(StringBuilder sb){
         for(int i=0; i < this.history.length; i++){
             switch(i){
-                case 0:
-                    sb.append("\033[0;31mDiscard\u001B[0m: ");
-                    break;
-                case 1:
-                    sb.append(" \033[0;31mHand\u001B[0m: ");
-                    break;
-                case 2:
-                    sb.append(" \033[0;31mDeck\u001B[0m: ");
-                    break;
-                default:
-                    sb.append(" ");
+                case 0 -> sb.append("\033[0;31mDiscard\u001B[0m: ");
+                case 1 -> sb.append(" \033[0;31mHand\u001B[0m: ");
+                case 2 -> sb.append(" \033[0;31mDeck\u001B[0m: ");
+                default -> sb.append(" ");
             }
             sb.append("[");
             for(int j=0; j < this.history[i].length; j++){
-                sb.append(this.history[i][j].getName());
+                sb.append(this.history[i][j]);
                 if(j + 1 < this.history[i].length){
                     sb.append(", ");
                 }
@@ -149,7 +139,7 @@ class StructHistory{
         sb.append("\n");
     }
 
-    public void callStackToString(StringBuilder sb){
+    public void callStackToIdString(StringBuilder sb){
         int[] currentCallStackHistory;
 
         for(int i=0; i < this.callStackHistory.size(); i++){
@@ -158,7 +148,7 @@ class StructHistory{
                 sb.append("<empty>");
             }else{
                 for(int j=0; j < currentCallStackHistory.length; j++){
-                    sb.append(currentCallStackHistory[j].getName());
+                    sb.append(currentCallStackHistory[j]);
                     if(j + 1 < currentCallStackHistory.length){
                         sb.append(" -> ");
                     }
@@ -168,62 +158,16 @@ class StructHistory{
         }
     }
 
-    public void toString(StringBuilder sb){
-        historyToString(sb);
-        callStackToString(sb);
+    public void toIdString(StringBuilder sb){
+        cardPoolToIdString(sb);
+        callStackToIdString(sb);
     }
 
-    public String historyToString(){
-        int[] currentCallStackHistory;
-        String result = "";
-
-        for(int i=0; i < this.history.length; i++){
-            switch(i){
-                case 0:
-                    result += "\033[0;31mDiscard\u001B[0m: ";
-                    break;
-                case 1:
-                    result += "\n\033[0;31mHand\u001B[0m: ";
-                    break;
-                case 2:
-                    result += "\n\033[0;31mDeck\u001B[0m: ";
-                    break;
-                default:
-                    result += " ";
-            }
-            result += "[";
-            for(int j=0; j < this.history[i].length; j++){
-                result += this.history[i][j].getName();
-                if(j + 1 < this.history[i].length){
-                    result += ", ";
-                }
-            }
-            result += "]";
-        }
-        result += "\n";
-        return result;
+    public String toIdString(){
+        StringBuilder sb = new StringBuilder();
+        this.toIdString(sb);
+        return sb.toString();
     }
-
-    public String callStackToString(int id){
-        String result = "";
-        int[] currentCallStackHistory;
-
-        if(id >= callStackHistory.size()){
-            return "err";//result;
-        }
-        currentCallStackHistory = this.callStackHistory.get(id);
-        if(currentCallStackHistory.length == 0){
-            result = "<empty>";
-        }else{
-            for(int j=0; j < currentCallStackHistory.length; j++){
-                result += currentCallStackHistory[j].getName();
-                if(j + 1 < currentCallStackHistory.length){
-                    result += " -> ";
-                }
-            }
-        }
-        return result;
-    }*/
 }
 
 public class CardHistory{
@@ -236,20 +180,29 @@ public class CardHistory{
     private int currentCallStackStep = 0;
 
     public CardHistory(Spell[] startingSpells){
-        this.startingSpells = new Spell[startingSpells.length];
-        for(int i=0; i < startingSpells.length; i++){
-            this.startingSpells[i] = startingSpells[i];
-        }
-        this.history = new ArrayList<StructHistory>();
+        this.startingSpells = Arrays.stream(startingSpells).filter(Objects::nonNull).toArray(Spell[]::new);
+        this.history = new ArrayList<>();
         this.history.add(new StructHistory(spellToID(new Spell[0]), spellToID(new Spell[0]), spellToID(startingSpells), spellToID(new Spell[0])));
-    }
-
-    public int getCardOnlySize(){
-        return this.history.size();
     }
 
     public int getSize(){
         return this.totalCallStackSize;
+    }
+
+    public int getCardPoolSize(){
+        return this.history.size();
+    }
+
+    public int getCurrentCallStackStepAbsolute(){
+        if(this.currentCardPoolStep == this.currentCardPoolStep2){
+            return this.currentCallStackStep;
+        }else{
+            return 0;
+        }
+    }
+
+    public int getCurrentCardPoolSize(){
+        return this.history.get(this.currentCardPoolStep).getCallStackSize();
     }
 
     public int getStep(){
@@ -258,16 +211,14 @@ public class CardHistory{
         for(int i=0; i < Math.min(currentCardPoolStep + 1, this.history.size()); i++){
             if(i < this.currentCardPoolStep){
                 result += Math.max(this.history.get(i).getCallStackSize(), 1);
-                //System.out.println("+" + Math.max(this.history.get(i).getCallStackSize(), 1));
             }else{
                 if(this.currentCardPoolStep2 == this.currentCardPoolStep){
                     result += this.currentCallStackStep;
                 }
-                //System.out.println(this.currentCardPoolStep + " "  + this.currentCardPoolStep2 + " " + this.currentCallStackStep + " = " + result);
                 return result;
             }
         }
-        //System.out.println(this.currentCardPoolStep + " "  + this.currentCardPoolStep2 + " " + this.currentCallStackStep + " = " + result);
+
         return result;
     }
 
@@ -321,29 +272,21 @@ public class CardHistory{
         StructHistory structHistory;
         Spell[][] history;
         Spell[][] callStack;
+        int maxSize = cardHistory.history.size(); // avoid infinite loop if (this == cardHistory) but still duplicates it
 
-        // avoid infinite loop
-        if(this == cardHistory){
-            System.out.println("Same CardHistory, skipping");
-            return;
-        }
-
-        System.out.println("start");
-        for(int i=0; i < cardHistory.history.size(); i++){
-            System.out.println(i + "/" + cardHistory.history.size() + " -> /" + this.history.size());
+        for(int i=0; i < maxSize; i++){
             structHistory = cardHistory.history.get(i);
             history = cardHistory.IDToSpell(structHistory.getHistory());
             this.addStep(history[0], history[1], history[2]);
             callStack = cardHistory.IDToSpell(structHistory.getCallStack());
-            for(int j=0; j < callStack.length; j++){
-                this.addCallStack(callStack[j]);
+            for(Spell[] spells : callStack){
+                this.addCallStack(spells);
             }
             if(destroy){
                 cardHistory.history.set(i, null);
             }
         }
         this.totalCallStackSize += cardHistory.getSize();
-        System.out.println("end");
     }
 
     public void addStep(Spell[] discard, Spell[] hand, Spell[] deck, Spell[] callStack){
@@ -357,13 +300,13 @@ public class CardHistory{
     }
 
     public void reset(){
-        this.history = new ArrayList<StructHistory>();
+        this.history = new ArrayList<>();
         this.history.add(new StructHistory(spellToID(new Spell[0]), spellToID(new Spell[0]), spellToID(this.startingSpells), spellToID(new Spell[0])));
         this.totalCallStackSize = 1;
     }
 
     public void reset(Spell[] discard, Spell[] hand, Spell[] deck){
-        this.history = new ArrayList<StructHistory>();
+        this.history = new ArrayList<>();
         this.history.add(new StructHistory(spellToID(discard), spellToID(hand), spellToID(deck)));
         this.totalCallStackSize = 1;
     }
@@ -375,157 +318,151 @@ public class CardHistory{
         this.history.get(this.history.size() - 1).addCallStack(spellToID(callStack));
     }
 
-    /*public String historyToString(){
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i < this.history.size(); i++){
-            this.history.get(i).historyToString(sb);
-        }
-        return sb.toString();
-    }
+    public boolean goToStep(int callStackStep){
+        int currentTotalStep = 0;
 
-    public String callStackToString(){
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i < this.history.size(); i++){
-            this.history.get(i).callStackToString(sb);
+        if(callStackStep < 0 || callStackStep >= this.totalCallStackSize){
+            return false;
         }
-        return sb.toString();
-    }
 
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i < this.history.size(); i++){
-            this.history.get(i).toString(sb);
-        }
-        //for(int i=0; i < this.totalCallStackSize; i++){
-        //    System.out.println(this.toString(i));
-        //}
-        //System.out.println();
-        return sb.toString();
-    }*/
+        this.currentCardPoolStep = 0;
 
-    /*public String toString(int callStackStep){
-        int currentStep = 0;
-        StructHistory currentHistory;
-        int previousId;
-
-        if(callStackStep < 0 || callStackStep >= totalCallStackSize){
-            return "OOB (" + callStackStep + " >= " + totalCallStackSize + ")";
-        }
-        for(int i=0; i < this.history.size(); i++){
-            currentHistory = this.history.get(i);
-            if(currentStep + Math.max(currentHistory.getCallStackSize(), 1) <= callStackStep){
-                currentStep += Math.max(currentHistory.getCallStackSize(), 1);
+        for(StructHistory history : this.history){
+            if(currentTotalStep + Math.max(history.getCallStackSize(), 1) <= callStackStep){
+                currentTotalStep += Math.max(history.getCallStackSize(), 1);
+                this.currentCardPoolStep++;
             }else{
-                if(currentHistory.getCallStackSize() == 0){
-                    previousId = i - 1;
-                    while(previousId >= 0 && this.history.get(previousId).getCallStackSize() == 0){
-                        previousId -= 1;
-                    }
-                    if(previousId < 0){
-                        return currentHistory.historyToString() + "<empty>";
-                    }else{
-                        return currentHistory.historyToString() + this.history.get(previousId).callStackToString(this.history.get(previousId).getCallStackSize() - 1);
-                    }
-                }else{
-                    return currentHistory.historyToString() + currentHistory.callStackToString(callStackStep - currentStep);
-                }
+                break;
             }
         }
-        return "OOB (" + currentStep + " >= " + totalCallStackSize + ")";
-    }*/
+
+        this.currentCardPoolStep2 = this.currentCardPoolStep;
+        this.currentCallStackStep = callStackStep - currentTotalStep;
+
+        if(this.currentCardPoolStep2 >= 0 && this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
+            while(this.currentCardPoolStep2 >= 0 && this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
+                this.currentCardPoolStep2 -= 1;
+            }
+            this.currentCallStackStep = this.history.get(this.currentCardPoolStep2).getCallStackSize() - 1;
+        }
+
+        return true;
+    }
+
+    public boolean goToStep(int cardPoolStep, int callStackStep){
+        StructHistory currentStructHistory;
+
+        if(cardPoolStep < 0 || cardPoolStep >= this.history.size()){
+            return false;
+        }
+
+        currentStructHistory = this.history.get(cardPoolStep);
+        if(callStackStep < 0 || (callStackStep != 0 && callStackStep >= currentStructHistory.getCallStackSize())){
+            return false;
+        }
+
+        this.currentCardPoolStep = cardPoolStep;
+        this.currentCardPoolStep2 = cardPoolStep;
+        this.currentCallStackStep = callStackStep;
+
+        if(this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
+            while(this.currentCardPoolStep2 >= 0 && this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
+                this.currentCardPoolStep2 -= 1;
+            }
+            this.currentCallStackStep = this.history.get(this.currentCardPoolStep2).getCallStackSize() - 1;
+        }
+
+        return true;
+    }
 
     public Spell[][] getStep(int callStackStep){
-        Spell[][] result = new Spell[4][];
-        int currentStep = 0;
-        StructHistory currentHistory;
+        Spell[][] result = new Spell[4][0];
         Spell[][] currentCardPool;
-        Spell[] currentCallStack;
-        int previousId;
+        int currentTotalStep = 0;
+        int currentCardPoolStep = 0;
+        int currentCardPoolStep2 = 0;
+        int currentCallStackStep = 0;
 
-        if(callStackStep < 0 || callStackStep >= totalCallStackSize){
-            for(int i=0; i < result.length; i++){
-                result[i] = new Spell[0];
-            }
+        if(callStackStep < 0 || callStackStep >= this.totalCallStackSize){
             return result;
         }
-        for(int i=0; i < this.history.size(); i++){
-            currentHistory = this.history.get(i);
-            if(currentStep + Math.max(currentHistory.getCallStackSize(), 1) <= callStackStep){
-                currentStep += Math.max(currentHistory.getCallStackSize(), 1);
+
+        for(StructHistory history : this.history){
+            if(currentTotalStep + Math.max(history.getCallStackSize(), 1) <= callStackStep){
+                currentTotalStep += Math.max(history.getCallStackSize(), 1);
+                currentCardPoolStep++;
             }else{
-                currentCardPool = IDToSpell(currentHistory.getHistory());
-                for(int j=0; j < currentCardPool.length && j < 3; j++){
-                    result[j] = new Spell[currentCardPool[j].length];
-                    for(int k=0; k < result[j].length; k++){
-                        result[j][k] = currentCardPool[j][k];
-                    }
-                }
-                if(currentHistory.getCallStackSize() == 0){
-                    previousId = i - 1;
-                    while(previousId >= 0 && this.history.get(previousId).getCallStackSize() == 0){
-                        previousId -= 1;
-                    }
-                    if(previousId < 0){
-                        result[3] = new Spell[0];
-                    }else{
-                        currentCallStack = IDToSpell(this.history.get(previousId).getCallStackHistory(this.history.get(previousId).getCallStackSize() - 1));
-                        result[3] = new Spell[currentCallStack.length];
-                        for(int j=0; j < result.length; j++){
-                            result[3][j] = currentCallStack[j];
-                        }
-                    }
-                    return result;
-                }else{
-                    currentCallStack = IDToSpell(currentHistory.getCallStackHistory(callStackStep - currentStep));
-                    result[3] = new Spell[currentCallStack.length];
-                    for(int j=0; j < result.length; j++){
-                        result[3][j] = currentCallStack[j];
-                    }
-                    return result;
-                }
+                break;
             }
         }
+
+        currentCardPoolStep2 = currentCardPoolStep;
+        currentCallStackStep = callStackStep - currentTotalStep;
+
+        if(currentCardPoolStep2 >= 0 && this.history.get(currentCardPoolStep2).getCallStackSize() == 0){
+            while(currentCardPoolStep2 >= 0 && this.history.get(currentCardPoolStep2).getCallStackSize() == 0){
+                currentCardPoolStep2 -= 1;
+            }
+            currentCallStackStep = this.history.get(currentCardPoolStep2).getCallStackSize() - 1;
+        }
+
+        currentCardPool = IDToSpell(this.history.get(currentCardPoolStep).getHistory());
+        for(int i=0; i < currentCardPool.length && i < 3; i++){
+            result[i] = currentCardPool[i];
+        }
+        result[3] = IDToSpell(this.history.get(currentCardPoolStep2).getCallStackHistory(currentCallStackStep));
+
+        return result;
+    }
+
+    public Spell[][] getStep(int cardPoolStep, int callStackStep){
+        Spell[][] result = new Spell[4][0];
+        Spell[][] currentCardPool;
+        StructHistory currentStructHistory;
+        int currentCardPoolStep2 = cardPoolStep;
+        int currentCallStackStep = callStackStep;
+
+        if(cardPoolStep < 0 || cardPoolStep >= this.history.size()){
+            return result;
+        }
+
+        currentStructHistory = this.history.get(cardPoolStep);
+        if(callStackStep < 0 || (callStackStep != 0 && callStackStep >= currentStructHistory.getCallStackSize())){
+            return result;
+        }
+
+        if(this.history.get(currentCardPoolStep2).getCallStackSize() == 0){
+            while(currentCardPoolStep2 >= 0 && this.history.get(currentCardPoolStep2).getCallStackSize() == 0){
+                currentCardPoolStep2 -= 1;
+            }
+            currentCallStackStep = this.history.get(currentCardPoolStep2).getCallStackSize() - 1;
+        }
+
+        currentCardPool = IDToSpell(this.history.get(cardPoolStep).getHistory());
+        for(int i=0; i < currentCardPool.length && i < 3; i++){
+            result[i] = currentCardPool[i];
+        }
+        result[3] = IDToSpell(this.history.get(currentCardPoolStep2).getCallStackHistory(currentCallStackStep));
+
         return result;
     }
 
     public Spell[][] getCurrentStep(){
         Spell[][] currentCardPool;
-        Spell[] currentCallStack;
-        Spell[][] result = new Spell[4][];
-        for(int i=0; i < result.length; i++){
-            result[i] = new Spell[0];
-        }
+        Spell[][] result = new Spell[4][0];
 
         if(this.currentCardPoolStep >= 0 && this.currentCardPoolStep < this.history.size()){
             currentCardPool = IDToSpell(this.history.get(this.currentCardPoolStep).getHistory());
             for(int i=0; i < currentCardPool.length && i < 3; i++){
-                result[i] = new Spell[currentCardPool[i].length];
-                for(int j=0; j < result[i].length; j++){
-                    result[i][j] = currentCardPool[i][j];
-                }
+                result[i] = currentCardPool[i];
             }
         }
         if(this.currentCardPoolStep2 >= 0 && this.currentCardPoolStep2 < this.history.size() && this.currentCallStackStep >= 0 && this.currentCallStackStep < this.history.get(this.currentCardPoolStep2).getCallStackSize()){
-            currentCallStack = IDToSpell(this.history.get(this.currentCardPoolStep2).getCallStackHistory(this.currentCallStackStep));
-            result[3] = new Spell[currentCallStack.length];
-            for(int i=0; i < currentCallStack.length; i++){
-                result[3][i] = currentCallStack[i];
-            }
+            result[3] = IDToSpell(this.history.get(this.currentCardPoolStep2).getCallStackHistory(this.currentCallStackStep));
         }
+
         return result;
     }
-
-    /*public String getCurrentStepString(){
-        String result = "";
-
-        if(this.currentCardPoolStep >= 0 && this.currentCardPoolStep < this.history.size()){
-            result += this.history.get(this.currentCardPoolStep).historyToString();
-        }
-        if(this.currentCardPoolStep2 >= 0 && this.currentCardPoolStep2 < this.history.size() && this.currentCallStackStep >= 0 && this.currentCallStackStep < this.history.get(this.currentCardPoolStep2).getCallStackSize()){
-            result += this.history.get(this.currentCardPoolStep2).callStackToString(this.currentCallStackStep);
-        }
-        return result;
-    }*/
 
     public void nextStep(){
         if(this.history.size() == 0 || this.currentCardPoolStep < 0 || this.currentCardPoolStep >= this.history.size()){
@@ -535,10 +472,10 @@ public class CardHistory{
             return;
         }
         //System.out.println("(1) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
-        if(currentCardPoolStep2 < currentCardPoolStep){
+        if(this.currentCardPoolStep2 < this.currentCardPoolStep){
             this.currentCallStackStep = 0;
         }
-        currentCardPoolStep2 = currentCardPoolStep;
+        this.currentCardPoolStep2 = this.currentCardPoolStep;
         this.currentCallStackStep += 1;
         //System.out.println("(2) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep);
 
@@ -577,10 +514,10 @@ public class CardHistory{
             return;
         }
         //System.out.println("(1) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
-        if(currentCardPoolStep2 < currentCardPoolStep){
+        if(this.currentCardPoolStep2 < this.currentCardPoolStep){
             this.currentCallStackStep = 0;
         }
-        currentCardPoolStep2 = currentCardPoolStep;
+        this.currentCardPoolStep2 = this.currentCardPoolStep;
         this.currentCallStackStep -= 1;
         //System.out.println("(2) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
 
@@ -592,11 +529,11 @@ public class CardHistory{
                 this.currentCardPoolStep2 = this.history.size() - 1;
             }
             this.currentCallStackStep = this.history.get(this.currentCardPoolStep).getCallStackSize() - 1;
-            /*if(this.currentCardPoolStep > 0){
-                System.out.println("(3) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
-            }else{
-                System.out.println("(3) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep);
-            }*/
+            //if(this.currentCardPoolStep > 0){
+            //    System.out.println("(3) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
+            //}else{
+            //    System.out.println("(3) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep);
+            //}
             if(this.currentCardPoolStep < 0){
                 this.currentCardPoolStep = this.history.size() - 1;
                 this.currentCardPoolStep2 = this.history.size() - 1;
@@ -630,18 +567,18 @@ public class CardHistory{
         this.currentCardPoolStep += 1;
         this.currentCardPoolStep2 = this.currentCardPoolStep;
         this.currentCallStackStep = 0;
-        /*if(this.currentCardPoolStep < this.history.size()){
-            System.out.println("(2) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
-        }else{
-            System.out.println("(2) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep);
-        }*/
+        //if(this.currentCardPoolStep < this.history.size()){
+        //    System.out.println("(2) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
+        //}else{
+        //    System.out.println("(2) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep);
+        //}
         if(this.currentCardPoolStep >= this.history.size()){
             this.currentCardPoolStep = 0;
             this.currentCardPoolStep2 = 0;
             //System.out.println("(3) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
             return;
         }
-        if(this.currentCardPoolStep2 >= 0 && this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
+        if(this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
             while(this.currentCardPoolStep2 >= 0 && this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
                 this.currentCardPoolStep2 -= 1;
                 //System.out.println("(4) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
@@ -675,7 +612,7 @@ public class CardHistory{
             this.currentCallStackStep = 0;
         }
         //System.out.println("(2) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
-        if(this.currentCardPoolStep2 >= 0 && this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
+        if(this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
             while(this.currentCardPoolStep2 >= 0 && this.history.get(this.currentCardPoolStep2).getCallStackSize() == 0){
                 this.currentCardPoolStep2 -= 1;
                 //System.out.println("(3) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
@@ -688,5 +625,126 @@ public class CardHistory{
             }
         }
         //System.out.println("(4) " + this.currentCardPoolStep + " " + this.currentCardPoolStep2 + " " + this.currentCallStackStep + "/[" + this.history.get(this.currentCardPoolStep).getCallStackSize() + ", " + this.totalCallStackSize + "]");
+    }
+
+    private String toString(boolean cardPool, boolean callStack){
+        StringBuilder sb = new StringBuilder();
+        Spell[][] currentHistory;
+        boolean first = true;
+
+        if(!cardPool && !callStack){
+            return "";
+        }
+
+        for(StructHistory structHistory : this.history){
+            if(!first && cardPool && callStack){
+                sb.append("\n");
+            }
+
+            if(cardPool){
+                if(!first){
+                    sb.append("\n");
+                }
+                currentHistory = IDToSpell(structHistory.getHistory());
+                for(int i=0; i < 3; i++){
+                    switch(i){
+                        case 0 -> sb.append("\033[0;31mDiscard\u001B[0m: ");
+                        case 1 -> sb.append(" \033[0;31mHand\u001B[0m: ");
+                        case 2 -> sb.append(" \033[0;31mDeck\u001B[0m: ");
+                        default -> sb.append(" ");
+                    }
+                    sb.append("[");
+                    for(int j=0; j < currentHistory[i].length; j++){
+                        sb.append(currentHistory[i][j].getName());
+                        if(j + 1 < currentHistory[i].length){
+                            sb.append(", ");
+                        }
+                    }
+                    sb.append("]");
+                }
+            }
+            if(callStack){
+                if(cardPool || !first){
+                    sb.append("\n");
+                }
+                currentHistory = IDToSpell(structHistory.getCallStack());
+                if(currentHistory.length == 0){
+                    sb.append("<empty>");
+                }
+                for(int i=0; i < currentHistory.length; i++){
+                    if(currentHistory[i].length == 0){
+                        sb.append("<empty>");
+                    }
+                    for(int j=0; j < currentHistory[i].length; j++){
+                        sb.append(currentHistory[i][j].getName());
+                        if(j + 1 < currentHistory[i].length){
+                            sb.append(" -> ");
+                        }
+                    }
+                    if(i + 1 < currentHistory.length){
+                        sb.append("\n");
+                    }
+                }
+            }
+            if(first){
+                first = false;
+            }
+        }
+
+        return sb.toString();
+    }
+
+    public String toString(){
+        return this.toString(true, true);
+    }
+
+    public String cardPoolToString(){
+        return this.toString(true, false);
+    }
+
+    public String callStackToString(){
+        return this.toString(false, true);
+    }
+
+    public String getCurrentStepString(){
+        StringBuilder sb = new StringBuilder();
+        Spell[][] currentHistory;
+        Spell[] currentCallStack;
+
+        if(this.currentCardPoolStep >= 0 && this.currentCardPoolStep < this.history.size()){
+            currentHistory = IDToSpell(this.history.get(this.currentCardPoolStep).getHistory());
+            for(int i=0; i < 3; i++){
+                switch(i){
+                    case 0 -> sb.append("\033[0;31mDiscard\u001B[0m: ");
+                    case 1 -> sb.append(" \033[0;31mHand\u001B[0m: ");
+                    case 2 -> sb.append(" \033[0;31mDeck\u001B[0m: ");
+                    default -> sb.append(" ");
+                }
+                sb.append("[");
+                for(int j=0; j < currentHistory[i].length; j++){
+                    sb.append(currentHistory[i][j].getName());
+                    if(j + 1 < currentHistory[i].length){
+                        sb.append(", ");
+                    }
+                }
+                sb.append("]");
+            }
+            sb.append("\n");
+
+            if(this.currentCardPoolStep2 >= 0 && this.currentCardPoolStep2 < this.history.size() && this.currentCallStackStep >= 0 && this.currentCallStackStep < this.history.get(this.currentCardPoolStep2).getCallStackSize()){
+                currentCallStack = IDToSpell(this.history.get(this.currentCardPoolStep2).getCallStackHistory(this.currentCallStackStep));
+                if(currentCallStack.length == 0){
+                    sb.append("<empty>");
+                }
+                for(int i=0; i < currentCallStack.length; i++){
+                    sb.append(currentCallStack[i].getName());
+                    if(i + 1 < currentCallStack.length){
+                        sb.append(" -> ");
+                    }
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }

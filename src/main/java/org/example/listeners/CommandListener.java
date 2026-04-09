@@ -17,6 +17,7 @@ public class CommandListener extends ListenerAdapter{
 
     public CommandListener(){
         commands.put("cast_state", new CastStateCommand());
+        commands.put("deck_animation", new DeckAnimationCommand());
         commands.put("echo", new EchoCommand());
         commands.put("feur", new FeurCommand());
         commands.put("flowchart_image", new ImageFlowchartCommand());
