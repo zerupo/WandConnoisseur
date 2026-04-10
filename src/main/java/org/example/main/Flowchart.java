@@ -390,11 +390,11 @@ public class Flowchart{
                 maxX = Math.max(maxX, x + arrowSizeX + imageSize - failedImage.getWidth()/2);
             }
             if(currentFlowchart.myself == null){
-                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.RED, true);
+                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.RED, true, true);
             }else if(copy){
-                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.YELLOW, true);
+                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.YELLOW, true, true);
             }else{
-                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.WHITE, true);
+                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.WHITE, true, true);
             }
             maxX = Math.max(maxX, x + arrowSizeX - 1);
             //System.out.println("(" + x + ", " + y + ") -> (" + (x + arrowSizeX - 1) + ", " + nextY + ")");

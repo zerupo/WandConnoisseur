@@ -1,157 +1,181 @@
 package org.example.main;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
 public class ImageBuilder{
-    private int margin = 20;
+    private final int margin = 20;
     private BufferedImage canvas;
     private Graphics2D g2d;
     private int canvasWidth = 1;
     private int canvasHeight = 1;
-    private Color backgroundColor = Color.WHITE;
+    private final Color backgroundColor;
+    private LinkedList<DrawAction> drawActions = new LinkedList<>();
+
+    static class DrawAction{
+        Consumer<Object[]> function;
+        Object[] parameters;
+
+        DrawAction(Consumer<Object[]> function, Object[] parameters){
+            this.function = function;
+            this.parameters = parameters;
+        }
+
+        public void callFunction(){
+            function.accept(parameters);
+        }
+    }
 
     public ImageBuilder(Color backgroundColor){
         this.backgroundColor = backgroundColor;
-        createCanvas();
     }
 
-    private void createCanvas(){
-        this.canvas = new BufferedImage(this.canvasWidth + 2*this.margin, this.canvasHeight + 2*this.margin, BufferedImage.TYPE_INT_ARGB);
+    private void createG2D(){
+        this.canvas = new BufferedImage(this.canvasWidth + 2 * this.margin, this.canvasHeight + 2 * this.margin, BufferedImage.TYPE_INT_ARGB);
         this.g2d = this.canvas.createGraphics();
-        clearCanvas();
+
+        this.g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        this.g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
     }
 
-    private void clearCanvas(){
-        this.g2d.setComposite(AlphaComposite.Clear);
-        this.g2d.fillRect(0, 0, this.canvasWidth + 2*this.margin, this.canvasHeight + 2*this.margin);
-        this.g2d.setComposite(AlphaComposite.SrcOver);
-    }
-
-    private void expandCanvas(int newWidth, int newHeight){
-        newWidth = Math.max(this.canvasWidth, newWidth);
-        newHeight = Math.max(this.canvasHeight, newHeight);
-        if(newWidth <= this.canvasWidth && newHeight <= this.canvasHeight){
-            return;
+    public void clear(){
+        if(!this.autoExpandCanvas()){
+            this.g2d.setColor(this.backgroundColor);
+            this.g2d.fillRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
         }
-        BufferedImage newCanvas = new BufferedImage(newWidth + 2*this.margin, newHeight + 2*this.margin, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = newCanvas.createGraphics();
-        g.drawImage(this.canvas, 0, 0, null);
-        g.dispose();
+        this.drawActions.clear();
+    }
 
+    private boolean autoExpandCanvas(){
+        if(this.g2d == null){
+            this.createG2D();
+            this.g2d.setColor(this.backgroundColor);
+            this.g2d.fillRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
+            return true;
+        }else if(this.canvas.getWidth() >= this.canvasWidth + 2*this.margin && this.canvas.getHeight() >= this.canvasHeight + 2*this.margin){
+            return false;
+        }
+
+        BufferedImage newCanvas = new BufferedImage(this.canvasWidth + 2*this.margin, this.canvasHeight + 2*this.margin, BufferedImage.TYPE_INT_ARGB);
+        this.g2d = newCanvas.createGraphics();
+        this.g2d.setColor(this.backgroundColor);
+        this.g2d.fillRect(0, 0, newCanvas.getWidth(), newCanvas.getHeight());
+        this.g2d.drawImage(this.canvas, 0, 0, null);
         this.canvas = newCanvas;
-        this.g2d = this.canvas.createGraphics();
-        this.canvasWidth = newWidth;
-        this.canvasHeight = newHeight;
+
+        return true;
     }
 
     public void addImage(BufferedImage image, int x, int y){
-        int newWidth = Math.max(this.canvasWidth, x + image.getWidth());
-        int newHeight = Math.max(this.canvasHeight, y + image.getHeight());
+        this.canvasWidth = Math.max(this.canvasWidth, x + image.getWidth());
+        this.canvasHeight = Math.max(this.canvasHeight, y + image.getHeight());
+        drawActions.add(new DrawAction(this::addImage, new Object[]{image, x, y}));
+    }
 
-        expandCanvas(newWidth, newHeight);
+    public void drawArrow(int x1, int y1, int x2, int y2, Color color, boolean priorityX, boolean drawUnder){
+        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
+        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
+        if(drawUnder){
+            this.drawActions.addFirst(new DrawAction(this::drawArrow, new Object[]{x1, y1, x2, y2, color, priorityX}));
+        }else{
+            this.drawActions.add(new DrawAction(this::drawArrow, new Object[]{x1, y1, x2, y2, color, priorityX}));
+        }
+    }
 
+    public void drawCurlyBrackets(int x1, int y1, int x2, int y2, int nb, Color color){
+        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
+        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
+        drawActions.add(new DrawAction(this::drawCurlyBrackets, new Object[]{x1, y1, x2, y2, nb, color}));
+    }
+
+    public BufferedImage toImage(){
+        this.autoExpandCanvas();
+
+        for(DrawAction action : drawActions){
+            action.callFunction();
+        }
+        this.drawActions.clear();
+
+        return this.canvas;
+    }
+
+    private void addImage(Object[] objects){
+        try{
+            this.addImageInternal((BufferedImage)objects[0], (int)objects[1], (int)objects[2]);
+        }catch(Exception e){
+            System.out.println("Error executing addImage() " + e.getMessage());
+        }
+    }
+
+    private void addImageInternal(BufferedImage image, int x, int y){
         this.g2d.drawImage(image, x + this.margin, y + this.margin, null);
     }
 
-    public void drawArrow(int x1, int y1, int x2, int y2, Color color, boolean drawUnder){
-        int radius = 0;
-        int tmp;
-        boolean right;
-
-        if(y1 > y2){
-            tmp = y1;
-            y1 = y2;
-            y2 = tmp;
+    private void drawArrow(Object[] objects){
+        try{
+            this.drawArrowInternal((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (Color)objects[4], (boolean)objects[5]);
+        }catch(Exception e){
+            System.out.println("Error executing drawArrow() " + e.getMessage());
         }
-        radius = (y2 - y1)/2;
-        radius = Math.min(radius, Math.abs((x2 - x1)/2));
-        radius = Math.max(radius, 0);
-        expandCanvas(Math.max(x1, x2), y2);
+    }
+
+    private void drawArrowInternal(int x1, int y1, int x2, int y2, Color color, boolean priorityX){
+        Path2D path = new Path2D.Double();
+        boolean invertX = x1 > x2;
+        boolean invertY = y1 > y2;
+        int middleWidth = (x2 + x1)/2;
+        int middleHeight = (y2 + y1)/2;
+        int radius = Math.max(Math.min(Math.abs(y2 - y1)/2, Math.abs((x2 - x1)/2)), 0);
+        int[][] points = new int[][]{
+            {(priorityX ? middleWidth : x1) + (invertX == priorityX ? 0 : -2*radius) + this.margin, (priorityX ? y1 : middleHeight) + (invertY == priorityX ? -2*radius : 0) + this.margin, priorityX ? (invertY ? 270 : 90) : (invertX ? 0 : 180), (invertX ^ invertY) ^ !priorityX ? 90 : -90},
+            {(priorityX ? middleWidth : x2) + (invertX == priorityX ? -2*radius : 0) + this.margin, (priorityX ? y2 : middleHeight) + (invertY == priorityX ? 0 : -2*radius) + this.margin, priorityX ? (invertX ? 0 : 180) : (invertY ? 270 : 90), (invertX ^ invertY) ^ !priorityX ? -90 : 90}
+        };
+
         this.g2d.setColor(color);
-
-        if(drawUnder){
-            BufferedImage tempImage = new BufferedImage(this.canvas.getWidth(), this.canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D tempG2D = tempImage.createGraphics();
-            tempG2D.setColor(color);
-            //tempG2D.setStroke(new BasicStroke(thickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            if(x2 > x1){
-                tempG2D.drawLine(x1 + this.margin, y1 + this.margin, x1 + (x2 - x1)/2 - radius + this.margin, y1 + this.margin);
-                tempG2D.drawArc(x1 + (x2 - x1)/2 - 2*radius + this.margin, y1 + this.margin, 2*radius, 2*radius, 90, -90);
-                tempG2D.drawLine((x2 + x1)/2 + this.margin, y1 + radius + this.margin, (x2 + x1)/2 + this.margin, y2 - radius + this.margin);
-                tempG2D.drawArc(x2 - (x2 - x1)/2 + this.margin, y2 - 2*radius + this.margin, 2*radius, 2*radius, 180, 90);
-                tempG2D.drawLine(x2 - (x2 - x1)/2 + radius + this.margin, y2 + this.margin, x2 + this.margin, y2 + this.margin);
-                this.drawArrowhead(x2 + 1, y2, true);
-            }else{
-                tempG2D.drawArc(x1 - (x1 - x2)/2 + this.margin, y1 + this.margin, 2*radius, 2*radius, 90, 90);
-                tempG2D.drawLine((x2 + x1)/2 + this.margin, y1 + radius + this.margin, (x2 + x1)/2 + this.margin, y2 - radius + this.margin);
-                tempG2D.drawArc(x2 + (x1 - x2)/2 - 2*radius + this.margin, y2 - 2*radius + this.margin, 2*radius, 2*radius, 0, -90);
-                tempG2D.drawLine(x2 + (x1 - x2)/2 - radius + this.margin, y2 + this.margin, x2 + this.margin, y2 + this.margin);
-                this.drawArrowhead(x2, y2, false);
-            }
-            tempG2D.dispose();
-            combineImages(tempImage);
-            this.g2d.dispose();
-            this.g2d = this.canvas.createGraphics();
-        }else{
-            if(x2 > x1){
-                this.g2d.drawLine(x1 + this.margin, y1 + this.margin, x1 + (x2 - x1)/2 - radius + this.margin, y1 + this.margin);
-                this.g2d.drawArc(x1 + (x2 - x1)/2 - 2*radius + this.margin, y1 + this.margin, 2*radius, 2*radius, 90, -90);
-                this.g2d.drawLine((x2 + x1)/2 + this.margin, y1 + radius + this.margin, (x2 + x1)/2 + this.margin, y2 - radius + this.margin);
-                this.g2d.drawArc(x2 - (x2 - x1)/2 + this.margin, y2 - 2*radius + this.margin, 2*radius, 2*radius, 180, 90);
-                this.g2d.drawLine(x2 - (x2 - x1)/2 + radius + this.margin, y2 + this.margin, x2 + this.margin, y2 + this.margin);
-                this.drawArrowhead(x2 + 1, y2, true);
-            }else{
-                this.g2d.drawArc(x1 - (x1 - x2)/2 + this.margin, y1 + this.margin, 2*radius, 2*radius, 90, 90);
-                this.g2d.drawLine((x2 + x1)/2 + this.margin, y1 + radius + this.margin, (x2 + x1)/2 + this.margin, y2 - radius + this.margin);
-                this.g2d.drawArc(x2 + (x1 - x2)/2 - 2*radius + this.margin, y2 - 2*radius + this.margin, 2*radius, 2*radius, 0, -90);
-                this.g2d.drawLine(x2 + (x1 - x2)/2 - radius + this.margin, y2 + this.margin, x2 + this.margin, y2 + this.margin);
-                this.drawArrowhead(x2, y2, false);
-            }
+        path.moveTo(x1 + this.margin, y1 + this.margin);
+        for(int i=0; i < points.length; i++){
+            path.append(new Arc2D.Double(points[i][0], points[i][1], 2*radius, 2*radius, points[i][2], points[i][3], Arc2D.OPEN), true);
         }
+        path.lineTo(x2 + this.margin, y2 + this.margin);
+
+        this.g2d.draw(path);
+        this.drawArrowhead(x2 + (priorityX ? (invertX ? -1 : 1) : 0), y2, priorityX ? invertX : invertY, priorityX);
     }
 
-    private void combineImages(BufferedImage newImage){
-        BufferedImage combinedImage = new BufferedImage(this.canvas.getWidth(), this.canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D combinedG2D = combinedImage.createGraphics();
-        combinedG2D.drawImage(newImage, 0, 0, null);
-        combinedG2D.drawImage(this.canvas, 0, 0, null);
-        this.canvas = combinedImage;
-        combinedG2D.dispose();
-    }
-
-    private void drawArrowhead(int x, int y, boolean right){
+    private void drawArrowhead(int x, int y, boolean invertX, boolean invertY){
         int arrowLength = 8;
         int arrowWidth = 4;
-        int x1;
-        int y1;
-        int x2;
-        int y2;
-
-        y1 = y - arrowWidth;
-        y2 = y + arrowWidth;
-        if(right){
-            x1 = x - arrowLength;
-            x2 = x - arrowLength;
-        }else{
-            x1 = x + arrowLength;
-            x2 = x + arrowLength;
-        }
+        int x1 = x + (invertY ? (invertX ? 1 : -1)*arrowLength : arrowWidth);
+        int y1 = y + (invertY ? arrowWidth : (invertX ? 1 : -1)*arrowLength);
+        int x2 = x - (invertY ? (invertX ? -1 : 1)*arrowLength : arrowWidth);
+        int y2 = y - (invertY ? arrowWidth : (invertX ? -1 : 1)*arrowLength);
 
         Path2D arrowhead = new Path2D.Double();
         arrowhead.moveTo(x + this.margin, y + this.margin);
-        arrowhead.lineTo(x1 + this.margin, y1 + this.margin);
+        arrowhead.lineTo(x1 + this.margin + (invertY ? 0 : 0.1), y1 + this.margin);
         arrowhead.lineTo(x2 + this.margin, y2 + this.margin);
         arrowhead.closePath();
         this.g2d.fill(arrowhead);
     }
 
-    public void drawCurlyBrackets(int x1, int y1, int x2, int y2, int nb, Color color){
-        int radius = 0;
+    private void drawCurlyBrackets(Object[] objects){
+        try{
+            this.drawCurlyBracketsInternal((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (int)objects[4], (Color)objects[5]);
+        }catch(Exception e){
+            System.out.println("Error executing drawCurlyBrackets() " + e.getMessage());
+        }
+    }
+
+    private void drawCurlyBracketsInternal(int x1, int y1, int x2, int y2, int nb, Color color){
+        Path2D path = new Path2D.Double();
         int tmp;
 
         if(y1 > y2){
@@ -164,57 +188,40 @@ public class ImageBuilder{
             x1 = x2;
             x2 = tmp;
         }
-
         if(y2 - y1 >= this.g2d.getFontMetrics().getHeight()){
             y2 -= this.g2d.getFontMetrics().getHeight();
         }else{
             y2 = y1;
         }
 
-        radius = (y2 - y1)/2;
-        radius = Math.min(radius, (x2 - x1)/4);
-        radius = Math.max(radius, 0);
+        int middleWidth = (x2 + x1)/2;
+        int middleHeight = (y2 + y1)/2;
+        int radius = Math.max(Math.min((y2 - y1)/2, (x2 - x1)/4), 0);
+        int[][] points = new int[][]{
+            {x1 + this.margin, middleHeight - 2*radius + this.margin, 180, 90},
+            {middleWidth - 2*radius + this.margin, middleHeight + this.margin, 90, -90}
+        };
 
-        expandCanvas(x2, y2);
         this.g2d.setColor(color);
+        path.moveTo(x1 + this.margin, y1 + this.margin);
+        for(int i=0; i < points.length; i++){
+            path.append(new Arc2D.Double(points[i][0], points[i][1], 2*radius, 2*radius, points[i][2], points[i][3], Arc2D.OPEN), true);
+        }
+        path.lineTo(middleWidth + this.margin, y2 + this.margin);
 
-        this.g2d.drawLine(x1 + this.margin, y1 + this.margin, x1 + this.margin, (y2 + y1)/2 - radius + this.margin);
-        this.g2d.drawArc(x1 + this.margin, (y2 + y1)/2 - 2*radius + this.margin, 2*radius, 2*radius, 180, 90);
-        this.g2d.drawLine(x1 + radius + this.margin, (y2 + y1)/2 + this.margin, (x2 + x1)/2 - radius + this.margin, (y2 + y1)/2 + this.margin);
-        this.g2d.drawArc((x2 + x1)/2 - 2*radius + this.margin, (y2 + y1)/2 + this.margin, 2*radius, 2*radius, 0, 90);
-        this.g2d.drawLine((x2 + x1)/2 + this.margin, (y2 + y1)/2 + radius + this.margin, (x2 + x1)/2 + this.margin, y2 + this.margin);
-        this.g2d.drawArc((x2 + x1)/2 + this.margin, (y2 + y1)/2 + this.margin, 2*radius, 2*radius, 180, -90);
-        this.g2d.drawLine((x2 + x1)/2 + radius + this.margin, (y2 + y1)/2 + this.margin, x2 - radius + this.margin, (y2 + y1)/2 + this.margin);
-        this.g2d.drawArc(x2 - 2*radius + this.margin, (y2 + y1)/2 - 2*radius + this.margin, 2*radius, 2*radius, 0, -90);
-        this.g2d.drawLine(x2 + this.margin, (y2 + y1)/2 - radius + this.margin, x2 + this.margin, y1 + this.margin);
+        AffineTransform transform = new AffineTransform();
+        transform.translate(path.getCurrentPoint().getX(), 0);
+        transform.scale(-1, 1);
+        transform.translate(-path.getCurrentPoint().getX(), 0);
+        path.append(path.createTransformedShape(transform), false);
+
         this.g2d.drawString("x" + nb, (x2 + x1)/2 - this.g2d.getFontMetrics().stringWidth("x" + nb)/2 + this.margin, y2 + this.g2d.getFontMetrics().getHeight() + this.margin);
-    }
-
-    public BufferedImage toImage(){
-        BufferedImage outputImage = new BufferedImage(this.canvasWidth + 2*this.margin, this.canvasHeight + 2*this.margin, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = outputImage.createGraphics();
-
-        g.setColor(this.backgroundColor);
-        g.fillRect(0, 0, this.canvasWidth + 2*this.margin, this.canvasHeight + 2*this.margin);
-
-        g.drawImage(this.canvas, 0, 0, null);
-        g.dispose();
-
-        return outputImage;
+        this.g2d.draw(path);
     }
 
     public boolean saveToFile(String filePath){
-        BufferedImage outputImage = new BufferedImage(this.canvasWidth + 2*this.margin, this.canvasHeight + 2*this.margin, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = outputImage.createGraphics();
-
-        g.setColor(this.backgroundColor);
-        g.fillRect(0, 0, this.canvasWidth + 2*this.margin, this.canvasHeight + 2*this.margin);
-
-        g.drawImage(this.canvas, 0, 0, null);
-        g.dispose();
-
         try{
-            ImageIO.write(outputImage, "png", new File(filePath));
+            ImageIO.write(this.toImage(), "png", new File(filePath));
             return true;
         }catch(IOException e){
             return false;
