@@ -9,7 +9,7 @@ public class DEATH_CROSS extends Spell{
         this.name = "Death Cross";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "death_cross.png";
-        this.emote = "<:death_cross:1447276648109052084>";
+        this.emote = getEmoteConfig("death_cross");
         this.description = "A deadly energy cross that explodes after a short time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_DEATH_CROSS();

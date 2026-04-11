@@ -9,7 +9,7 @@ public class PIPE_BOMB extends Spell{
         this.name = "Dormant Crystal";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "pipe_bomb.png";
-        this.emote = "<:pipe_bomb:1451342048270483456>";
+        this.emote = getEmoteConfig("pipe_bomb");
         this.description = "A crystal that explodes when caught in an explosion";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_PIPE_BOMB();

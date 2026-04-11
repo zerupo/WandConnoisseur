@@ -3,7 +3,7 @@ package org.example.projectiles;
 public class PROJECTILE_LANCE_HOLY extends Projectile{
     @Override
     protected void initialization(){
-        this.emote = "<:lance_holy:1464974860181704736>";
+        this.emote = getEmoteConfig("lance_holy");
         this.gravityY = 100;
         this.airFriction = -0.6;
         this.mass = 0.15;

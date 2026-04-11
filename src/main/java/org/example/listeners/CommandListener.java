@@ -16,6 +16,7 @@ public class CommandListener extends ListenerAdapter{
     private final Map<String, Command> commands = new HashMap<>();
 
     public CommandListener(){
+        commands.put("dump_emotes", new DumpEmotesCommand());
         commands.put("cast_state", new CastStateCommand());
         commands.put("deck_animation", new DeckAnimationCommand());
         commands.put("echo", new EchoCommand());

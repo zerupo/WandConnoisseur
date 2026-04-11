@@ -1,10 +1,10 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 
 import java.awt.*;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +14,11 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public abstract class Spell{
+
+    static protected String getEmoteConfig(String name){
+        return EmoteConfig.get(name);
+    };
+
     public enum SpellType {projectile, static_projectile, passif, utility, modifier, material, multicast, other};
     protected final int recursionLimit = 2;
     protected String name = "spell_name";
@@ -21,7 +26,7 @@ public abstract class Spell{
     protected String imagePath = "./src/main/java/org/example/image/spell/";
     protected String imageFile = "_unidentified.png";
     protected String typeFile = "item_bg_other.png";
-    protected String emote = "<:_unidentified:1464974832608477288>";
+    protected String emote = getEmoteConfig("_unidentified");
     protected String defaultImage = "_unidentified.png";
     protected String description = "this spell does things";
     protected JLabel imageLabel = null;

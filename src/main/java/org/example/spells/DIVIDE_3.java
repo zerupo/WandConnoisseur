@@ -10,7 +10,7 @@ public class DIVIDE_3 extends Spell{
         this.name = "Divide By 3";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "d3"};
         this.imageFile = "divide_3.png";
-        this.emote = "<:divide_3:1433949647600091276>";
+        this.emote = getEmoteConfig("divide_3");
         this.description = "Casts the next spell 3 times, but with reduced damage";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0.1, 0.1, 0.2, 0, 0, 0, 1);

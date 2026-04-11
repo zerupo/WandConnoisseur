@@ -9,7 +9,7 @@ public class AIR_BULLET extends Spell{
         this.name = "Burst Of Air";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "air", "fart"};
         this.imageFile = "air_bullet.png";
-        this.emote = "<:air_bullet:1447276636574847138>";
+        this.emote = getEmoteConfig("air_bullet");
         this.description = "A brittle burst of air capable of greatly pushing objects";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_AIR_BULLET();

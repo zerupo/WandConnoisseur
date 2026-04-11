@@ -10,7 +10,7 @@ public class BULLET_TIMER extends Spell{
         this.name = "Magic Arrow With Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "magic arrow timer"};
         this.imageFile = "bullet_timer.png";
-        this.emote = "<:bullet_timer:1464974839558177034>";
+        this.emote = getEmoteConfig("bullet_timer");
         this.description = "A magical arrow that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BULLET();

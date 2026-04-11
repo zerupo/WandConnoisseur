@@ -9,7 +9,7 @@ public class MIST_SLIME extends Spell{
         this.name = "Slime Mist";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mist_slime.png";
-        this.emote = "<:mist_slime:1464974872160501914>";
+        this.emote = getEmoteConfig("mist_slime");
         this.description = "A cloud of slimy mist";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MIST_SLIME();

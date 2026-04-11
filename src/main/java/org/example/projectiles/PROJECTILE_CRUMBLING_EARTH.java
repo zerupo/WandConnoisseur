@@ -4,7 +4,7 @@ public class PROJECTILE_CRUMBLING_EARTH extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Earthquake";
-        this.emote = "<:crumbling_earth:1453399893166133339>";
+        this.emote = getEmoteConfig("crumbling_earth");
         this.gravityY = 10;
         this.mass = 0.07;
 

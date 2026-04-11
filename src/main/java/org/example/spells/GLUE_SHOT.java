@@ -9,7 +9,7 @@ public class GLUE_SHOT extends Spell{
         this.name = "Glue Ball";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "coom"};
         this.imageFile = "glue_shot.png";
-        this.emote = "<:glue_shot:1464974849431830659>";
+        this.emote = getEmoteConfig("glue_shot");
         this.description = "A projectile that explodes into a sticky mess";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GLUE_SHOT();

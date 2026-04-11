@@ -4,7 +4,7 @@ public class PROJECTILE_FIREBALL extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Fireball";
-        this.emote = "<:fireball:1453399896806789264>";
+        this.emote = getEmoteConfig("fireball");
         this.gravityY = 100;
         this.mass = 0.09;
 

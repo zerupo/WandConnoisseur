@@ -8,7 +8,7 @@ public class CHAIN_SHOT extends Spell{
         this.name = "Chain Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "chain_shot.png";
-        this.emote = "<:chain_shot:1433949638758633543>";
+        this.emote = getEmoteConfig("chain_shot");
         this.description = "Causes a projectile to cast a copy of itself upon expiring, up to 5 times";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0, 0.6, 0.8, 0, 0, 0, 0, 0);

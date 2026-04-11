@@ -4,7 +4,7 @@ public class PROJECTILE_HOOK extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Hookbolt";
-        this.emote = "<:hook:1464974856306032801>";
+        this.emote = getEmoteConfig("hook");
         this.gravityY = 120;
         this.airFriction = 1.2;
         this.mass = 0.07;

@@ -9,7 +9,7 @@ public class LANCE_HOLY extends Spell{
         this.name = "Holy Lance";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "lance_holy.png";
-        this.emote = "<:lance_holy:1464974860181704736>";
+        this.emote = getEmoteConfig("lance_holy");
         this.description = "A fast-flying, penetrating lance that glows with power";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LANCE_HOLY();

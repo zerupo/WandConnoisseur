@@ -11,7 +11,7 @@ public class BUCKSHOT extends Spell{
         this.name = "Triplicate Bolt";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "triplicate", "shotgun"};
         this.imageFile = "buckshot.png";
-        this.emote = "<:buckshot:1433949550917455893>";
+        this.emote = getEmoteConfig("buckshot");
         this.description = "A formation of three small, fast bolts";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BUCKSHOT();

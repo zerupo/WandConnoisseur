@@ -10,7 +10,7 @@ public class SLOW_BULLET_TIMER extends Spell{
         this.name = "Energy Orb With A Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "energy orb timer"};
         this.imageFile = "slow_bullet_timer.png";
-        this.emote = "<:slow_bullet_timer:1453399906357219458>";
+        this.emote = getEmoteConfig("slow_bullet_timer");
         this.description = "A slow but powerful orb of energy that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SLOW_BULLET();

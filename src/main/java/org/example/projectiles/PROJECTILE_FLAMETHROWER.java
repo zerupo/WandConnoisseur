@@ -4,7 +4,7 @@ public class PROJECTILE_FLAMETHROWER extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Flamethrower";
-        this.emote = "<:flamethrower:1464974846604869694>";
+        this.emote = getEmoteConfig("flamethrower");
         this.gravityY = 100;
         this.mass = 0.067;
 

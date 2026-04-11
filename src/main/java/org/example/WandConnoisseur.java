@@ -87,6 +87,7 @@ public class WandConnoisseur{
 
         logger.info("Registering Slash Commands...");
         jda.updateCommands().addCommands(
+            Commands.slash("dump_emotes", "Renvoie la listes des emotes avec leur nom et ID."),
             Commands.slash("cast_state", "Renvoie un menu contenant les différent cast states.")
                 .addOption(OptionType.STRING, "sorts", "Sorts à séparer par des \",\", précéder par 0: max: ou inf: pour modifier les charges (défaut: inf:).", true, true)
                 .addOption(OptionType.INTEGER, "draw", "Nombre de sorts/lancer de la baguette (défaut: 1).", false)

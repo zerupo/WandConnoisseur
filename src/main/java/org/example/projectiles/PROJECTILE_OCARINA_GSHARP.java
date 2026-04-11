@@ -4,7 +4,7 @@ public class PROJECTILE_OCARINA_GSHARP extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Ocarina - Note G+";
-        this.emote = "<:ocarina_gsharp:1451342046777573376>";
+        this.emote = getEmoteConfig("ocarina_gsharp");
         this.gravityY = 0;
         this.airFriction = 8;
         this.mass = 0.01;

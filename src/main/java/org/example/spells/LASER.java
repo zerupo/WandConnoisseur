@@ -9,7 +9,7 @@ public class LASER extends Spell{
         this.name = "Concentrated Light";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "conc light"};
         this.imageFile = "laser.png";
-        this.emote = "<:laser:1464974861364629610>";
+        this.emote = getEmoteConfig("laser");
         this.description = "A pinpointed beam of light";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER();

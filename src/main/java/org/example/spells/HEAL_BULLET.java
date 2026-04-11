@@ -9,7 +9,7 @@ public class HEAL_BULLET extends Spell{
         this.name = "Healing Bolt";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "heal"};
         this.imageFile = "heal_bullet.png";
-        this.emote = "<:heal_bullet:1464974850807304284>";
+        this.emote = getEmoteConfig("heal_bullet");
         this.description = "A magical bolt that heals other beings";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HEAL_BULLET();

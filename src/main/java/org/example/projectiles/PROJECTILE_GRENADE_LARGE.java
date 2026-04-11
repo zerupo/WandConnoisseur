@@ -4,7 +4,7 @@ public class PROJECTILE_GRENADE_LARGE extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Dropper Bolt";
-        this.emote = "<:grenade_large:1453399900350971988>";
+        this.emote = getEmoteConfig("grenade_large");
         this.gravityY = 1000;
         this.mass = 0.165;
 

@@ -9,7 +9,7 @@ public class LUMINOUS_DRILL extends Spell{
         this.name = "Luminous Drill";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lumi"};
         this.imageFile = "luminous_drill.png";
-        this.emote = "<:luminous_drill:1464974864749432955>";
+        this.emote = getEmoteConfig("luminous_drill");
         this.description = "A pinpointed, short-ranged beam of concentrated light";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LUMINOUS_DRILL();

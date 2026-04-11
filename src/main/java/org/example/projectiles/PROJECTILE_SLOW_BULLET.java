@@ -4,7 +4,7 @@ public class PROJECTILE_SLOW_BULLET extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Energy Orb";
-        this.emote = "<:slow_bullet:1453399905035882679>";
+        this.emote = getEmoteConfig("slow_bullet");
         this.gravityY = 0;
         this.airFriction = 1.0;
         this.mass = 0.09;

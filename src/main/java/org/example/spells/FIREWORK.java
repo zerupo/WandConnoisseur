@@ -14,7 +14,7 @@ public class FIREWORK extends Spell{
         this.name = "Fireworks!";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "fireworks"};
         this.imageFile = "fireworks.png";
-        this.emote = "<:firework:1464974845556297738>";
+        this.emote = getEmoteConfig("firework");
         this.description = "A fiery, explosive projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FIREWORK_PINK();

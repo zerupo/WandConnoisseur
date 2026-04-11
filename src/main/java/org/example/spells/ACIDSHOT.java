@@ -9,7 +9,7 @@ public class ACIDSHOT extends Spell{
         this.name = "Acid Ball";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "acidshot.png";
-        this.emote = "<:acidshot:1447276635329134692>";
+        this.emote = getEmoteConfig("acidshot");
         this.description = "A terrifying acidic projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ACIDSHOT();

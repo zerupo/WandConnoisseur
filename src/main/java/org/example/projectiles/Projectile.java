@@ -2,14 +2,20 @@ package org.example.projectiles;
 
 import org.example.main.CastState;
 import org.example.main.DamageComponent;
+import org.example.config.EmoteConfig;
 
 public abstract class Projectile{
+
+    static protected String getEmoteConfig(String name){
+        return EmoteConfig.get(name);
+    };
+
     public enum TriggerType {none, trigger, timer, expiration};
     protected TriggerType triggerType = TriggerType.none;
     protected int timer = 0;
     protected CastState triggerCastState = null;
     protected String name = "projectile_name";
-    protected String emote = "<:_unidentified:1464974832608477288>";
+    protected String emote = getEmoteConfig("_unidentified");
 
     // velocity component
     protected double gravityX = 0.0;

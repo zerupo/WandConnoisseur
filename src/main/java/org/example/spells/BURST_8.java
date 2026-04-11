@@ -8,7 +8,7 @@ public class BURST_8 extends Spell{
         this.name = "Octuple Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "octo", "octo cast", "octo spell", "octuple", "octuple cast"};
         this.imageFile = "burst_8.png";
-        this.emote = "<:burst_8:1433949636443377734>";
+        this.emote = getEmoteConfig("burst_8");
         this.description = "Simultaneously casts 8 spells";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0, 0, 0, 0.5);

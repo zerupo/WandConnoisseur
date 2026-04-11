@@ -9,7 +9,7 @@ public class ROCKET extends Spell{
         this.name = "Magic Missile";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "rocket.png";
-        this.emote = "<:rocket:1464974873402150963>";
+        this.emote = getEmoteConfig("rocket");
         this.description = "A fiery, explosive projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ROCKET();

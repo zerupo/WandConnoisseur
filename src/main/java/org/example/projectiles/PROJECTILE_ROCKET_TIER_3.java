@@ -4,7 +4,7 @@ public class PROJECTILE_ROCKET_TIER_3 extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Giant Magic Missile";
-        this.emote = "<:rocket_tier_3:1464974875855818823>";
+        this.emote = getEmoteConfig("rocket_tier_3");
         this.gravityY = 50;
         this.airFriction = -5.0;
         this.mass = 0.05;

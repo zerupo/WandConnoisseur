@@ -8,7 +8,7 @@ public class SCATTER_4 extends Spell{
         this.name = "Quadruple Scatter Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "quad scatter", "quad spread", "quadruple scatter", "quadruple spread"};
         this.imageFile = "scatter_4.png";
-        this.emote = "<:scatter_4:1433949681058189483>";
+        this.emote = getEmoteConfig("scatter_4");
         this.description = "Simultaneously casts 4 spells with low accuracy";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.5, 0.6, 0.7, 0.8, 0.8, 0.6, 0, 0, 0, 0);

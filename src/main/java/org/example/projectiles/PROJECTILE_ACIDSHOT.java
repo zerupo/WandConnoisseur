@@ -4,7 +4,7 @@ public class PROJECTILE_ACIDSHOT extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Acid Ball";
-        this.emote = "<:acidshot:1447276635329134692>";
+        this.emote = getEmoteConfig("acidshot");
         this.gravityY = 10;
         this.mass = 0.07;
 

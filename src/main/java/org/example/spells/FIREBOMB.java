@@ -9,7 +9,7 @@ public class FIREBOMB extends Spell{
         this.name = "Firebomb";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "firebomb.png";
-        this.emote = "<:firebomb:1464974844155400300>";
+        this.emote = getEmoteConfig("firebomb");
         this.description = "Slow, fiery bolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FIREBOMB();

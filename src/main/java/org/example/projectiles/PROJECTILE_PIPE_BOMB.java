@@ -4,7 +4,7 @@ public class PROJECTILE_PIPE_BOMB extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Dormant Crystal";
-        this.emote = "<:pipe_bomb:1451342048270483456>";
+        this.emote = getEmoteConfig("pipe_bomb");
         this.mass = 0.06;
 
         this.speedMin = 250;

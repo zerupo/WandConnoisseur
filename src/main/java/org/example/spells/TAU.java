@@ -7,7 +7,7 @@ public class TAU extends Spell{
     protected void initialization(){
         this.name = "Tau";
         this.imageFile = "tau.png";
-        this.emote = "<:tau:1433949687676670112>";
+        this.emote = getEmoteConfig("tau");
         this.description = "Copies the two following spells in the wand when cast";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

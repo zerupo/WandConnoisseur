@@ -9,7 +9,7 @@ public class BOMB_HOLY extends Spell{
         this.name = "Holy Bomb";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bomb_holy.png";
-        this.emote = "<:bomb_holy:1464974835699679519>";
+        this.emote = getEmoteConfig("bomb_holy");
         this.description = "Summons a bomb that... well...";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BOMB_HOLY();

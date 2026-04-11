@@ -9,7 +9,7 @@ public class GRENADE_ANTI extends Spell{
         this.name = "Odd Firebolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade_anti.png";
-        this.emote = "<:grenade_anti:1453399899143147530>";
+        this.emote = getEmoteConfig("grenade_anti");
         this.description = "A somewhat peculiar bouncy, explosive bolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GRENADE_ANTI();

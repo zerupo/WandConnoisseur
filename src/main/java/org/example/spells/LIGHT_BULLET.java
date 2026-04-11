@@ -9,7 +9,7 @@ public class LIGHT_BULLET extends Spell{
         this.name = "Spark Bolt";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "spark"};
         this.imageFile = "light_bullet.png";
-        this.emote = "<:light_bullet:1433949664469712967>";
+        this.emote = getEmoteConfig("light_bullet");
         this.description = "A weak but enchanting sparkling projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LIGHT_BULLET();

@@ -9,7 +9,7 @@ public class BLACK_HOLE extends Spell{
         this.name = "Black Hole";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bh"};
         this.imageFile = "black_hole.png";
-        this.emote = "<:black_hole:1433949520550428862>";
+        this.emote = getEmoteConfig("black_hole");
         this.description = "A slow orb of void that eats through all obstacles";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BLACK_HOLE();

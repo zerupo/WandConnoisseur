@@ -9,7 +9,7 @@ public class GLITTER_BOMB extends Spell{
         this.name = "Glitter Bomb";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "glitter_bomb.png";
-        this.emote = "<:glitter_bomb:1464974848122949810>";
+        this.emote = getEmoteConfig("glitter_bomb");
         this.description = "Summons a bomb that explodes into volatile fragments";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GLITTER_BOMB();

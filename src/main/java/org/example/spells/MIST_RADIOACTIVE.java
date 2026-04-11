@@ -9,7 +9,7 @@ public class MIST_RADIOACTIVE extends Spell{
         this.name = "Toxic Mist";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mist_radioactive.png";
-        this.emote = "<:mist_radioactive:1464974870898278633>";
+        this.emote = getEmoteConfig("mist_radioactive");
         this.description = "A cloud of toxic mist";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MIST_RADIOACTIVE();

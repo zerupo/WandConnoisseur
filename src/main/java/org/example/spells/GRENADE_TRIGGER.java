@@ -10,7 +10,7 @@ public class GRENADE_TRIGGER extends Spell{
         this.name = "Firebolt With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "firebolt trigger"};
         this.imageFile = "grenade_trigger.png";
-        this.emote = "<:grenade_trigger:1453399903769333820>";
+        this.emote = getEmoteConfig("grenade_trigger");
         this.description = "A bouncy, explosive bolt that that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GRENADE();

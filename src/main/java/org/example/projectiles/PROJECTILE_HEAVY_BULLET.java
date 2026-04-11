@@ -4,7 +4,7 @@ public class PROJECTILE_HEAVY_BULLET extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Magic Bolt";
-        this.emote = "<:heavy_bullet:1464974851948417149>";
+        this.emote = getEmoteConfig("heavy_bullet");
         this.gravityY = 200;
         this.airFriction = 0.3;
         this.mass = 0.08;

@@ -8,7 +8,7 @@ public class PENTAGRAM_SHAPE extends Spell{
         this.name = "Formation - Pentagon";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "penta", "penta cast", "penta spell"};
         this.imageFile = "pentagram_shape.png";
-        this.emote = "<:pentagram_shape:1433949673562832976>";
+        this.emote = getEmoteConfig("pentagram_shape");
         this.description = "Casts 5 spells in a pentagonal pattern";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.4, 0.3, 0.2, 0.1, 0, 0, 0, 0, 0);

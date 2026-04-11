@@ -9,7 +9,7 @@ public class ROCKET_TIER_2 extends Spell{
         this.name = "Large Magic Missile";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "rocket_tier_2.png";
-        this.emote = "<:rocket_tier_2:1464974874610106504>";
+        this.emote = getEmoteConfig("rocket_tier_2");
         this.description = "A more powerful version of Magic missile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ROCKET_TIER_2();

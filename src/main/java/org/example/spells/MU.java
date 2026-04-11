@@ -7,7 +7,7 @@ public class MU extends Spell{
     protected void initialization(){
         this.name = "Mu";
         this.imageFile = "mu.png";
-        this.emote = "<:mu:1433949668659691632>";
+        this.emote = getEmoteConfig("mu");
         this.description = "Every modifier-type spell in the current wand is applied to a projectile";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

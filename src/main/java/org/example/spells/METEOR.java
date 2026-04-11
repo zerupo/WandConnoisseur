@@ -9,7 +9,7 @@ public class METEOR extends Spell{
         this.name = "Meteor";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "meteor.png";
-        this.emote = "<:meteor:1464974867228004483>";
+        this.emote = getEmoteConfig("meteor");
         this.description = "A destructive projectile from the skies!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_METEOR();

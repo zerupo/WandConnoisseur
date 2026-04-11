@@ -10,7 +10,7 @@ public class DIVIDE_4 extends Spell{
         this.name = "Divide By 4";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "d4"};
         this.imageFile = "divide_4.png";
-        this.emote = "<:divide_4:1433949648757719131>";
+        this.emote = getEmoteConfig("divide_4");
         this.description = "Casts the next spell 4 times, but with reduced damage";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0, 0, 0, 1);

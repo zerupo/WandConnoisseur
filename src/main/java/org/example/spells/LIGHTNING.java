@@ -9,7 +9,7 @@ public class LIGHTNING extends Spell{
         this.name = "Lightning Bolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "lightning.png";
-        this.emote = "<:lightning:1464974863671361772>";
+        this.emote = getEmoteConfig("lightning");
         this.description = "The primordial force of nature";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LIGHTNING();

@@ -4,7 +4,7 @@ public class PROJECTILE_BUBBLESHOT extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Bubble Spark";
-        this.emote = "<:bubbleshot:1447276643411431654>";
+        this.emote = getEmoteConfig("bubbleshot");
         this.gravityY = 0;
         this.airFriction = 1.0;
         this.mass = 0.02;

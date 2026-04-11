@@ -8,7 +8,7 @@ public class SPIRALING_SHOT extends Spell{
         this.name = "Spiral Arc";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "spiral"};
         this.imageFile = "spiraling_shot.png";
-        this.emote = "<:spiraling_shot:1433949683037900893>";
+        this.emote = getEmoteConfig("spiraling_shot");
         this.description = "A projectile flies in a spiralling pattern";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0.3, 0.4, 0.5, 0, 0, 0, 0, 0, 0);

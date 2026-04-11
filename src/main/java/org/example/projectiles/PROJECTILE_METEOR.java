@@ -4,7 +4,7 @@ public class PROJECTILE_METEOR extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Meteor";
-        this.emote = "<:meteor:1464974867228004483>";
+        this.emote = getEmoteConfig("meteor");
         this.gravityY = 50;
         this.airFriction = 0.0;
         this.mass = 0.3;

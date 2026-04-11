@@ -9,7 +9,7 @@ public class DYNAMITE extends Spell{
         this.name = "Dynamite";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "tnt"};
         this.imageFile = "dynamite.png";
-        this.emote = "<:dynamite:1453399894239744010>";
+        this.emote = getEmoteConfig("dynamite");
         this.description = "Summons a small explosive";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_DYNAMITE();

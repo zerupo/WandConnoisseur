@@ -10,7 +10,7 @@ public class LASER_LUMINOUS_DRILL extends Spell{
         this.name = "Luminous Drill With Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lumi timer"};
         this.imageFile = "luminous_drill_timer.png";
-        this.emote = "<:laser_luminous_drill:1464974862576779416>";
+        this.emote = getEmoteConfig("laser_luminous_drill");
         this.description = "A pinpointed, short-ranged beam of concentrated light that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LUMINOUS_DRILL();

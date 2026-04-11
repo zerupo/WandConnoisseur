@@ -8,7 +8,7 @@ public class LIFETIME_DOWN extends Spell{
         this.name = "Reduce Lifetime";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lifetime down"};
         this.imageFile = "lifetime_down.png";
-        this.emote = "<:lifetime_down:1433949663014289430>";
+        this.emote = getEmoteConfig("lifetime_down");
         this.description = "Reduces the lifetime of a spell";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.5, 0.5, 0.75, 0.5, 0, 0, 0, 0.1);

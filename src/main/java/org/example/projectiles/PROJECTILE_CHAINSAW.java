@@ -4,7 +4,7 @@ public class PROJECTILE_CHAINSAW extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Chainsaw";
-        this.emote = "<:chainsaw:1433949639866060862>";
+        this.emote = getEmoteConfig("chainsaw");
         this.lifetime = 1;
         this.lifetimeRandomness = 0;
     }

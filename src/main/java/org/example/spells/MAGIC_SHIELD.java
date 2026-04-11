@@ -9,7 +9,7 @@ public class MAGIC_SHIELD extends Spell{
         this.name = "Magic Guard";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "magic_shield.png";
-        this.emote = "<:magic_shield:1464974866079027270>";
+        this.emote = getEmoteConfig("magic_shield");
         this.description = "Four guarding lights rotate around you for a time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MAGIC_SHIELD();

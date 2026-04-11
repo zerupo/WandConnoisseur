@@ -9,7 +9,7 @@ public class EXPANDING_ORB extends Spell{
         this.name = "Expanding Sphere";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "expanding_orb.png";
-        this.emote = "<:expanding_orb:1453399895678648341>";
+        this.emote = getEmoteConfig("expanding_orb");
         this.description = "A slow projectile that increases its damage over time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_EXPANDING_ORB();

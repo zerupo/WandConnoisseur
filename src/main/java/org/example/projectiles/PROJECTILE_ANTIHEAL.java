@@ -4,7 +4,7 @@ public class PROJECTILE_ANTIHEAL extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Deadly Heal";
-        this.emote = "<:antiheal:1447276638357295325>";
+        this.emote = getEmoteConfig("antiheal");
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.07;

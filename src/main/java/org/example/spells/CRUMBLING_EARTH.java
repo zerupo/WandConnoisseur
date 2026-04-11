@@ -9,7 +9,7 @@ public class CRUMBLING_EARTH extends Spell{
         this.name = "Earthquake";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "crumbling_earth.png";
-        this.emote = "<:crumbling_earth:1453399893166133339>";
+        this.emote = getEmoteConfig("crumbling_earth");
         this.description = "Calls the anger of the earth";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CRUMBLING_EARTH();

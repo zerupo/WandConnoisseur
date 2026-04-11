@@ -9,7 +9,7 @@ public class THUNDERBALL extends Spell{
         this.name = "Thunder Charge";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "thunderball.png";
-        this.emote = "<:thunderball:1464974877164306494>";
+        this.emote = getEmoteConfig("thunderball");
         this.description = "A projectile with immense stored electricity";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_THUNDERBALL();

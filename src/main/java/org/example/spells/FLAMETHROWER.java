@@ -9,7 +9,7 @@ public class FLAMETHROWER extends Spell{
         this.name = "Flamethrower";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "flamethrower.png";
-        this.emote = "<:flamethrower:1464974846604869694>";
+        this.emote = getEmoteConfig("flamethrower");
         this.description = "A stream of fire!!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FLAMETHROWER();

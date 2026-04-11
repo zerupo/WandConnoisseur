@@ -9,7 +9,7 @@ public class LASER_EMITTER_CUTTER extends Spell{
         this.name = "Plasma Cutter";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "laser_emitter_cutter.png";
-        this.emote = "<:laser_emitter_cutter:1433949661336436736>";
+        this.emote = getEmoteConfig("laser_emitter_cutter");
         this.description = "A plasma beam specialized in cutting materials!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER_CUTTER();

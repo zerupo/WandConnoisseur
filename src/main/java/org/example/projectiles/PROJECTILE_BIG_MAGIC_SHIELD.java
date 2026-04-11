@@ -4,7 +4,7 @@ public class PROJECTILE_BIG_MAGIC_SHIELD extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Big Magic Guard";
-        this.emote = "<:big_magic_shield:1464974834952962215>";
+        this.emote = getEmoteConfig("big_magic_shield");
         this.gravityY = 0;
         this.airFriction = 0.0;
 

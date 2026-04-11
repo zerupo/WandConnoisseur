@@ -7,7 +7,7 @@ public class GAMMA extends Spell{
     protected void initialization(){
         this.name = "Gamma";
         this.imageFile = "gamma.png";
-        this.emote = "<:gamma:1433949658476183716>";
+        this.emote = getEmoteConfig("gamma");
         this.description = "Casts a copy of the last spell in your wand";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

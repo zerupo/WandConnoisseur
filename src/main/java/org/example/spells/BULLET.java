@@ -9,7 +9,7 @@ public class BULLET extends Spell{
         this.name = "Magic Arrow";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bullet.png";
-        this.emote = "<:bullet:1464974838559936533>";
+        this.emote = getEmoteConfig("bullet");
         this.description = "A handy magical arrow";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BULLET();

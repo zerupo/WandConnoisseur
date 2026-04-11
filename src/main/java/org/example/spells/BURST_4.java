@@ -8,7 +8,7 @@ public class BURST_4 extends Spell{
         this.name = "Quadruple Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "quad", "quad cast", "quad spell", "quadruple", "quadruple cast", "quadruple spell"};
         this.imageFile = "burst_4.png";
-        this.emote = "<:burst_4:1433949554243272906>";
+        this.emote = getEmoteConfig("burst_4");
         this.description = "Simultaneously casts 4 spells";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.5, 0.6, 0.6, 0.6, 0, 0, 0, 0);

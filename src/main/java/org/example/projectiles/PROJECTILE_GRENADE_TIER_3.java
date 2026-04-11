@@ -4,7 +4,7 @@ public class PROJECTILE_GRENADE_TIER_3 extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Giant Firebolt";
-        this.emote = "<:grenade_tier_3:1453399902750244975>";
+        this.emote = getEmoteConfig("grenade_tier_3");
         this.mass = 0.065;
 
         this.speedMin = 250;

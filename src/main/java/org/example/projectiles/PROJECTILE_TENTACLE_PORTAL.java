@@ -4,7 +4,7 @@ public class PROJECTILE_TENTACLE_PORTAL extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Eldritch Portal";
-        this.emote = "<:tentacle_portal:1453399908663951370>";
+        this.emote = getEmoteConfig("tentacle_portal");
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.08;

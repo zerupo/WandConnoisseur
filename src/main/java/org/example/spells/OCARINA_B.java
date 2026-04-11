@@ -9,7 +9,7 @@ public class OCARINA_B extends Spell{
         this.name = "Ocarina - Note B";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "ocarina b", "b"};
         this.imageFile = "ocarina_b.png";
-        this.emote = "<:ocarina_b:1451342040515346717>";
+        this.emote = getEmoteConfig("ocarina_b");
         this.description = "Music for your ears!";
         this.type = SpellType.other;
         this.relatedProjectile = new PROJECTILE_OCARINA_B();

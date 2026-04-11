@@ -9,7 +9,7 @@ public class LASER_EMITTER extends Spell{
         this.name = "Plasma Beam";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "plasma"};
         this.imageFile = "laser_emitter.png";
-        this.emote = "<:laser_emitter:1447276651972006000>";
+        this.emote = getEmoteConfig("laser_emitter");
         this.description = "An instantaneous, dangerous beam of light";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER();

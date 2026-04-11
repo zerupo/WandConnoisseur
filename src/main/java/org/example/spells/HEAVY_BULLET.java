@@ -9,7 +9,7 @@ public class HEAVY_BULLET extends Spell{
         this.name = "Magic Bolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "heavy_bullet.png";
-        this.emote = "<:heavy_bullet:1464974851948417149>";
+        this.emote = getEmoteConfig("heavy_bullet");
         this.description = "A powerful magical bolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HEAVY_BULLET();

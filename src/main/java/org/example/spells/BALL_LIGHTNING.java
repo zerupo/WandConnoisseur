@@ -9,7 +9,7 @@ public class BALL_LIGHTNING extends Spell{
         this.name = "Ball Lightning";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "elec balls", "blue balls"};
         this.imageFile = "ball_lightning.png";
-        this.emote = "<:ball_lightning:1464974833799663707>";
+        this.emote = getEmoteConfig("ball_lightning");
         this.description = "Summons three short range electrical orbs";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BALL_LIGHTNING();

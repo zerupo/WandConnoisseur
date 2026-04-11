@@ -9,7 +9,7 @@ public class GRENADE_LARGE extends Spell{
         this.name = "Dropper Bolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade_large.png";
-        this.emote = "<:grenade_large:1453399900350971988>";
+        this.emote = getEmoteConfig("grenade_large");
         this.description = "A very heavy explosive bolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GRENADE_LARGE();

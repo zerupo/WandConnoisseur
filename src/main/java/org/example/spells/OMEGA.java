@@ -7,7 +7,7 @@ public class OMEGA extends Spell{
     protected void initialization(){
         this.name = "Omega";
         this.imageFile = "omega.png";
-        this.emote = "<:omega:1433949671486656673>";
+        this.emote = getEmoteConfig("omega");
         this.description = "Casts copies of every spell in your wand";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0, 0, 0, 1);

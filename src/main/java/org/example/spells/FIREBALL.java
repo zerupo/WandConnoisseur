@@ -9,7 +9,7 @@ public class FIREBALL extends Spell{
         this.name = "Fireball";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "fireball.png";
-        this.emote = "<:fireball:1453399896806789264>";
+        this.emote = getEmoteConfig("fireball");
         this.description = "A powerful exploding spell";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FIREBALL();

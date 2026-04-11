@@ -4,7 +4,7 @@ public class PROJECTILE_GLITTER_BOMB extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Glitter Bomb";
-        this.emote = "<:glitter_bomb:1464974848122949810>";
+        this.emote = getEmoteConfig("glitter_bomb");
         this.speedMin = 800;
         this.speedMax = 800;
         this.lifetime = 50;

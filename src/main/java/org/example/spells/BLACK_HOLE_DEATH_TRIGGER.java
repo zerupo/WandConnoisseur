@@ -10,7 +10,7 @@ public class BLACK_HOLE_DEATH_TRIGGER extends Spell{
         this.name = "Black Hole With Death Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bh timer", "bh expiration"};
         this.imageFile = "black_hole_timer.png";
-        this.emote = "<:black_hole_death_trigger:1447276639837753556>";
+        this.emote = getEmoteConfig("black_hole_death_trigger");
         this.description = "A slow orb of void that eats through all obstacles and casts another spell as it expires";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BLACK_HOLE();

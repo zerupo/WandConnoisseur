@@ -9,7 +9,7 @@ public class TENTACLE_PORTAL extends Spell{
         this.name = "Eldritch Portal";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "yamete portal"};
         this.imageFile = "tentacle_portal.png";
-        this.emote = "<:tentacle_portal:1453399908663951370>";
+        this.emote = getEmoteConfig("tentacle_portal");
         this.description = "A weak but enchanting sparkling projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_TENTACLE_PORTAL();

@@ -10,7 +10,7 @@ public class ADD_TRIGGER extends Spell{
     protected void initialization(){
         this.name = "Add Trigger";
         this.imageFile = "trigger.png";
-        this.emote = "<:add_trigger:1433949483225583817>";
+        this.emote = getEmoteConfig("add_trigger");
         this.description = "Makes a projectile cast another spell upon collision";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.3, 0.6, 0.6, 0, 0, 0, 0, 1);

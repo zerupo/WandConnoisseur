@@ -8,7 +8,7 @@ public class SIGMA extends Spell{
         this.name = "Sigma";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "sigma balls"};
         this.imageFile = "sigma.png";
-        this.emote = "<:sigma:1433949682018816121>";
+        this.emote = getEmoteConfig("sigma");
         this.description = "Copies every static projectile -type spell in the wand when cast";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 0, 1);

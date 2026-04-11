@@ -10,7 +10,7 @@ public class HEAVY_BULLET_TIMER extends Spell{
         this.name = "Magic Bolt With Timer";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "heavy_bullet_timer.png";
-        this.emote = "<:heavy_bullet_timer:1464974853584195636>";
+        this.emote = getEmoteConfig("heavy_bullet_timer");
         this.description = "A powerful magical bolt that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HEAVY_BULLET();

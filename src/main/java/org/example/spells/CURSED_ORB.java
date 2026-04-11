@@ -9,7 +9,7 @@ public class CURSED_ORB extends Spell{
         this.name = "Cursed Sphere";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "cursed_orb.png";
-        this.emote = "<:cursed_orb:1447276646980784209>";
+        this.emote = getEmoteConfig("cursed_orb");
         this.description = "A projectile that brings bad luck to anyone it hits";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CURSED_ORB();

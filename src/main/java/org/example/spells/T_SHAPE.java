@@ -8,7 +8,7 @@ public class T_SHAPE extends Spell{
         this.name = "Formation - Above And Below";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "t shape", "above below", "above and below"};
         this.imageFile = "t_shape.png";
-        this.emote = "<:t_shape:1433949686602928412>";
+        this.emote = getEmoteConfig("t_shape");
         this.description = "Casts 3 spells - ahead, above and below the caster";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.5, 0.4, 0.3, 0, 0, 0, 0, 0, 0);

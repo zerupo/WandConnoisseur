@@ -9,7 +9,7 @@ public class HOOK extends Spell{
         this.name = "Hookbolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "hook.png";
-        this.emote = "<:hook:1464974856306032801>";
+        this.emote = getEmoteConfig("hook");
         this.description = "A glowing hook that pulls the caster towards itself upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HOOK();

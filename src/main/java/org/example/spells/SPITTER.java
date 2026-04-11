@@ -9,7 +9,7 @@ public class SPITTER extends Spell{
         this.name = "Spitter Bolt";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "spitter.png";
-        this.emote = "<:spitter:1433949684245987378>";
+        this.emote = getEmoteConfig("spitter");
         this.description = "A short-lived magical bolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SPITTER();

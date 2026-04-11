@@ -5,7 +5,7 @@ public class PROJECTILE_BOMB_HOLY_GIGA extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Giga Holy Bomb";
-        this.emote = "<:bomb_holy_giga:1464974837247119392>";
+        this.emote = getEmoteConfig("bomb_holy_giga");
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.07;

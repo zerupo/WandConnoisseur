@@ -4,7 +4,7 @@ public class PROJECTILE_LANCE extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Glowing Lance";
-        this.emote = "<:lance:1464974859187785780>";
+        this.emote = getEmoteConfig("lance");
         this.airFriction = -0.4;
         this.mass = 0.065;
 

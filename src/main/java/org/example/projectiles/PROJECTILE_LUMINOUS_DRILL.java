@@ -4,7 +4,7 @@ public class PROJECTILE_LUMINOUS_DRILL extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Luminous Drill";
-        this.emote = "<:luminous_drill:1464974864749432955>";
+        this.emote = getEmoteConfig("luminous_drill");
         this.mass = 1.65;
 
         this.speedMin = 1400;

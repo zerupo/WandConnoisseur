@@ -4,7 +4,7 @@ public class PROJECTILE_FIREWORK_PINK extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Pink Firework";
-        this.emote = "<:firework:1464974845556297738>";
+        this.emote = getEmoteConfig("firework");
         this.gravityY = 50;
         this.airFriction = -5.0;
         this.mass = 0.05;

@@ -4,7 +4,7 @@ public class PROJECTILE_NUKE extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Nuke";
-        this.emote = "<:nuke:1433949670249468016>";
+        this.emote = getEmoteConfig("nuke");
         this.gravityY = 120;
         this.airFriction = 0.00001;
         this.mass = 0.2;

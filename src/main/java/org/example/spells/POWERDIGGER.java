@@ -9,7 +9,7 @@ public class POWERDIGGER extends Spell{
         this.name = "Digging Blast";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "drill bad"};
         this.imageFile = "powerdigger.png";
-        this.emote = "<:powerdigger:1447276654920597605>";
+        this.emote = getEmoteConfig("powerdigger");
         this.description = "More powerful digging";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_POWERDIGGER();

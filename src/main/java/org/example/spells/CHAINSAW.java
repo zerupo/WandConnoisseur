@@ -8,7 +8,7 @@ public class CHAINSAW extends Spell{
     protected void initialization(){
         this.name = "Chainsaw";
         this.imageFile = "chainsaw.png";
-        this.emote = "<:chainsaw:1433949639866060862>";
+        this.emote = getEmoteConfig("chainsaw");
         this.description = "A good tool for cutting meat. Also has some magical properties...";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CHAINSAW();

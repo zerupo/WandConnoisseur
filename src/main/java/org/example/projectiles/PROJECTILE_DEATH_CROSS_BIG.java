@@ -4,7 +4,7 @@ public class PROJECTILE_DEATH_CROSS_BIG extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Giga Death Cross";
-        this.emote = "<:death_cross_big:1447276649304559826>";
+        this.emote = getEmoteConfig("death_cross_big");
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.08;

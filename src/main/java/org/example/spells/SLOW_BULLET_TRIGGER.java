@@ -10,7 +10,7 @@ public class SLOW_BULLET_TRIGGER extends Spell{
         this.name = "Energy Orb With A Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "energy orb trigger"};
         this.imageFile = "slow_bullet_trigger.png";
-        this.emote = "<:slow_bullet_trigger:1453399907414180116>";
+        this.emote = getEmoteConfig("slow_bullet_trigger");
         this.description = "A slow but powerful orb of energy that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SLOW_BULLET();

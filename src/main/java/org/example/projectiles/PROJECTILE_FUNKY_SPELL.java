@@ -4,7 +4,7 @@ public class PROJECTILE_FUNKY_SPELL extends Projectile{
     @Override
     protected void initialization(){
         this.name = "???";
-        this.emote = "<:funky_spell:1447276650839412962>";
+        this.emote = getEmoteConfig("funky_spell");
         this.mass = 0.05;
 
         this.speedMin = 400;

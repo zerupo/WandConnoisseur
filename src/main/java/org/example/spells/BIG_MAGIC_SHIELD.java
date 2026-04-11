@@ -9,7 +9,7 @@ public class BIG_MAGIC_SHIELD extends Spell{
         this.name = "Big Magic Guard";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "big_magic_shield.png";
-        this.emote = "<:big_magic_shield:1464974834952962215>";
+        this.emote = getEmoteConfig("big_magic_shield");
         this.description = "Eight guarding lights rotate around you for a time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BIG_MAGIC_SHIELD();

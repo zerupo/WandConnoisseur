@@ -4,7 +4,7 @@ public class PROJECTILE_MIST_SLIME extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Slime Mist";
-        this.emote = "<:mist_slime:1464974872160501914>";
+        this.emote = getEmoteConfig("mist_slime");
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.0;

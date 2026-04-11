@@ -10,7 +10,7 @@ public class SPITTER_TIMER extends Spell{
         this.name = "Spitter Bolt With Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "spitter timer"};
         this.imageFile = "spitter_timer.png";
-        this.emote = "<:spitter_timer:1433949685369802864>";
+        this.emote = getEmoteConfig("spitter_timer");
         this.description = "A short-lived magical bolt that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SPITTER();

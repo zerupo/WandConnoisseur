@@ -9,7 +9,7 @@ public class ICEBALL extends Spell{
         this.name = "Iceball";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "iceball.png";
-        this.emote = "<:iceball:1464974857866313984>";
+        this.emote = getEmoteConfig("iceball");
         this.description = "A magical ball of frozen fire";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ICEBALL();

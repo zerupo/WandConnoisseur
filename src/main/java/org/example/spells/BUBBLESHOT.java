@@ -9,7 +9,7 @@ public class BUBBLESHOT extends Spell{
         this.name = "Bubble Spark";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bubble"};
         this.imageFile = "bubbleshot.png";
-        this.emote = "<:bubbleshot:1447276643411431654>";
+        this.emote = getEmoteConfig("bubbleshot");
         this.description = "A bouncy, inaccurate spell";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BUBBLESHOT();

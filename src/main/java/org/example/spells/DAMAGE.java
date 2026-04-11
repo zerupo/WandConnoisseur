@@ -8,7 +8,7 @@ public class DAMAGE extends Spell{
         this.name = "Damage Plus";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "damage up"};
         this.imageFile = "damage.png";
-        this.emote = "<:damage:1433949642986360852>";
+        this.emote = getEmoteConfig("damage");
         this.description = "Increases the damage done by a projectile";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.6, 0.6, 0.8, 0.6, 0.6, 0, 0, 0, 0, 0);

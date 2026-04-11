@@ -8,7 +8,7 @@ public class BURST_2 extends Spell{
         this.name = "Double Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "double", "double cast"};
         this.imageFile = "burst_2.png";
-        this.emote = "<:burst_2:1433949551923957932>";
+        this.emote = getEmoteConfig("burst_2");
         this.description = "Simultaneously casts 2 spells";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0, 0, 0, 0);

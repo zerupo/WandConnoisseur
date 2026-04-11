@@ -5,7 +5,7 @@ public class PROJECTILE_BOMB_HOLY extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Holy Bomb";
-        this.emote = "<:bomb_holy:1464974835699679519>";
+        this.emote = getEmoteConfig("bomb_holy");
         this.lifetime = 260;
         this.lifetimeRandomness = 0;
     }

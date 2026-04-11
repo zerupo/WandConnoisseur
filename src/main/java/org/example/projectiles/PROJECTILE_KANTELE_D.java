@@ -4,7 +4,7 @@ public class PROJECTILE_KANTELE_D extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Kantele - Note D";
-        this.emote = "<:kantele_d:1451342033007542393>";
+        this.emote = getEmoteConfig("kantele_d");
         this.gravityY = 0;
         this.airFriction = 8;
         this.mass = 0.01;

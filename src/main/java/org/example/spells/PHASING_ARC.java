@@ -8,7 +8,7 @@ public class PHASING_ARC extends Spell{
         this.name = "Phasing Arc";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "phasing"};
         this.imageFile = "phasing_arc.png";
-        this.emote = "<:phasing_arc:1433949674968191137>";
+        this.emote = getEmoteConfig("phasing_arc");
         this.description = "Makes a projectile fly much slower, but teleport short distances over its flight";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.3, 0.6, 0.1, 0, 0, 0, 0, 0);

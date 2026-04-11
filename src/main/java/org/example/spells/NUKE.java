@@ -8,7 +8,7 @@ public class NUKE extends Spell{
     protected void initialization(){
         this.name = "Nuke";
         this.imageFile = "nuke.png";
-        this.emote = "<:nuke:1433949670249468016>";
+        this.emote = getEmoteConfig("nuke");
         this.description = "Take cover!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_NUKE();

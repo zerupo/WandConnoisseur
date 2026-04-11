@@ -4,7 +4,7 @@ public class PROJECTILE_EXPANDING_ORB extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Expanding Sphere";
-        this.emote = "<:expanding_orb:1453399895678648341>";
+        this.emote = getEmoteConfig("expanding_orb");
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.04;

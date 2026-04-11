@@ -10,7 +10,7 @@ public class LASER_EMITTER_FOUR extends Spell{
         this.name = "Plasma Beam Cross";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "plasma cross"};
         this.imageFile = "laser_emitter_four.png";
-        this.emote = "<:laser_emitter_four:1447276652857135105>";
+        this.emote = getEmoteConfig("laser_emitter_four");
         this.description = "Four deadly plasma beams in a cross-shape. Look out, they can hurt you as well!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER();

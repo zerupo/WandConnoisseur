@@ -11,7 +11,7 @@ public class ADD_DEATH_TRIGGER extends Spell{
         this.name = "Add Expiration Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "add expiration"};
         this.imageFile = "death_trigger.png";
-        this.emote = "<:add_death_trigger:1433948899693039666>";
+        this.emote = getEmoteConfig("add_death_trigger");
         this.description = "Makes a projectile cast another spell upon expiring";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.3, 0.6, 0.6, 0, 0, 0, 0, 1);

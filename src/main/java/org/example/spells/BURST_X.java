@@ -8,7 +8,7 @@ public class BURST_X extends Spell{
         this.name = "Myriad Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "myriad"};
         this.imageFile = "burst_x.png";
-        this.emote = "<:burst_x:1433949637470978048>";
+        this.emote = getEmoteConfig("burst_x");
         this.description = "Simultaneously casts as many spells as you have left uncast in your wand";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0, 0, 0, 0.5);

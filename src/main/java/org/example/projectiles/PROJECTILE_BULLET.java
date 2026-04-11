@@ -4,7 +4,7 @@ public class PROJECTILE_BULLET extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Magic Arrow";
-        this.emote = "<:bullet:1464974838559936533>";
+        this.emote = getEmoteConfig("bullet");
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.07;

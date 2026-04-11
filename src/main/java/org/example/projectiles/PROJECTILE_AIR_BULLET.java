@@ -4,7 +4,7 @@ public class PROJECTILE_AIR_BULLET extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Burst Of Air";
-        this.emote = "<:air_bullet:1447276636574847138>";
+        this.emote = getEmoteConfig("air_bullet");
         this.gravityY = 0;
         this.airFriction = 1.7;
         this.mass = 0.01;

@@ -9,7 +9,7 @@ public class ANTIHEAL extends Spell{
         this.name = "Deadly Heal";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "antiheal.png";
-        this.emote = "<:antiheal:1447276638357295325>";
+        this.emote = getEmoteConfig("antiheal");
         this.description = "A projectile that at first deals damage, then heals over time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ANTIHEAL();

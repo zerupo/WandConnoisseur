@@ -747,4 +747,64 @@ public class CardHistory{
 
         return sb.toString();
     }
+
+
+    public String toJson() {
+        int saved = this.getStep();
+        StringBuilder sb = new StringBuilder();
+    
+        // ── Dictionnaire des sorts ──────────────────────────────
+        sb.append("{\"spells\":[");
+        for (int i = 0; i < this.spellID.length; i++) {
+            Spell s = this.spellID[i];
+            sb.append("{\"name\":\"").append(jsonEscape(s.getName())).append("\",")
+            .append("\"emote\":\"").append(jsonEscape(s.getEmote())).append("\"}");
+            if (i + 1 < this.spellID.length) sb.append(",");
+        }
+        sb.append("],");
+    
+        // ── Frames (une par step global) ────────────────────────
+        sb.append("\"frames\":[");
+        for (int i = 0; i < this.totalCallStackSize; i++) {
+            this.goToStep(i);
+            Spell[][] step = this.getCurrentStep();
+    
+            sb.append("{");
+    
+            // discard / hand / deck / callStack
+            String[] keys = {"discard", "hand", "deck", "callStack"};
+            for (int k = 0; k < 4; k++) {
+                sb.append("\"").append(keys[k]).append("\":[");
+                Spell[] zone = step[k];
+                for (int j = 0; j < zone.length; j++) {
+                    sb.append(spellToID(zone[j]));
+                    if (j + 1 < zone.length) sb.append(",");
+                }
+                sb.append("],");
+            }
+    
+            // méta-données pour le titre
+            sb.append("\"meta\":{")
+            .append("\"cardPoolStep\":").append(this.getCardOnlyStep()).append(",")
+            .append("\"cardPoolSize\":").append(this.getCardPoolSize()).append(",")
+            .append("\"callStackStep\":").append(this.getCurrentCallStackStepAbsolute()).append(",")
+            .append("\"callStackSize\":").append(Math.max(this.getCurrentCardPoolSize(), 1))
+            .append("}}");
+    
+            if (i + 1 < this.totalCallStackSize) sb.append(",");
+        }
+        sb.append("]}");
+    
+        // Restaurer la position d'avant
+        this.goToStep(saved);
+        return sb.toString();
+    }
+    
+    private static String jsonEscape(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
+    }
 }

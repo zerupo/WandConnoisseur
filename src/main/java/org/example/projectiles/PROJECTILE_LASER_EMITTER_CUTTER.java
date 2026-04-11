@@ -4,7 +4,7 @@ public class PROJECTILE_LASER_EMITTER_CUTTER extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Plasma Cutter";
-        this.emote = "<:laser_emitter_cutter:1433949661336436736>";
+        this.emote = getEmoteConfig("laser_emitter_cutter");
         this.gravityY = 0;
         this.airFriction = 7;
         this.mass = 0.05;

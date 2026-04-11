@@ -7,7 +7,7 @@ public class PHI extends Spell{
     protected void initialization(){
         this.name = "Phi";
         this.imageFile = "phi.png";
-        this.emote = "<:phi:1433949676477878282>";
+        this.emote = getEmoteConfig("phi");
         this.description = "Casts a copy of every projectile-type spell in the current wand";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

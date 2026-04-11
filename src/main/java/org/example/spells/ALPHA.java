@@ -7,7 +7,7 @@ public class ALPHA extends Spell{
     protected void initialization(){
         this.name = "Alpha";
         this.imageFile = "alpha.png";
-        this.emote = "<:alpha:1433949500828946523>";
+        this.emote = getEmoteConfig("alpha");
         this.description = "Casts a copy of the first spell in your wand";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

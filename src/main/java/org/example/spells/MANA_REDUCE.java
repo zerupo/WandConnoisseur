@@ -8,7 +8,7 @@ public class MANA_REDUCE extends Spell{
         this.name = "Add Mana";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "mana"};
         this.imageFile = "mana.png";
-        this.emote = "<:mana_reduce:1433949667103871082>";
+        this.emote = getEmoteConfig("mana_reduce");
         this.description = "Immediately adds 30 mana to the wand";
         this.type = Spell.SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.7, 0.9, 1, 1, 1, 1, 0, 0, 0, 0);

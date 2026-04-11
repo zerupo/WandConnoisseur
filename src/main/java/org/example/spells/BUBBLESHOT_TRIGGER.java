@@ -10,7 +10,7 @@ public class BUBBLESHOT_TRIGGER extends Spell{
         this.name = "Bubble Spark With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bubble trigger"};
         this.imageFile = "bubbleshot_trigger.png";
-        this.emote = "<:bubbleshot_trigger:1447276644761862415>";
+        this.emote = getEmoteConfig("bubbleshot_trigger");
         this.description = "A bouncy, inaccurate spell that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BUBBLESHOT();

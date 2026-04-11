@@ -9,7 +9,7 @@ public class CHAIN_BOLT extends Spell{
         this.name = "Chain Bolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "chain_bolt.png";
-        this.emote = "<:chain_bolt:1447276645739266078>";
+        this.emote = getEmoteConfig("chain_bolt");
         this.description = "Fires a mysterious bolt that jumps from enemy to enemy";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CHAIN_BOLT();

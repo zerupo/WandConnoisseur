@@ -9,7 +9,7 @@ public class MIST_ALCOHOL extends Spell{
         this.name = "Mist Of Spirits";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mist_alcohol.png";
-        this.emote = "<:mist_alcohol:1464974868712783933>";
+        this.emote = getEmoteConfig("mist_alcohol");
         this.description = "A cloud of potent alcohol";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MIST_ALCOHOL();

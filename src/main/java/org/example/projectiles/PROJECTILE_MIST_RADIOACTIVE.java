@@ -4,7 +4,7 @@ public class PROJECTILE_MIST_RADIOACTIVE extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Toxic Mist";
-        this.emote = "<:mist_radioactive:1464974870898278633>";
+        this.emote = getEmoteConfig("mist_radioactive");
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.0;

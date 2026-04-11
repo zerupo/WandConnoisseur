@@ -9,7 +9,7 @@ public class GRENADE_TIER_3 extends Spell{
         this.name = "Giant Firebolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade_tier_3.png";
-        this.emote = "<:grenade_tier_3:1453399902750244975>";
+        this.emote = getEmoteConfig("grenade_tier_3");
         this.description = "The most powerful version of Firebolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GRENADE_TIER_3();

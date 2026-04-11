@@ -9,7 +9,7 @@ public class MIST_BLOOD extends Spell{
         this.name = "Blood Mist";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mist_blood.png";
-        this.emote = "<:mist_blood:1464974869811691707>";
+        this.emote = getEmoteConfig("mist_blood");
         this.description = "A cloud of blood mist";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MIST_BLOOD();

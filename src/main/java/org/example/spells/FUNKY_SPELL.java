@@ -9,7 +9,7 @@ public class FUNKY_SPELL extends Spell{
         this.name = "???";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "machinegun_bullet.png";
-        this.emote = "<:funky_spell:1447276650839412962>";
+        this.emote = getEmoteConfig("funky_spell");
         this.description = "???";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FUNKY_SPELL();

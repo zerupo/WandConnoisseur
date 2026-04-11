@@ -9,7 +9,7 @@ public class KANTELE_E extends Spell{
         this.name = "Kantele - Note E";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "kantele e"};
         this.imageFile = "kantele_e.png";
-        this.emote = "<:kantele_e:1451342035603689582>";
+        this.emote = getEmoteConfig("kantele_e");
         this.description = "Music for your ears!";
         this.type = SpellType.other;
         this.relatedProjectile = new PROJECTILE_KANTELE_E();

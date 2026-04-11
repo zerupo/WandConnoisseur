@@ -10,7 +10,7 @@ public class LIGHT_BULLET_TRIGGER extends Spell{
         this.name = "Spark Bolt With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "spark trigger"};
         this.imageFile = "light_bullet_trigger.png";
-        this.emote = "<:light_bullet_trigger:1433949665597984951>";
+        this.emote = getEmoteConfig("light_bullet_trigger");
         this.description = "A spark bolt that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LIGHT_BULLET();

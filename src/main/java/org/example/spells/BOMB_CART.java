@@ -9,7 +9,7 @@ public class BOMB_CART extends Spell{
         this.name = "Bomb Cart";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bomb_cart.png";
-        this.emote = "<:bomb_cart:1447276642337685597>";
+        this.emote = getEmoteConfig("bomb_cart");
         this.description = "Summons a self-propeled mine cart loaded with explosives";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BOMB_CART();

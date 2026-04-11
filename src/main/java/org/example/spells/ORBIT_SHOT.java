@@ -8,7 +8,7 @@ public class ORBIT_SHOT extends Spell{
         this.name = "Orbiting Arc";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "orbit"};
         this.imageFile = "orbit_shot.png";
-        this.emote = "<:orbit_shot:1433949672556466176>";
+        this.emote = getEmoteConfig("orbit_shot");
         this.description = "A projectile orbits the point of its origin";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0.4, 0.4, 0.3, 0, 0, 0, 0, 0, 0);

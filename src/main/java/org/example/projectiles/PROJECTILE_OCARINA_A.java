@@ -4,7 +4,7 @@ public class PROJECTILE_OCARINA_A extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Ocarina - Note A";
-        this.emote = "<:ocarina_a:1451342037910818846>";
+        this.emote = getEmoteConfig("ocarina_a");
         this.gravityY = 0;
         this.airFriction = 8;
         this.mass = 0.01;
