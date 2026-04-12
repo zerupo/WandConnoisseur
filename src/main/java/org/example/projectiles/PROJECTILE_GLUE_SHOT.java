@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_GLUE_SHOT extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Glue Ball";
-        this.emote = "<:glue_shot:1464974849431830659>";
+        this.imageFile = "glue_shot.png";
+        this.emote = staticEmote;
         this.gravityY = 200;
         this.airFriction = 1.0;
         this.mass = 0.06;

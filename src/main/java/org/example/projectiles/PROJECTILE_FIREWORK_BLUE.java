@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_FIREWORK_BLUE extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Blue Firework";
-        this.emote = "<:firework:1464974845556297738>";
+        this.imageFile = "fireworks_blue.png";
+        this.emote = staticEmote;
         this.gravityY = 50;
         this.airFriction = -5.0;
         this.mass = 0.05;

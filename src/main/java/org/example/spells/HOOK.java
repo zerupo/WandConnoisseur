@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_HOOK;
 
+import java.lang.invoke.MethodHandles;
+
 public class HOOK extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Hookbolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "hook.png";
-        this.emote = "<:hook:1464974856306032801>";
+        this.emote = staticEmote;
         this.description = "A glowing hook that pulls the caster towards itself upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HOOK();

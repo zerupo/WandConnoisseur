@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_GRENADE_ANTI;
 
+import java.lang.invoke.MethodHandles;
+
 public class GRENADE_ANTI extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Odd Firebolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade_anti.png";
-        this.emote = "<:grenade_anti:1453399899143147530>";
+        this.emote = staticEmote;
         this.description = "A somewhat peculiar bouncy, explosive bolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GRENADE_ANTI();

@@ -1,9 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_LANCE_HOLY extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
-        this.emote = "<:lance_holy:1464974860181704736>";
+        this.name = "Holy Lance";
+        this.imageFile = "lance_holy.png";
+        this.emote = staticEmote;
         this.gravityY = 100;
         this.airFriction = -0.6;
         this.mass = 0.15;

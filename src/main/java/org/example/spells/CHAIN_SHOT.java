@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class CHAIN_SHOT extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Chain Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "chain_shot.png";
-        this.emote = "<:chain_shot:1433949638758633543>";
+        this.emote = staticEmote;
         this.description = "Causes a projectile to cast a copy of itself upon expiring, up to 5 times";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0, 0.6, 0.8, 0, 0, 0, 0, 0);

@@ -1,11 +1,18 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_BOMB_HOLY_GIGA extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     // TODO custom xml, wtf is this ?
     @Override
     protected void initialization(){
         this.name = "Giga Holy Bomb";
-        this.emote = "<:bomb_holy_giga:1464974837247119392>";
+        this.imageFile = "bomb_holy_giga.png";
+        this.emote = staticEmote;
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.07;

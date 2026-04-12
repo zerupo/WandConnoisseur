@@ -27,7 +27,7 @@ public class SpellListCommand implements Command{
         String filter = "";
         String sort = "";
         String[][] properties = new String[0][0];
-        Spell[] spellList = Global.getSpellList().getSpells();
+        Spell[] spellList = Global.getSpellList().getSpells(false);
         SpellFilter spellFilter = Global.getSpellFilter();
         StringBuilder result = new StringBuilder();
 

@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_BLACK_HOLE extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Black Hole";
-        this.emote = "<:black_hole:1433949520550428862>";
+        this.imageFile = "black_hole.png";
+        this.emote = staticEmote;
         this.lifetime = 120;
         this.lifetimeRandomness = 7;
     }

@@ -1,15 +1,24 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
 import org.example.main.CastState;
 import org.example.main.DamageComponent;
+import org.example.main.Global;
+
+import java.io.File;
+import java.lang.invoke.MethodHandles;
+import javax.imageio.ImageIO;
 
 public abstract class Projectile{
     public enum TriggerType {none, trigger, timer, expiration};
     protected TriggerType triggerType = TriggerType.none;
     protected int timer = 0;
     protected CastState triggerCastState = null;
+    protected String imagePath = "./src/main/java/org/example/image/spell/";
+    protected String imageFile = "_unidentified.png";
     protected String name = "projectile_name";
-    protected String emote = "<:_unidentified:1464974832608477288>";
+    protected static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+    protected String emote = staticEmote;
 
     // velocity component
     protected double gravityX = 0.0;
@@ -164,6 +173,18 @@ public abstract class Projectile{
 
     public String getSpeedString(){
         return this.speedMin == this.speedMax ? "" + this.speedMin : "[" + this.speedMin + "; " + this.speedMax + "]";
+    }
+
+    public void createEmote(){
+        try{
+            String name = this.getClass().getSimpleName().toLowerCase();
+            if(name.equals("")){
+                name = "projectile";
+            }
+            ImageIO.write(Global.scaleImage(Global.loadImage(this.imagePath + this.imageFile), 8),"png", new File(Global.getPathOutput() + name + ".png"));
+        }catch(Exception e){
+            System.out.println("Error trying to create emote for spell \"" + this.name + "\" : " + e.getMessage());
+        }
     }
 
     protected abstract void initialization();

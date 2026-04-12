@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_HEAVY_BULLET;
 
+import java.lang.invoke.MethodHandles;
+
 public class HEAVY_BULLET_TRIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Magic Bolt With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "magic bolt trigger"};
         this.imageFile = "heavy_bullet_trigger.png";
-        this.emote = "<:heavy_bullet_trigger:1464974854930567250>";
+        this.emote = staticEmote;
         this.description = "A powerful magical bolt that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HEAVY_BULLET();

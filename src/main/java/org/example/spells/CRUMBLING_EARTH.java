@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_CRUMBLING_EARTH;
 
+import java.lang.invoke.MethodHandles;
+
 public class CRUMBLING_EARTH extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Earthquake";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "crumbling_earth.png";
-        this.emote = "<:crumbling_earth:1453399893166133339>";
+        this.emote = staticEmote;
         this.description = "Calls the anger of the earth";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CRUMBLING_EARTH();

@@ -1,11 +1,15 @@
 package org.example;
 
 import org.example.config.BotConfig;
+import org.example.config.EmoteConfig;
 import org.example.listeners.AutoCompleteListener;
 import org.example.listeners.CommandListener;
 import org.example.listeners.MenuListener;
+import org.example.main.CardPool;
+import org.example.main.CastState;
 import org.example.main.Global;
 import org.example.main.WandList;
+import org.example.projectiles.Projectile;
 import org.example.spells.Spell;
 
 import java.util.EnumSet;
@@ -26,7 +30,6 @@ public class WandConnoisseur{
     // mob quizz (audio ?)
     // shuffle
     // always cast
-    // fix charges removal
     // better structure for projectiles
     // code every spell
     // list of 1k wands
@@ -47,10 +50,24 @@ public class WandConnoisseur{
         }
 
         if(generateEmotes){
-            Spell[] spells = Global.getSpellList().getSpells();
+            Spell[] spells = Global.getSpellList().getSpells(false);
+            Projectile[] projectiles = Global.getProjectileList().getProjectiles(false);
+
             for(int i=0; i < spells.length; i++){
                 spells[i].createEmote();
             }
+            for(int i=0; i < projectiles.length; i++){
+                projectiles[i].createEmote();
+            }
+
+            // default emotes
+            new Spell(){
+                @Override protected void initialization(){}
+                @Override protected void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){}
+            }.createEmote();
+            new Projectile(){
+                @Override protected void initialization(){}
+            }.createEmote();
         }
         if(generateWandstat){
             new WandList().generateAllSprites();
@@ -73,6 +90,7 @@ public class WandConnoisseur{
             jda.awaitReady();
 
             registerSlashCommands();
+            EmoteConfig.initConfig(true);
             logger.info("Bot is online and ready!");
         }catch(Exception e){
             logger.error("Error starting the bot: ", e);

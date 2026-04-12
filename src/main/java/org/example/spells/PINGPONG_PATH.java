@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class PINGPONG_PATH extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Ping-Pong Path";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "ppp", "ping pong", "pingpong path", "ping pong path"};
         this.imageFile = "pingpong_path.png";
-        this.emote = "<:pingpong_path:1433949677555810405>";
+        this.emote = staticEmote;
         this.description = "Makes a projectile fly back and forth";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0, 0.5, 0, 0.4, 0, 0, 0, 0, 0);

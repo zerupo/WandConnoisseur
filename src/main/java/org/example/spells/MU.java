@@ -1,13 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class MU extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Mu";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mu.png";
-        this.emote = "<:mu:1433949668659691632>";
+        this.emote = staticEmote;
         this.description = "Every modifier-type spell in the current wand is applied to a projectile";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

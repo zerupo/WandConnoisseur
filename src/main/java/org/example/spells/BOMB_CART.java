@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_BOMB_CART;
 
+import java.lang.invoke.MethodHandles;
+
 public class BOMB_CART extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Bomb Cart";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bomb_cart.png";
-        this.emote = "<:bomb_cart:1447276642337685597>";
+        this.emote = staticEmote;
         this.description = "Summons a self-propeled mine cart loaded with explosives";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BOMB_CART();

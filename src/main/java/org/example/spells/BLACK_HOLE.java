@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_BLACK_HOLE;
 
+import java.lang.invoke.MethodHandles;
+
 public class BLACK_HOLE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Black Hole";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bh"};
         this.imageFile = "black_hole.png";
-        this.emote = "<:black_hole:1433949520550428862>";
+        this.emote = staticEmote;
         this.description = "A slow orb of void that eats through all obstacles";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BLACK_HOLE();

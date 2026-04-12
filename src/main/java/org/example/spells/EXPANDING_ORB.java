@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_EXPANDING_ORB;
 
+import java.lang.invoke.MethodHandles;
+
 public class EXPANDING_ORB extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Expanding Sphere";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "expanding_orb.png";
-        this.emote = "<:expanding_orb:1453399895678648341>";
+        this.emote = staticEmote;
         this.description = "A slow projectile that increases its damage over time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_EXPANDING_ORB();

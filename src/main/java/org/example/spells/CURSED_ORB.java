@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_CURSED_ORB;
 
+import java.lang.invoke.MethodHandles;
+
 public class CURSED_ORB extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Cursed Sphere";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "cursed_orb.png";
-        this.emote = "<:cursed_orb:1447276646980784209>";
+        this.emote = staticEmote;
         this.description = "A projectile that brings bad luck to anyone it hits";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CURSED_ORB();

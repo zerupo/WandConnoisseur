@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_PIPE_BOMB;
 
+import java.lang.invoke.MethodHandles;
+
 public class PIPE_BOMB_DEATH_TRIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Dormant Crystal With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "dormant crystal trigger", "dormant crystal expiration"};
         this.imageFile = "pipe_bomb_death_trigger.png";
-        this.emote = "<:pipe_bomb_death_trigger:1451342049604407410>";
+        this.emote = staticEmote;
         this.description = "A crystal that explodes when caught in an explosion";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_PIPE_BOMB();

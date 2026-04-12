@@ -50,7 +50,12 @@ public class SpellList{
         return null;
     }
 
-    public Spell[] getSpells(){
+    public Spell[] getSpells(boolean cloning){
+        if(!cloning){
+            return this.spells;
+        }
+
+        System.out.println("CLONING ALL SPELLS");
         Spell[] result = new Spell[this.spells.length];
         for(int i=0; i < result.length; i++){
             result[i] = this.spells[i].clone();
@@ -60,12 +65,10 @@ public class SpellList{
 
     public String[] getAllAlias(){
         String[] currentAlias;
-        List <String> alias = new ArrayList<String>();
+        List <String> alias = new ArrayList<>();
         for(int i=0; i < this.spells.length; i++){
             currentAlias = this.spells[i].getAlias();
-            for(int j=0; j < currentAlias.length; j++){
-                alias.add(currentAlias[j]);
-            }
+            alias.addAll(Arrays.asList(currentAlias));
         }
         currentAlias = alias.toArray(new String[0]);
         Arrays.sort(currentAlias);

@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_LASER_EMITTER_FOUR extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Plasma Beam Cross";
-        this.emote = "<:laser_emitter_four:1447276652857135105>";
+        this.imageFile = "laser_emitter_four.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 7;
         this.mass = 0.05;

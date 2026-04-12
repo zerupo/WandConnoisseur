@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_BUBBLESHOT extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Bubble Spark";
-        this.emote = "<:bubbleshot:1447276643411431654>";
+        this.imageFile = "bubbleshot.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 1.0;
         this.mass = 0.02;

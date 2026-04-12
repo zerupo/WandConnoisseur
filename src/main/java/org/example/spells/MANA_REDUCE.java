@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class MANA_REDUCE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Add Mana";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "mana"};
         this.imageFile = "mana.png";
-        this.emote = "<:mana_reduce:1433949667103871082>";
+        this.emote = staticEmote;
         this.description = "Immediately adds 30 mana to the wand";
         this.type = Spell.SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.7, 0.9, 1, 1, 1, 1, 0, 0, 0, 0);

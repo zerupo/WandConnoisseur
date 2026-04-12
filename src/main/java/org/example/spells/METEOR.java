@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_METEOR;
 
+import java.lang.invoke.MethodHandles;
+
 public class METEOR extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Meteor";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "meteor.png";
-        this.emote = "<:meteor:1464974867228004483>";
+        this.emote = staticEmote;
         this.description = "A destructive projectile from the skies!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_METEOR();

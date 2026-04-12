@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class SCATTER_2 extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Double Scatter Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "double scatter", "double spread"};
         this.imageFile = "scatter_2.png";
-        this.emote = "<:scatter_2:1433949678726287500>";
+        this.emote = staticEmote;
         this.description = "Simultaneously casts 2 spells with low accuracy";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0.8, 0.8, 0.7, 0, 0, 0, 0, 0, 0, 0, 0);

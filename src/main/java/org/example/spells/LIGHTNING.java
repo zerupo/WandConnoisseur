@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LIGHTNING;
 
+import java.lang.invoke.MethodHandles;
+
 public class LIGHTNING extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Lightning Bolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "lightning.png";
-        this.emote = "<:lightning:1464974863671361772>";
+        this.emote = staticEmote;
         this.description = "The primordial force of nature";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LIGHTNING();

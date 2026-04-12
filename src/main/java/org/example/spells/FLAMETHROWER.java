@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_FLAMETHROWER;
 
+import java.lang.invoke.MethodHandles;
+
 public class FLAMETHROWER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Flamethrower";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "flamethrower.png";
-        this.emote = "<:flamethrower:1464974846604869694>";
+        this.emote = staticEmote;
         this.description = "A stream of fire!!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FLAMETHROWER();

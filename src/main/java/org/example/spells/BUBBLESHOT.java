@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_BUBBLESHOT;
 
+import java.lang.invoke.MethodHandles;
+
 public class BUBBLESHOT extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Bubble Spark";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bubble"};
         this.imageFile = "bubbleshot.png";
-        this.emote = "<:bubbleshot:1447276643411431654>";
+        this.emote = staticEmote;
         this.description = "A bouncy, inaccurate spell";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BUBBLESHOT();

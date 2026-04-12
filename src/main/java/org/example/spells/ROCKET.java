@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_ROCKET;
 
+import java.lang.invoke.MethodHandles;
+
 public class ROCKET extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Magic Missile";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "rocket.png";
-        this.emote = "<:rocket:1464974873402150963>";
+        this.emote = staticEmote;
         this.description = "A fiery, explosive projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ROCKET();

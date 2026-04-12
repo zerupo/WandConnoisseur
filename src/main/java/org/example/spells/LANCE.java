@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LANCE;
 
+import java.lang.invoke.MethodHandles;
+
 public class LANCE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Glowing Lance";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "lance.png";
-        this.emote = "<:lance:1464974859187785780>";
+        this.emote = staticEmote;
         this.description = "A magical lance that cuts through soft materials";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LANCE();

@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_MIST_RADIOACTIVE extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Toxic Mist";
-        this.emote = "<:mist_radioactive:1464974870898278633>";
+        this.imageFile = "mist_radioactive.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.0;

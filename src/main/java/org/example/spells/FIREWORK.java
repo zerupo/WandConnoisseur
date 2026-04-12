@@ -1,20 +1,24 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_FIREWORK_BLUE;
 import org.example.projectiles.PROJECTILE_FIREWORK_GREEN;
 import org.example.projectiles.PROJECTILE_FIREWORK_ORANGE;
 import org.example.projectiles.PROJECTILE_FIREWORK_PINK;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Random;
 
 public class FIREWORK extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Fireworks!";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "fireworks"};
         this.imageFile = "fireworks.png";
-        this.emote = "<:firework:1464974845556297738>";
+        this.emote = staticEmote;
         this.description = "A fiery, explosive projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FIREWORK_PINK();

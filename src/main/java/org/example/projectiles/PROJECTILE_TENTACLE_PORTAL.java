@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_TENTACLE_PORTAL extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Eldritch Portal";
-        this.emote = "<:tentacle_portal:1453399908663951370>";
+        this.imageFile = "tentacle_portal.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.08;

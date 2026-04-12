@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class I_SHAPE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Formation - Behind Your Back";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "behind your back", "behind back"};
         this.imageFile = "i_shape.png";
-        this.emote = "<:i_shape:1433949659944190054>";
+        this.emote = staticEmote;
         this.description = "Casts two spells: one ahead of and one behind the caster";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.5, 0.3, 0, 0, 0, 0, 0, 0, 0);

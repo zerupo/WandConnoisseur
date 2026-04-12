@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_OCARINA_A2 extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Ocarina - Note A2";
-        this.emote = "<:ocarina_a2:1451342039294935040>";
+        this.imageFile = "ocarina_a2.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 8;
         this.mass = 0.01;

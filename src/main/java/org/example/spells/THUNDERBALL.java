@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_THUNDERBALL;
 
+import java.lang.invoke.MethodHandles;
+
 public class THUNDERBALL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Thunder Charge";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "thunderball.png";
-        this.emote = "<:thunderball:1464974877164306494>";
+        this.emote = staticEmote;
         this.description = "A projectile with immense stored electricity";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_THUNDERBALL();

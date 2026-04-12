@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_LIGHT_BULLET;
 
+import java.lang.invoke.MethodHandles;
+
 public class LIGHT_BULLET_TRIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Spark Bolt With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "spark trigger"};
         this.imageFile = "light_bullet_trigger.png";
-        this.emote = "<:light_bullet_trigger:1433949665597984951>";
+        this.emote = staticEmote;
         this.description = "A spark bolt that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LIGHT_BULLET();

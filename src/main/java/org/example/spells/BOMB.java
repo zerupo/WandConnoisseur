@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_BOMB;
 
+import java.lang.invoke.MethodHandles;
+
 public class BOMB extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Bomb";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bomb.png";
-        this.emote = "<:bomb:1447276640844386435>";
+        this.emote = staticEmote;
         this.description = "Summons a bomb that destroys ground very efficiently";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BOMB();

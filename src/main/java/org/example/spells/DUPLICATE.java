@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class DUPLICATE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Spell Duplication";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "SD", "duplication"};
         this.imageFile = "duplicate.png";
-        this.emote = "<:duplicate:1433949656261329058>";
+        this.emote = staticEmote;
         this.description = "Duplicates every spell cast before it";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

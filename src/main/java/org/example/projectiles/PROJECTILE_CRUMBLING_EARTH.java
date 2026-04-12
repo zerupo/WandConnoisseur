@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_CRUMBLING_EARTH extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Earthquake";
-        this.emote = "<:crumbling_earth:1453399893166133339>";
+        this.imageFile = "crumbling_earth.png";
+        this.emote = staticEmote;
         this.gravityY = 10;
         this.mass = 0.07;
 

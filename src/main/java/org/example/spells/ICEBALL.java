@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_ICEBALL;
 
+import java.lang.invoke.MethodHandles;
+
 public class ICEBALL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Iceball";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "iceball.png";
-        this.emote = "<:iceball:1464974857866313984>";
+        this.emote = staticEmote;
         this.description = "A magical ball of frozen fire";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ICEBALL();

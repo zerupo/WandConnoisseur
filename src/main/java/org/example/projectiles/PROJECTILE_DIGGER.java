@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_DIGGER extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Digging Bolt";
-        this.emote = "<:digger:1433949644102303915>";
+        this.imageFile = "digger.png";
+        this.emote = staticEmote;
         this.speedMin = 0;
         this.speedMax = 0;
         this.lifetime = 2;

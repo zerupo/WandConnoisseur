@@ -1,13 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class PHI extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Phi";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "phi.png";
-        this.emote = "<:phi:1433949676477878282>";
+        this.emote = staticEmote;
         this.description = "Casts a copy of every projectile-type spell in the current wand";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

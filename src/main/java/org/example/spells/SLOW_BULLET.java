@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_SLOW_BULLET;
 
+import java.lang.invoke.MethodHandles;
+
 public class SLOW_BULLET extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Energy Orb";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "slow_bullet.png";
-        this.emote = "<:slow_bullet:1453399905035882679>";
+        this.emote = staticEmote;
         this.description = "A slow but powerful orb of energy";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SLOW_BULLET();

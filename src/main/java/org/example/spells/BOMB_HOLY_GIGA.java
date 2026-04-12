@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_BOMB_HOLY_GIGA;
 
+import java.lang.invoke.MethodHandles;
+
 public class BOMB_HOLY_GIGA extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Giga Holy Bomb";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bomb_holy_giga.png";
-        this.emote = "<:bomb_holy_giga:1464974837247119392>";
+        this.emote = staticEmote;
         this.description = "Bigger and therefore holier";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BOMB_HOLY_GIGA();

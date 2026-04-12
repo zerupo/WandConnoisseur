@@ -109,25 +109,25 @@ public class ImageBuilder{
 
     private void addImage(Object[] objects){
         try{
-            this.addImageInternal((BufferedImage)objects[0], (int)objects[1], (int)objects[2]);
+            this.add_image((BufferedImage)objects[0], (int)objects[1], (int)objects[2]);
         }catch(Exception e){
             System.out.println("Error executing addImage() " + e.getMessage());
         }
     }
 
-    private void addImageInternal(BufferedImage image, int x, int y){
+    private void add_image(BufferedImage image, int x, int y){
         this.g2d.drawImage(image, x + this.margin, y + this.margin, null);
     }
 
     private void drawArrow(Object[] objects){
         try{
-            this.drawArrowInternal((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (Color)objects[4], (boolean)objects[5]);
+            this.draw_arrow((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (Color)objects[4], (boolean)objects[5]);
         }catch(Exception e){
             System.out.println("Error executing drawArrow() " + e.getMessage());
         }
     }
 
-    private void drawArrowInternal(int x1, int y1, int x2, int y2, Color color, boolean priorityX){
+    private void draw_arrow(int x1, int y1, int x2, int y2, Color color, boolean priorityX){
         Path2D path = new Path2D.Double();
         boolean invertX = x1 > x2;
         boolean invertY = y1 > y2;
@@ -168,13 +168,13 @@ public class ImageBuilder{
 
     private void drawCurlyBrackets(Object[] objects){
         try{
-            this.drawCurlyBracketsInternal((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (int)objects[4], (Color)objects[5]);
+            this.draw_curly_brackets((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (int)objects[4], (Color)objects[5]);
         }catch(Exception e){
             System.out.println("Error executing drawCurlyBrackets() " + e.getMessage());
         }
     }
 
-    private void drawCurlyBracketsInternal(int x1, int y1, int x2, int y2, int nb, Color color){
+    private void draw_curly_brackets(int x1, int y1, int x2, int y2, int nb, Color color){
         Path2D path = new Path2D.Double();
         int tmp;
 

@@ -1,17 +1,20 @@
 package org.example.spells;
 
-import org.example.main.CardPool;
-import org.example.main.CastState;
-import org.example.main.SpawnProbabilities;
+import org.example.config.EmoteConfig;
+import org.example.main.*;
 import org.example.projectiles.Projectile;
 
+import java.lang.invoke.MethodHandles;
+
 public class ADD_DEATH_TRIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Add Expiration Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "add expiration"};
         this.imageFile = "death_trigger.png";
-        this.emote = "<:add_death_trigger:1433948899693039666>";
+        this.emote = staticEmote;
         this.description = "Makes a projectile cast another spell upon expiring";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.3, 0.6, 0.6, 0, 0, 0, 0, 1);

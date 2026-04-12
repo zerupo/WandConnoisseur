@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_BOMB extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Bomb";
-        this.emote = "<:bomb:1447276640844386435>";
+        this.imageFile = "bomb.png";
+        this.emote = staticEmote;
         this.lifetime = 180;
         this.lifetimeRandomness = 0;
     }

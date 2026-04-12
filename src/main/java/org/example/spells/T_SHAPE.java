@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class T_SHAPE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Formation - Above And Below";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "t shape", "above below", "above and below"};
         this.imageFile = "t_shape.png";
-        this.emote = "<:t_shape:1433949686602928412>";
+        this.emote = staticEmote;
         this.description = "Casts 3 spells - ahead, above and below the caster";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.5, 0.4, 0.3, 0, 0, 0, 0, 0, 0);

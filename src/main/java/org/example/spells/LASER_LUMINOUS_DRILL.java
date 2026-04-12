@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_LUMINOUS_DRILL;
 
+import java.lang.invoke.MethodHandles;
+
 public class LASER_LUMINOUS_DRILL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Luminous Drill With Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lumi timer"};
         this.imageFile = "luminous_drill_timer.png";
-        this.emote = "<:laser_luminous_drill:1464974862576779416>";
+        this.emote = staticEmote;
         this.description = "A pinpointed, short-ranged beam of concentrated light that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LUMINOUS_DRILL();

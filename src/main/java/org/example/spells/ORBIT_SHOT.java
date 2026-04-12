@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class ORBIT_SHOT extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Orbiting Arc";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "orbit"};
         this.imageFile = "orbit_shot.png";
-        this.emote = "<:orbit_shot:1433949672556466176>";
+        this.emote = staticEmote;
         this.description = "A projectile orbits the point of its origin";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0.4, 0.4, 0.3, 0, 0, 0, 0, 0, 0);

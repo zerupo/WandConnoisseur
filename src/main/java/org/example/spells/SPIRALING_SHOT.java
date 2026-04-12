@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class SPIRALING_SHOT extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Spiral Arc";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "spiral"};
         this.imageFile = "spiraling_shot.png";
-        this.emote = "<:spiraling_shot:1433949683037900893>";
+        this.emote = staticEmote;
         this.description = "A projectile flies in a spiralling pattern";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0.3, 0.4, 0.5, 0, 0, 0, 0, 0, 0);

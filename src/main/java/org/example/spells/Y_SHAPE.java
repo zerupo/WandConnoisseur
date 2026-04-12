@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class Y_SHAPE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Formation - Bifurcated";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "y shape", "bifurcated"};
         this.imageFile = "y_shape.png";
-        this.emote = "<:y_shape:1433949690923319488>";
+        this.emote = staticEmote;
         this.description = "Casts 2 spells in a bifurcated pattern";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0.8, 0.5, 0.4, 0.3, 0, 0, 0, 0, 0, 0, 0);

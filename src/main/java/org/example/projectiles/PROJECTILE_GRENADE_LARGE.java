@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_GRENADE_LARGE extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Dropper Bolt";
-        this.emote = "<:grenade_large:1453399900350971988>";
+        this.imageFile = "grenade_large.png";
+        this.emote = staticEmote;
         this.gravityY = 1000;
         this.mass = 0.165;
 

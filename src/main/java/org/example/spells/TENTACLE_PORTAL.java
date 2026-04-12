@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_TENTACLE_PORTAL;
 
+import java.lang.invoke.MethodHandles;
+
 public class TENTACLE_PORTAL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Eldritch Portal";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "yamete portal"};
         this.imageFile = "tentacle_portal.png";
-        this.emote = "<:tentacle_portal:1453399908663951370>";
+        this.emote = staticEmote;
         this.description = "A weak but enchanting sparkling projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_TENTACLE_PORTAL();

@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_FUNKY_SPELL;
 
+import java.lang.invoke.MethodHandles;
+
 public class FUNKY_SPELL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "???";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "machinegun_bullet.png";
-        this.emote = "<:funky_spell:1447276650839412962>";
+        this.emote = staticEmote;
         this.description = "???";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_FUNKY_SPELL();

@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class LIFETIME extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Increase Lifetime";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lifetime", "lifetime up"};
         this.imageFile = "lifetime.png";
-        this.emote = "<:lifetime:1433949662410313769>";
+        this.emote = staticEmote;
         this.description = "Increases the lifetime of a spell";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.5, 0.5, 0.5, 0.75, 0, 0, 0, 0.1);

@@ -1,13 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class TAU extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Tau";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "tau.png";
-        this.emote = "<:tau:1433949687676670112>";
+        this.emote = staticEmote;
         this.description = "Copies the two following spells in the wand when cast";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

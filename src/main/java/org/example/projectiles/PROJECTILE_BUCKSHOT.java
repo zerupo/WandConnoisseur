@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_BUCKSHOT extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Triplicate Bolt";
-        this.emote = "<:buckshot:1433949550917455893>";
+        this.imageFile = "buckshot.png";
+        this.emote = staticEmote;
         this.lifetime = 120;
         this.lifetimeRandomness = 7;
     }

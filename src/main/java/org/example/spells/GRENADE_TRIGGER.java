@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_GRENADE;
 
+import java.lang.invoke.MethodHandles;
+
 public class GRENADE_TRIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Firebolt With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "firebolt trigger"};
         this.imageFile = "grenade_trigger.png";
-        this.emote = "<:grenade_trigger:1453399903769333820>";
+        this.emote = staticEmote;
         this.description = "A bouncy, explosive bolt that that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GRENADE();

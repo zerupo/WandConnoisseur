@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_CHAIN_BOLT extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Chain Bolt";
-        this.emote = "<:chain_bolt:1447276645739266078>";
+        this.imageFile = "chain_bolt.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
 
         this.speedMin = 40;

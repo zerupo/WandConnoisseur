@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class W_SHAPE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Formation - Trifurcated";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "w shape", "trifurcated"};
         this.imageFile = "w_shape.png";
-        this.emote = "<:w_shape:1433949689929142333>";
+        this.emote = staticEmote;
         this.description = "Casts 2 spells in a trifurcated pattern";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.3, 0.5, 0.3, 0.3, 0, 0, 0, 0);

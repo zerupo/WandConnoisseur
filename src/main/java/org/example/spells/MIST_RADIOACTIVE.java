@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_MIST_RADIOACTIVE;
 
+import java.lang.invoke.MethodHandles;
+
 public class MIST_RADIOACTIVE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Toxic Mist";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mist_radioactive.png";
-        this.emote = "<:mist_radioactive:1464974870898278633>";
+        this.emote = staticEmote;
         this.description = "A cloud of toxic mist";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MIST_RADIOACTIVE();

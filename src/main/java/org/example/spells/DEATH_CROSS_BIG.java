@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_DEATH_CROSS_BIG;
 
+import java.lang.invoke.MethodHandles;
+
 public class DEATH_CROSS_BIG extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Giga Death Cross";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "death_cross_big.png";
-        this.emote = "<:death_cross_big:1447276649304559826>";
+        this.emote = staticEmote;
         this.description = "A giant, deadly energy cross that explodes after a short time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_DEATH_CROSS_BIG();

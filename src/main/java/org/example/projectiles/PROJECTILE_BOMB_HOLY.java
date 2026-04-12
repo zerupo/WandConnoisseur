@@ -1,11 +1,18 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_BOMB_HOLY extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     // TODO custom xml, wtf is this ?
     @Override
     protected void initialization(){
         this.name = "Holy Bomb";
-        this.emote = "<:bomb_holy:1464974835699679519>";
+        this.imageFile = "bomb_holy.png";
+        this.emote = staticEmote;
         this.lifetime = 260;
         this.lifetimeRandomness = 0;
     }

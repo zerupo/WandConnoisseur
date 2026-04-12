@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_BALL_LIGHTNING;
 
+import java.lang.invoke.MethodHandles;
+
 public class BALL_LIGHTNING extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Ball Lightning";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "elec balls", "blue balls"};
         this.imageFile = "ball_lightning.png";
-        this.emote = "<:ball_lightning:1464974833799663707>";
+        this.emote = staticEmote;
         this.description = "Summons three short range electrical orbs";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BALL_LIGHTNING();

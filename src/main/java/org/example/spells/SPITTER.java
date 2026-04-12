@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_SPITTER;
 
+import java.lang.invoke.MethodHandles;
+
 public class SPITTER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Spitter Bolt";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "spitter.png";
-        this.emote = "<:spitter:1433949684245987378>";
+        this.emote = staticEmote;
         this.description = "A short-lived magical bolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SPITTER();

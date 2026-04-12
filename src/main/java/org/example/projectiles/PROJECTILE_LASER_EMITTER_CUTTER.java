@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_LASER_EMITTER_CUTTER extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Plasma Cutter";
-        this.emote = "<:laser_emitter_cutter:1433949661336436736>";
+        this.imageFile = "laser_emitter_cutter.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 7;
         this.mass = 0.05;

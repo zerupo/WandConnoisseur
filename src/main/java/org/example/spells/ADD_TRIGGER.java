@@ -1,16 +1,20 @@
 package org.example.spells;
 
-import org.example.main.CardPool;
-import org.example.main.CastState;
-import org.example.main.SpawnProbabilities;
+import org.example.config.EmoteConfig;
+import org.example.main.*;
 import org.example.projectiles.Projectile;
 
+import java.lang.invoke.MethodHandles;
+
 public class ADD_TRIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Add Trigger";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "trigger.png";
-        this.emote = "<:add_trigger:1433949483225583817>";
+        this.emote = staticEmote;
         this.description = "Makes a projectile cast another spell upon collision";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.3, 0.6, 0.6, 0, 0, 0, 0, 1);

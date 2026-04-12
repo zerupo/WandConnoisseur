@@ -25,6 +25,7 @@ public class CardPool{
     private int rechargeTime = 0;
     private double recoil = 0;
     private double screenshake = 0.0;
+    private boolean forceStopDraws = false;
 
     public CardPool(){
         this.startingDeck = new ArrayList<>();
@@ -106,6 +107,10 @@ public class CardPool{
         this.maxMana = maxMana;
         this.rechargeTime = rechargeTime;
         this.manaUsage = 0;
+    }
+
+    public int getMaxMana(){
+        return this.maxMana;
     }
 
     public void addManaUsage(int manaUsage){
@@ -275,6 +280,7 @@ public class CardPool{
         this.drawEnabled = true;
         this.flowchart.reset();
         this.cardHistory.reset();
+        this.forceStopDraws = false;
         this.wrappedThisCast = false;
     }
 
@@ -285,6 +291,7 @@ public class CardPool{
         this.drawEnabled = true;
         this.flowchart.reset();
         this.cardHistory.reset();
+        this.forceStopDraws = false;
         this.wrappedThisCast = false;
     }
 
@@ -302,6 +309,7 @@ public class CardPool{
         this.drawEnabled = true;
         this.flowchart.reset();
         this.cardHistory = new CardHistory(this.startingDeck.toArray(new Spell[0]));
+        this.forceStopDraws = false;
         this.wrappedThisCast = false;
     }
 
@@ -332,8 +340,21 @@ public class CardPool{
     }
 
     public void endCast(){
+        Spell currentSpell;
+        List<Spell> conditionalChargeSpells = new ArrayList<>();
+        boolean containsProjectile = false;
+
         while(!this.hand.isEmpty()){
-            this.discard.add(this.hand.remove(0));
+            currentSpell = this.hand.remove(0);
+            if(currentSpell.getType() == Spell.SpellType.modifier || currentSpell.getType() == Spell.SpellType.multicast){
+                conditionalChargeSpells.add(currentSpell);
+            }else{
+                currentSpell.removeCharge();
+            }
+            if(!containsProjectile && (currentSpell.getType() == Spell.SpellType.projectile || currentSpell.getType() == Spell.SpellType.static_projectile || currentSpell.getType() == Spell.SpellType.material)){
+                containsProjectile = true;
+            }
+            this.discard.add(currentSpell);
             if(this.autoCardHistory){
                 this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
             }
@@ -343,6 +364,13 @@ public class CardPool{
             this.discard.clear();
             this.drawEnabled = true;
         }
+        if(containsProjectile){
+            for(Spell spell : conditionalChargeSpells){
+                spell.removeCharge();
+            }
+        }
+
+        this.forceStopDraws = false;
         this.wrappedThisCast = false;
     }
 
@@ -362,7 +390,11 @@ public class CardPool{
         draw(nbDraw, castState, wrapAllowed, this.getCallStack());
     }
 
-    private void wrap(){
+    public void wrap(){
+        if(this.forceStopDraws){
+            return;
+        }
+
         while(!this.discard.isEmpty()){
             this.deck.add(this.discard.remove(0));
             if(this.autoCardHistory){
@@ -378,7 +410,6 @@ public class CardPool{
     public void draw(int nbDraw, CastState castState, boolean wrapAllowed, Flowchart currentNode){
         Spell currentSpell = null;
         boolean spellSkipped = false;
-        boolean removeCharges = false;
         boolean drawConsumed = true;
 
         for(int i=0; i < nbDraw; i++){
@@ -388,15 +419,10 @@ public class CardPool{
                 }
             }
             if(this.drawEnabled && !this.deck.isEmpty()){
-                removeCharges = false;
                 drawConsumed = true;
                 currentSpell = this.deck.remove(0);
-                if(this.manaUsage + currentSpell.getManaCost() <= this.maxMana && !currentSpell.getHasCharges()){
+                if(this.manaUsage + currentSpell.getManaCost() <= this.maxMana && (!currentSpell.getHasCharges() || currentSpell.getChargesLeft() > 0)){
                     this.hand.add(currentSpell);
-                    spellSkipped = false;
-                }else if(this.manaUsage + currentSpell.getManaCost() <= this.maxMana && currentSpell.getHasCharges() && currentSpell.getChargesLeft() > 0){
-                    this.hand.add(currentSpell);
-                    removeCharges = true;
                     spellSkipped = false;
                 }else{
                     this.discard.add(currentSpell);
@@ -416,9 +442,6 @@ public class CardPool{
                         this.addCallStack(currentNode.add(currentSpell));
                     }
                     this.manaUsage += currentSpell.getManaCost();
-                    if(removeCharges){
-                        currentSpell.removeCharge();
-                    }
                     currentSpell.doAction(this, castState);
                     if(this.autoFlowchart || this.autoCardHistory){
                         this.removeCallStack();
@@ -458,12 +481,38 @@ public class CardPool{
         }
     }
 
+    public void discardAllDeck(){
+        while(!this.deck.isEmpty()){
+            this.discard.add(this.deck.remove(0));
+            if(this.autoCardHistory){
+                this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+            }
+        }
+    }
+
+    public void discardAllHand(){
+        while(!this.hand.isEmpty()){
+            this.discard.add(this.hand.remove(0));
+            if(this.autoCardHistory){
+                this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+            }
+        }
+    }
+
     public void enableDraw(){
         this.drawEnabled = true;
     }
 
     public void disableDraw(){
         this.drawEnabled = false;
+    }
+
+    public boolean getForceStopDraws(){
+        return this.forceStopDraws;
+    }
+
+    public void setForceStopDraws(boolean forceStopDraws){
+        this.forceStopDraws = forceStopDraws;
     }
 
     public String toString(){

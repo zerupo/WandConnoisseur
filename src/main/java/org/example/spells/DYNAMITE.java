@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_DYNAMITE;
 
+import java.lang.invoke.MethodHandles;
+
 public class DYNAMITE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Dynamite";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "tnt"};
         this.imageFile = "dynamite.png";
-        this.emote = "<:dynamite:1453399894239744010>";
+        this.emote = staticEmote;
         this.description = "Summons a small explosive";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_DYNAMITE();

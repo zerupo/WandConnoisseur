@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class PHASING_ARC extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Phasing Arc";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "phasing"};
         this.imageFile = "phasing_arc.png";
-        this.emote = "<:phasing_arc:1433949674968191137>";
+        this.emote = staticEmote;
         this.description = "Makes a projectile fly much slower, but teleport short distances over its flight";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.3, 0.6, 0.1, 0, 0, 0, 0, 0);

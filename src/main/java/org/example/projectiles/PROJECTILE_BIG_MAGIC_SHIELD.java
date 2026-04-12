@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_BIG_MAGIC_SHIELD extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Big Magic Guard";
-        this.emote = "<:big_magic_shield:1464974834952962215>";
+        this.imageFile = "big_magic_shield.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 0.0;
 

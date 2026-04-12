@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LUMINOUS_DRILL;
 
+import java.lang.invoke.MethodHandles;
+
 public class LUMINOUS_DRILL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Luminous Drill";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "lumi"};
         this.imageFile = "luminous_drill.png";
-        this.emote = "<:luminous_drill:1464974864749432955>";
+        this.emote = staticEmote;
         this.description = "A pinpointed, short-ranged beam of concentrated light";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LUMINOUS_DRILL();

@@ -1,14 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_CHAINSAW;
 
+import java.lang.invoke.MethodHandles;
+
 public class CHAINSAW extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Chainsaw";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "chainsaw.png";
-        this.emote = "<:chainsaw:1433949639866060862>";
+        this.emote = staticEmote;
         this.description = "A good tool for cutting meat. Also has some magical properties...";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CHAINSAW();

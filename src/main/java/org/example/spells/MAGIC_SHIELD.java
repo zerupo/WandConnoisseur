@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_MAGIC_SHIELD;
 
+import java.lang.invoke.MethodHandles;
+
 public class MAGIC_SHIELD extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Magic Guard";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "magic_shield.png";
-        this.emote = "<:magic_shield:1464974866079027270>";
+        this.emote = staticEmote;
         this.description = "Four guarding lights rotate around you for a time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MAGIC_SHIELD();

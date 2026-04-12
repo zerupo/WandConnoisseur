@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class BURST_2 extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Double Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "double", "double cast"};
         this.imageFile = "burst_2.png";
-        this.emote = "<:burst_2:1433949551923957932>";
+        this.emote = staticEmote;
         this.description = "Simultaneously casts 2 spells";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0, 0, 0, 0);

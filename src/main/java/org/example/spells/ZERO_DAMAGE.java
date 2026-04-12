@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class ZERO_DAMAGE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Null Shot";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "zero_damage.png";
-        this.emote = "<:zero_damage:1433949692282142791>";
+        this.emote = staticEmote;
         this.description = "Increases a projectile's duration dramatically but removes all damage and explosion from it";
         this.type = SpellType.modifier;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.3, 0.3, 0.6, 0, 0, 0, 0, 0.3);

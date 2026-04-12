@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_HEAL_BULLET;
 
+import java.lang.invoke.MethodHandles;
+
 public class HEAL_BULLET extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Healing Bolt";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "heal"};
         this.imageFile = "heal_bullet.png";
-        this.emote = "<:heal_bullet:1464974850807304284>";
+        this.emote = staticEmote;
         this.description = "A magical bolt that heals other beings";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HEAL_BULLET();

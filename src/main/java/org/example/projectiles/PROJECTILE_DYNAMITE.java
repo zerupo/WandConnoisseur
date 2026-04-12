@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_DYNAMITE extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Dynamite";
-        this.emote = "<:dynamite:1453399894239744010>";
+        this.imageFile = "dynamite.png";
+        this.emote = staticEmote;
         this.speedMin = 800;
         this.speedMax = 800;
         this.lifetime = 50;

@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LASER_EMITTER;
 
+import java.lang.invoke.MethodHandles;
+
 public class LASER_EMITTER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Plasma Beam";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "plasma"};
         this.imageFile = "laser_emitter.png";
-        this.emote = "<:laser_emitter:1447276651972006000>";
+        this.emote = staticEmote;
         this.description = "An instantaneous, dangerous beam of light";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER();

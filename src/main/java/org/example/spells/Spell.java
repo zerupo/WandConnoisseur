@@ -1,5 +1,6 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -21,7 +23,8 @@ public abstract class Spell{
     protected String imagePath = "./src/main/java/org/example/image/spell/";
     protected String imageFile = "_unidentified.png";
     protected String typeFile = "item_bg_other.png";
-    protected String emote = "<:_unidentified:1464974832608477288>";
+    protected static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+    protected String emote = staticEmote;
     protected String defaultImage = "_unidentified.png";
     protected String description = "this spell does things";
     protected JLabel imageLabel = null;
@@ -490,7 +493,11 @@ public abstract class Spell{
                 case other -> type = ImageIO.read(new File(this.imagePath + "item_bg_other_emote.png"));
                 default -> type = ImageIO.read(new File(this.imagePath + "item_bg_other_emote.png"));
             }
-            ImageIO.write(scaleImage(combineImages(type, ImageIO.read(new File(this.imagePath + this.imageFile)), new Color(54, 43, 39)), 8),"png",new File(Global.getPathOutput() + this.getClass().getSimpleName().toLowerCase() + ".png"));
+            String name = this.getClass().getSimpleName().toLowerCase();
+            if(name.equals("")){
+                name = "spell";
+            }
+            ImageIO.write(scaleImage(combineImages(type, ImageIO.read(new File(this.imagePath + this.imageFile)), new Color(54, 43, 39)), 8),"png",new File(Global.getPathOutput() + name + ".png"));
         }catch(IOException e){
             System.out.println("Error trying to create emote for spell \"" + this.name + "\" : " + e.getMessage());
         }

@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_SPITTER extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Spitter Bolt";
-        this.emote = "<:spitter:1433949684245987378>";
+        this.imageFile = "spitter.png";
+        this.emote = staticEmote;
         this.gravityY = 200;
         this.airFriction = 2.7;
         this.mass = 0.02;

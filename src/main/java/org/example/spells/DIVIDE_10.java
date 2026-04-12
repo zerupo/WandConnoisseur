@@ -1,8 +1,12 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class DIVIDE_10 extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
     private int lastIteration = 0;
 
     @Override
@@ -10,7 +14,7 @@ public class DIVIDE_10 extends Spell{
         this.name = "Divide By 10";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "d10"};
         this.imageFile = "divide_10.png";
-        this.emote = "<:divide_10:1433949649894510683>";
+        this.emote = staticEmote;
         this.description = "Casts the next spell 10 times, but with reduced damage";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);

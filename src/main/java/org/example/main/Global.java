@@ -24,9 +24,11 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class Global{
     private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
     private final static String pathAutoDelete = "./src/main/java/org/example/fileOutput/autoDelete/";
+    private final static String pathConfig = "./src/main/java/org/example/configFiles/";
     private final static SpellFilter spellFilter = new SpellFilter();
     private final static String[] spellProperties = SpellFilter.PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
     private final static String[] spellStringProperties = SpellFilter.STRING_PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
+    private final static ProjectileList projectileList = new ProjectileList();
     private final static SpellList spellList = new SpellList();
     private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
     private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
@@ -52,6 +54,10 @@ public class Global{
         return pathAutoDelete;
     }
 
+    public static String getPathConfig(){
+        return pathConfig;
+    }
+
     public static SpellFilter getSpellFilter(){
         return spellFilter;
     }
@@ -62,6 +68,10 @@ public class Global{
 
     public static String[] getSpellStringProperties(){
         return spellStringProperties;
+    }
+
+    public static ProjectileList getProjectileList(){
+        return projectileList;
     }
 
     public static SpellList getSpellList(){

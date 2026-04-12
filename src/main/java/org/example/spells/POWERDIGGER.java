@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_POWERDIGGER;
 
+import java.lang.invoke.MethodHandles;
+
 public class POWERDIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Digging Blast";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "drill bad"};
         this.imageFile = "powerdigger.png";
-        this.emote = "<:powerdigger:1447276654920597605>";
+        this.emote = staticEmote;
         this.description = "More powerful digging";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_POWERDIGGER();

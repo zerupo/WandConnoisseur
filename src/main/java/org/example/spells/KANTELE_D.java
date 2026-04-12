@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_KANTELE_D;
 
+import java.lang.invoke.MethodHandles;
+
 public class KANTELE_D extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Kantele - Note D";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "kantele d"};
         this.imageFile = "kantele_d.png";
-        this.emote = "<:kantele_d:1451342033007542393>";
+        this.emote = staticEmote;
         this.description = "Music for your ears!";
         this.type = SpellType.other;
         this.relatedProjectile = new PROJECTILE_KANTELE_D();

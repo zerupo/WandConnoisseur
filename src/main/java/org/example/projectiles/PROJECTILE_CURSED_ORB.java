@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_CURSED_ORB extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Cursed Sphere";
-        this.emote = "<:cursed_orb:1447276646980784209>";
+        this.imageFile = "cursed_orb.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = -6;
         this.mass = 0.04;

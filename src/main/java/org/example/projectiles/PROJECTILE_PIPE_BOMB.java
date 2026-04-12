@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_PIPE_BOMB extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Dormant Crystal";
-        this.emote = "<:pipe_bomb:1451342048270483456>";
+        this.imageFile = "pipe_bomb.png";
+        this.emote = staticEmote;
         this.mass = 0.06;
 
         this.speedMin = 250;

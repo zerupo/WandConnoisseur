@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_OCARINA_A2;
 
+import java.lang.invoke.MethodHandles;
+
 public class OCARINA_A2 extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Ocarina - Note A2";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "ocarina a2", "a2"};
         this.imageFile = "ocarina_a2.png";
-        this.emote = "<:ocarina_a2:1451342039294935040>";
+        this.emote = staticEmote;
         this.description = "Music for your ears!";
         this.type = SpellType.other;
         this.relatedProjectile = new PROJECTILE_OCARINA_A2();

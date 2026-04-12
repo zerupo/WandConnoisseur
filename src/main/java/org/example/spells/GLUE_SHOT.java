@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_GLUE_SHOT;
 
+import java.lang.invoke.MethodHandles;
+
 public class GLUE_SHOT extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Glue Ball";
-        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "coom"};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "glue", "coom"};
         this.imageFile = "glue_shot.png";
-        this.emote = "<:glue_shot:1464974849431830659>";
+        this.emote = staticEmote;
         this.description = "A projectile that explodes into a sticky mess";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GLUE_SHOT();

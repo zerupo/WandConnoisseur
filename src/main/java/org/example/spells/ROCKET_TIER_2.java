@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_ROCKET_TIER_2;
 
+import java.lang.invoke.MethodHandles;
+
 public class ROCKET_TIER_2 extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Large Magic Missile";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "rocket_tier_2.png";
-        this.emote = "<:rocket_tier_2:1464974874610106504>";
+        this.emote = staticEmote;
         this.description = "A more powerful version of Magic missile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ROCKET_TIER_2();

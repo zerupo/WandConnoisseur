@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_AIR_BULLET;
 
+import java.lang.invoke.MethodHandles;
+
 public class AIR_BULLET extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Burst Of Air";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "air", "fart"};
         this.imageFile = "air_bullet.png";
-        this.emote = "<:air_bullet:1447276636574847138>";
+        this.emote = staticEmote;
         this.description = "A brittle burst of air capable of greatly pushing objects";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_AIR_BULLET();

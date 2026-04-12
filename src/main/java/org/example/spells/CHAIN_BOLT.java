@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_CHAIN_BOLT;
 
+import java.lang.invoke.MethodHandles;
+
 public class CHAIN_BOLT extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Chain Bolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "chain_bolt.png";
-        this.emote = "<:chain_bolt:1447276645739266078>";
+        this.emote = staticEmote;
         this.description = "Fires a mysterious bolt that jumps from enemy to enemy";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_CHAIN_BOLT();

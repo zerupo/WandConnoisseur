@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_GRENADE_TIER_2;
 
+import java.lang.invoke.MethodHandles;
+
 public class GRENADE_TIER_2 extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Large Firebolt";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "grenade_tier_2.png";
-        this.emote = "<:grenade_tier_2:1453399901672181945>";
+        this.emote = staticEmote;
         this.description = "A more powerful version of Firebolt";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_GRENADE_TIER_2();

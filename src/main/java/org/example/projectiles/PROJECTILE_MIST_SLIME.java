@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_MIST_SLIME extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Slime Mist";
-        this.emote = "<:mist_slime:1464974872160501914>";
+        this.imageFile = "mist_slime.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.0;

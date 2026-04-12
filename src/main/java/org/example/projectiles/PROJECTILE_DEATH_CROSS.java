@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_DEATH_CROSS extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Death Cross";
-        this.emote = "<:death_cross:1447276648109052084>";
+        this.imageFile = "death_cross.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 0.0;
         this.mass = 0.08;

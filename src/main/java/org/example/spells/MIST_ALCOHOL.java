@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_MIST_ALCOHOL;
 
+import java.lang.invoke.MethodHandles;
+
 public class MIST_ALCOHOL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Mist Of Spirits";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "mist_alcohol.png";
-        this.emote = "<:mist_alcohol:1464974868712783933>";
+        this.emote = staticEmote;
         this.description = "A cloud of potent alcohol";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_MIST_ALCOHOL();

@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_SLOW_BULLET;
 
+import java.lang.invoke.MethodHandles;
+
 public class SLOW_BULLET_TIMER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Energy Orb With A Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "energy orb timer"};
         this.imageFile = "slow_bullet_timer.png";
-        this.emote = "<:slow_bullet_timer:1453399906357219458>";
+        this.emote = staticEmote;
         this.description = "A slow but powerful orb of energy that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SLOW_BULLET();

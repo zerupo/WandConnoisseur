@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_BUBBLESHOT;
 
+import java.lang.invoke.MethodHandles;
+
 public class BUBBLESHOT_TRIGGER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Bubble Spark With Trigger";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "bubble trigger"};
         this.imageFile = "bubbleshot_trigger.png";
-        this.emote = "<:bubbleshot_trigger:1447276644761862415>";
+        this.emote = staticEmote;
         this.description = "A bouncy, inaccurate spell that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BUBBLESHOT();

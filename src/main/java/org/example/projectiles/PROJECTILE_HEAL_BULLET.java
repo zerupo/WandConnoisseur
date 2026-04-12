@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_HEAL_BULLET extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Healing Bolt";
-        this.emote = "<:heal_bullet:1464974850807304284>";
+        this.imageFile = "heal_bullet.png";
+        this.emote = staticEmote;
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.05;

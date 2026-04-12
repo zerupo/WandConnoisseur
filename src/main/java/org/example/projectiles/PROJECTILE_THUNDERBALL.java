@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_THUNDERBALL extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Thunder Charge";
-        this.emote = "<:thunderball:1464974877164306494>";
+        this.imageFile = "thunderball.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = -1.0;
         this.mass = 0.9;

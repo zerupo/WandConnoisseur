@@ -1,13 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class GAMMA extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Gamma";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "gamma.png";
-        this.emote = "<:gamma:1433949658476183716>";
+        this.emote = staticEmote;
         this.description = "Casts a copy of the last spell in your wand";
         this.type = SpellType.other;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.2, 0, 0, 0, 1);

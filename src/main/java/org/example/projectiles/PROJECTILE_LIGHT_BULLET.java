@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_LIGHT_BULLET extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Spark Bolt";
-        this.emote = "<:light_bullet:1433949664469712967>";
+        this.imageFile = "light_bullet.png";
+        this.emote = staticEmote;
         this.gravityY = 200;
         this.airFriction = 1.7;
         this.mass = 0.04;

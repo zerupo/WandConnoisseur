@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_ACIDSHOT extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Acid Ball";
-        this.emote = "<:acidshot:1447276635329134692>";
+        this.imageFile = "acidshot.png";
+        this.emote = staticEmote;
         this.gravityY = 10;
         this.mass = 0.07;
 

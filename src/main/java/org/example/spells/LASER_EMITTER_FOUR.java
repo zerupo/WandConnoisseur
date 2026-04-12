@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LASER_EMITTER;
 import org.example.projectiles.PROJECTILE_LASER_EMITTER_FOUR;
 
+import java.lang.invoke.MethodHandles;
+
 public class LASER_EMITTER_FOUR extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Plasma Beam Cross";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "plasma cross"};
         this.imageFile = "laser_emitter_four.png";
-        this.emote = "<:laser_emitter_four:1447276652857135105>";
+        this.emote = staticEmote;
         this.description = "Four deadly plasma beams in a cross-shape. Look out, they can hurt you as well!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER();

@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_ANTIHEAL;
 
+import java.lang.invoke.MethodHandles;
+
 public class ANTIHEAL extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Deadly Heal";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "antiheal.png";
-        this.emote = "<:antiheal:1447276638357295325>";
+        this.emote = staticEmote;
         this.description = "A projectile that at first deals damage, then heals over time";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ANTIHEAL();

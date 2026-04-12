@@ -172,7 +172,7 @@ public class WispCommand implements Command{
         }
         event.reply(stringResult.toString()).queue();
 
-        Spell[] spellsLifetimeModifier = Global.getSpellListLifetimeModifier().getSpells();
+        Spell[] spellsLifetimeModifier = Global.getSpellListLifetimeModifier().getSpells(false);
 
         List<Modifier> modifiersList = new ArrayList<>();
         for(int i = 0; i < spellsLifetimeModifier.length; i++){

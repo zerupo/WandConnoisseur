@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class CIRCLE_SHAPE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Formation - Hexagon";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "hexa", "hexa cast", "hexa spell"};
         this.imageFile = "circle_shape.png";
-        this.emote = "<:circle_shape:1433949641296314479>";
+        this.emote = staticEmote;
         this.description = "Casts 6 spells in a hexagonal pattern";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.1, 0.2, 0.3, 0.3, 0.3, 0.3, 0, 0, 0, 0);

@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_ACIDSHOT;
 
+import java.lang.invoke.MethodHandles;
+
 public class ACIDSHOT extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Acid Ball";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "acidshot.png";
-        this.emote = "<:acidshot:1447276635329134692>";
+        this.emote = staticEmote;
         this.description = "A terrifying acidic projectile";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_ACIDSHOT();

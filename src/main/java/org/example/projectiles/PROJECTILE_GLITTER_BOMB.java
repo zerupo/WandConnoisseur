@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_GLITTER_BOMB extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Glitter Bomb";
-        this.emote = "<:glitter_bomb:1464974848122949810>";
+        this.imageFile = "glitter_bomb.png";
+        this.emote = staticEmote;
         this.speedMin = 800;
         this.speedMax = 800;
         this.lifetime = 50;

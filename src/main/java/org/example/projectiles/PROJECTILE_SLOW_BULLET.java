@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_SLOW_BULLET extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Energy Orb";
-        this.emote = "<:slow_bullet:1453399905035882679>";
+        this.imageFile = "slow_bullet.png";
+        this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 1.0;
         this.mass = 0.09;

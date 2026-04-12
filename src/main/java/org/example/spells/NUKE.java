@@ -1,14 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_NUKE;
 
+import java.lang.invoke.MethodHandles;
+
 public class NUKE extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Nuke";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "nuke.png";
-        this.emote = "<:nuke:1433949670249468016>";
+        this.emote = staticEmote;
         this.description = "Take cover!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_NUKE();

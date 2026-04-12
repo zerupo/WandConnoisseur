@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_LUMINOUS_DRILL extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Luminous Drill";
-        this.emote = "<:luminous_drill:1464974864749432955>";
+        this.imageFile = "luminous_drill.png";
+        this.emote = staticEmote;
         this.mass = 1.65;
 
         this.speedMin = 1400;

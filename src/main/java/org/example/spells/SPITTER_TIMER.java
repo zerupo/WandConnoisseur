@@ -1,16 +1,21 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
 import org.example.projectiles.PROJECTILE_SPITTER;
 
+import java.lang.invoke.MethodHandles;
+
 public class SPITTER_TIMER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Spitter Bolt With Timer";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "spitter timer"};
         this.imageFile = "spitter_timer.png";
-        this.emote = "<:spitter_timer:1433949685369802864>";
+        this.emote = staticEmote;
         this.description = "A short-lived magical bolt that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SPITTER();

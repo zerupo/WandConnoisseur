@@ -1,15 +1,20 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_BULLET;
 
+import java.lang.invoke.MethodHandles;
+
 public class BULLET extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Magic Arrow";
         //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
         this.imageFile = "bullet.png";
-        this.emote = "<:bullet:1464974838559936533>";
+        this.emote = staticEmote;
         this.description = "A handy magical arrow";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BULLET();

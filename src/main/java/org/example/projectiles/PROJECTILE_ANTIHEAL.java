@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_ANTIHEAL extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Deadly Heal";
-        this.emote = "<:antiheal:1447276638357295325>";
+        this.imageFile = "antiheal.png";
+        this.emote = staticEmote;
         this.gravityY = 200;
         this.airFriction = 1.2;
         this.mass = 0.07;

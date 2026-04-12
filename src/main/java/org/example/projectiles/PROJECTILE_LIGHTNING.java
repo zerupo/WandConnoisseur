@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_LIGHTNING extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Lightning Bolt";
-        this.emote = "<:lightning:1464974863671361772>";
+        this.imageFile = "lightning.png";
+        this.emote = staticEmote;
         this.lifetime = 2;
         this.lifetimeRandomness = 0;
     }

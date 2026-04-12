@@ -1,10 +1,17 @@
 package org.example.projectiles;
 
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
 public class PROJECTILE_ROCKET_TIER_2 extends Projectile{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Large Magic Missile";
-        this.emote = "<:rocket_tier_2:1464974874610106504>";
+        this.imageFile = "rocket_tier_2.png";
+        this.emote = staticEmote;
         this.gravityY = 50;
         this.airFriction = -5.0;
         this.mass = 0.05;

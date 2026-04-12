@@ -1,14 +1,19 @@
 package org.example.spells;
 
+import org.example.config.EmoteConfig;
 import org.example.main.*;
 
+import java.lang.invoke.MethodHandles;
+
 public class BURST_8 extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
     @Override
     protected void initialization(){
         this.name = "Octuple Spell";
         this.alias = new String[]{this.getClass().getSimpleName(), this.name, "octo", "octo cast", "octo spell", "octuple", "octuple cast"};
         this.imageFile = "burst_8.png";
-        this.emote = "<:burst_8:1433949636443377734>";
+        this.emote = staticEmote;
         this.description = "Simultaneously casts 8 spells";
         this.type = SpellType.multicast;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0, 0, 0, 0.5);
