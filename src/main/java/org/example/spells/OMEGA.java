@@ -23,22 +23,21 @@ public class OMEGA extends Spell{
         this.castDelay = 50;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         Spell currentSpell;
 
         for(int i=0; i < cardPool.getDiscardSize(); i++){
             currentSpell = cardPool.getDiscardSpell(i);
-            //if(not wand refresh){
+            if(currentSpell.getClass() != RESET.class){
                 cardPool.disableDraw();
                 copy(cardPool, castState, currentSpell, recursionLevel);
                 cardPool.enableDraw();
-            //}
+            }
         }
         for(int i=0; i < cardPool.getHandSize(); i++){
             currentSpell = cardPool.getHandSpell(i);
-            if(!currentSpell.recursive){ // and not wand refresh
+            if(!currentSpell.recursive && currentSpell.getClass() != RESET.class){
                 cardPool.disableDraw();
                 copy(cardPool, castState, currentSpell, recursionLevel);
                 cardPool.enableDraw();
@@ -46,11 +45,11 @@ public class OMEGA extends Spell{
         }
         for(int i=0; i < cardPool.getDeckSize(); i++){
             currentSpell = cardPool.getDeckSpell(i);
-            //if(not wand refresh){
+            if(currentSpell.getClass() != RESET.class){
                 cardPool.disableDraw();
                 copy(cardPool, castState, currentSpell, recursionLevel);
                 cardPool.enableDraw();
-            //}
+            }
         }
     }
 }

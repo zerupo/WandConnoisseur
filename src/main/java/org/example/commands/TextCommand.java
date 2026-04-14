@@ -4,12 +4,8 @@ import org.example.main.Global;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -46,59 +42,48 @@ public class TextCommand implements Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
-        OptionMapping texteOption = event.getOption("texte");
+        OptionMapping textOption = event.getOption("texte");
         OptionMapping fontOption = event.getOption("font");
-        OptionMapping tailleOption = event.getOption("taille");
-        OptionMapping couleurOption = event.getOption("couleur");
+        OptionMapping sizeOption = event.getOption("taille");
+        OptionMapping colorOption = event.getOption("couleur");
         String texte = "";
         String fontTexte = "title";
-        String outputPath = Global.getPathOutput();
         int taille = 100;
         Color couleur = new Color(255, 255, 255, 255);
         BufferedImage gradientImage;
         Graphics2D g2d;
         Font font;
 
-        if(texteOption != null){
-            texte = texteOption.getAsString();
+        if(textOption != null){
+            texte = textOption.getAsString();
         }
         if(fontOption != null){
             fontTexte = fontOption.getAsString();
         }
-        if(tailleOption != null){
-            taille = tailleOption.getAsInt();
+        if(sizeOption != null){
+            taille = sizeOption.getAsInt();
         }
-        if(couleurOption != null){
+        if(colorOption != null){
             Pattern p = Pattern.compile("^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$");
-            Matcher m = p.matcher(couleurOption.getAsString().toLowerCase());
+            Matcher m = p.matcher(colorOption.getAsString().toLowerCase());
             if(m.find()){
-                System.out.println(couleurOption.getAsString().toLowerCase() + " is matching, alpha = " + (m.group(4) != null));
-                if(m.group(4) != null){
-                    // RGBA
+                System.out.println(colorOption.getAsString().toLowerCase() + " is matching, alpha = " + (m.group(4) != null));
+                if(m.group(4) != null){ // RGBA
                     couleur = new Color(Integer.parseInt(m.group(1), 16), Integer.parseInt(m.group(2), 16), Integer.parseInt(m.group(3), 16), Integer.parseInt(m.group(4), 16));
-                }else{
-                    // RGB
+                }else{ // RGB
                     couleur = new Color(Integer.parseInt(m.group(1), 16), Integer.parseInt(m.group(2), 16), Integer.parseInt(m.group(3), 16), 255);
                 }
             }
         }
 
         try{
-            InputStream myStream = null;
-            switch (fontTexte) {
-                case "pixel" -> myStream = new FileInputStream("./src/main/java/org/example/PixelFont.ttf");
-                case "title" -> myStream = new FileInputStream("./src/main/java/org/example/TitleFont.ttf");
+            switch(fontTexte){
+                case "pixel" -> font = Global.getPixelFont().deriveFont(Font.PLAIN, taille);
                 case "glyph" -> {
-                    myStream = new FileInputStream("./src/main/java/org/example/GlyphFont.ttf");
+                    font = Global.getGlyphFont().deriveFont(Font.PLAIN, taille);;
                     texte = texte.replace(" ", "   ");
                 }
-                default -> {}
-            }
-            if(myStream != null){
-                Font baseFont = Font.createFont(Font.TRUETYPE_FONT, myStream);
-                font = baseFont.deriveFont(Font.PLAIN, taille);
-            }else{
-                font = new Font("Arial", Font.PLAIN, taille);
+                default -> font = Global.getTitleFont().deriveFont(Font.PLAIN, taille);
             }
 
             BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
@@ -110,7 +95,7 @@ public class TextCommand implements Command{
             tempG2d.dispose();
 
             image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            if(fontTexte.equals("title") && couleurOption == null){
+            if(fontTexte.equals("title") && colorOption == null){
                 gradientImage = scaleGradient(Global.loadImage("./src/main/java/org/example/image/other/gradient.png"), height);
 
                 BufferedImage mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -136,12 +121,8 @@ public class TextCommand implements Command{
                 g2d.dispose();
             }
 
-            File textFile = new File(outputPath + "text_" + event.getId() + ".png");
-            ImageIO.write(image, "PNG", textFile);
-            event.replyFiles(FileUpload.fromData(textFile, "text.png")).queue();
-            if(!textFile.delete()){
-                System.out.println("\"" + outputPath + "text_" + event.getId() + ".png\" not deleted");
-            }
+            FileUpload textFile = Global.bufferedImageToUpload(image, "test.png");
+            event.replyFiles(textFile).queue();
         }catch(Exception e){
             event.reply("Erreur lors de la création de l'image").setEphemeral(true).queue();
             System.out.println("Error: " + e.getMessage());

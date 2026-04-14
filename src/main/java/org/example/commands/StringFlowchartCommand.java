@@ -4,11 +4,11 @@ import org.example.main.Global;
 import org.example.main.Wand;
 import org.example.spells.*;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 public class StringFlowchartCommand implements Command{
     @Override
@@ -25,7 +25,6 @@ public class StringFlowchartCommand implements Command{
     public void executeSlash(SlashCommandInteractionEvent event){
         OptionMapping fileOption = event.getOption("fichier");
         boolean file = false;
-        String fileName = event.getId() + ".png";
         StringBuilder result = new StringBuilder();
         Wand wand = Global.slashInteractionToWand(event);
         Spell[] spells;
@@ -66,17 +65,12 @@ public class StringFlowchartCommand implements Command{
         result.append("\n\n").append(wand.getFlowchartString(true, !file));
 
         if(file){
-            try{
-                FileWriter fw = new FileWriter(Global.getPathOutput() + "text_flowchart" + fileName);
-                fw.write(result.toString());
-                fw.close();
+            try(ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+                baos.write(result.toString().getBytes(StandardCharsets.UTF_8));
+                event.getHook().editOriginal("").setFiles(FileUpload.fromData(baos.toByteArray(), "text_flowchart.txt")).queue();
             }catch(Exception e){
+                event.getHook().editOriginal("Erreur lors de l'écriture du fichier.").queue();
                 e.printStackTrace();
-            }
-            File textFile = new File(Global.getPathOutput() + "text_flowchart" + fileName);
-            event.getHook().editOriginal("").setFiles(FileUpload.fromData(textFile, "text_flowchart.txt")).queue();//getChannel().sendFiles(FileUpload.fromData(textFile, "text_flowchart.txt")).queue();
-            if(!textFile.delete()){
-                System.out.println("\"" + textFile.getAbsolutePath() + "\" not deleted");
             }
         }else{
             Global.sendMessage(result.toString(), event, true, true);

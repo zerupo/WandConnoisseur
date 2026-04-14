@@ -28,7 +28,6 @@ public class RESET extends Spell{
         cardPool.discardAllHand();
         cardPool.discardAllDeck();
 
-        System.out.println("WR: " + cardPool.getForceStopDraws());
         if(!cardPool.getForceStopDraws()){
             cardPool.wrap();
             cardPool.setForceStopDraws(true);

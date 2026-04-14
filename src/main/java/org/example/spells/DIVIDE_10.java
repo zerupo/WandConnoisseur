@@ -20,6 +20,7 @@ public class DIVIDE_10 extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
         this.price = 400;
         this.manaCost = 200;
+        this.autoStat = false;
         this.castDelay = 80;
         this.rechargeTime = 20;
         this.hasCharges = true;
@@ -39,6 +40,9 @@ public class DIVIDE_10 extends Spell{
         boolean copyFailed = false;
         int currentCastDelay = 0;
         int currentRechareTime = 0;
+
+        castState.addCastDelay(this.castDelay);
+        cardPool.addRechargeTime(this.rechargeTime);
 
         currentSpell = cardPool.getDeckSpell(iterationLevel - 1);
         if(iterationLevel > iterationLimit){

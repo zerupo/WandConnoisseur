@@ -6,8 +6,7 @@ import org.example.spells.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 public class Global{
     private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
@@ -40,10 +40,14 @@ public class Global{
     private final static int baseIconSize = 7;
     private final static int imageScaleFactor = 5;
     private final static int margin = 4*getImageScaleFactor();
+    private final static Font titleFont = loadFont("./src/main/java/org/example/TitleFont.ttf");
+    private final static Font pixelFont = loadFont("./src/main/java/org/example/PixelFont.ttf");
+    private final static Font glyphFont = loadFont("./src/main/java/org/example/GlyphFont.ttf");
     private final static Pattern delayPattern = Pattern.compile("^ *([+-]?[0-9]+(|\\.[0-9]+)?)(?: *(|[fs]))? *$");
     private final static Pattern spellPattern = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
     public final static MenuManager menuManager = new MenuManager();
-    public static long currentFrame = 0;
+    private static long currentFrame = 0;
+    private static boolean reqOEState = false;
 
     // getters
     public static String getPathOutput(){
@@ -118,6 +122,18 @@ public class Global{
         return margin;
     }
 
+    public static Font getTitleFont(){
+        return titleFont;
+    }
+
+    public static Font getPixelFont(){
+        return pixelFont;
+    }
+
+    public static Font getGlyphFont(){
+        return glyphFont;
+    }
+
     public static Pattern getDelayPattern(){
         return delayPattern;
     }
@@ -149,6 +165,14 @@ public class Global{
         }else{
             currentFrame += nb;
         }
+    }
+
+    public static boolean getReqOEState(){
+        return reqOEState;
+    }
+
+    public static void switchReqEOState(){
+        reqOEState = !reqOEState;
     }
 
     private Global(){
@@ -390,23 +414,75 @@ public class Global{
         }
     }
 
+    private static Font loadFont(String filePath){
+        try{
+            InputStream myStream = new FileInputStream(filePath);
+            return Font.createFont(Font.TRUETYPE_FONT, myStream);
+        }catch(Exception e){
+            return new Font("Arial", Font.PLAIN, imageScaleFactor*7);
+        }
+    }
+
     public static File JPanelToFile(JPanel jPanel, String filePath){
         if(jPanel == null || jPanel.getSize().width <= 0 || jPanel.getSize().height <= 0){
             return null;
         }
 
-        BufferedImage bi = new BufferedImage(jPanel.getSize().width, jPanel.getSize().height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bi = new BufferedImage(jPanel.getWidth(), jPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics g = bi.createGraphics();
         jPanel.paint(g);
         g.dispose();
 
         try{
-            ImageIO.write(bi,"png",new File(filePath));
+            ImageIO.write(bi,"png", new File(filePath));
         }catch(Exception e){
             System.out.println("Error writing file \"" + filePath + "\" " + e.getMessage());
             return null;
         }
 
         return new File(filePath);
+    }
+
+    public static byte[] bufferedImageToBytes(BufferedImage bufferedImage){
+        if(bufferedImage == null){
+            return null;
+        }
+
+        try(ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+            ImageIO.write(bufferedImage, "png", baos);
+            return baos.toByteArray();
+        }catch(IOException e){
+            System.out.println("Error writing image: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static byte[] JPanelToBytes(JPanel jPanel){
+        if(jPanel == null || jPanel.getWidth() <= 0 || jPanel.getHeight() <= 0){
+            return null;
+        }
+
+        BufferedImage bi = new BufferedImage(jPanel.getWidth(), jPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = bi.createGraphics();
+        jPanel.paint(g);
+        g.dispose();
+
+        try(ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+            javax.imageio.ImageIO.write(bi, "png", baos);
+            return baos.toByteArray();
+        }catch(IOException e){
+            System.out.println("Error writing image: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static FileUpload JPanelToUpload(JPanel panel, String name){
+        byte[] data = JPanelToBytes(panel);
+        return data != null ? FileUpload.fromData(data, name) : null;
+    }
+
+    public static FileUpload bufferedImageToUpload(BufferedImage bufferedImage, String name){
+        byte[] data = bufferedImageToBytes(bufferedImage);
+        return data != null ? FileUpload.fromData(data, name) : null;
     }
 }

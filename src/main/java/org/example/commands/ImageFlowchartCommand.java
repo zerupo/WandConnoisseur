@@ -3,7 +3,6 @@ package org.example.commands;
 import org.example.main.Global;
 import org.example.main.Wand;
 
-import java.io.File;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.FileUpload;
 
@@ -20,11 +19,10 @@ public class ImageFlowchartCommand implements Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
-        String fileName = event.getId() + ".png";
-        File wandStatImage = null;
-        File wandImage;
-        File flowchartImage;
         Wand wand = Global.slashInteractionToWand(event);
+        FileUpload wandStatImage = null;
+        FileUpload wandImage;
+        FileUpload flowchartImage;
         String[] statOptions = new String[]{"draw", "cast_delay", "recharge_time", "mana_max", "mana_regen", "spread", "speed"};
         boolean statChanged = false;
         boolean eventReplied = false;
@@ -42,39 +40,29 @@ public class ImageFlowchartCommand implements Command{
         event.deferReply(false).queue();
 
         if(statChanged){
-            wandStatImage = Global.JPanelToFile(wand.getStatJPanel(), Global.getPathOutput() + "wandstats_" + fileName);
+            wandStatImage = Global.JPanelToUpload(wand.getStatJPanel(), "wandstats.png");
         }
-        wandImage = Global.JPanelToFile(wand.getWandJPanel(), Global.getPathOutput() + "wand_" + fileName);
-        wand.saveFlowchartImage(Global.getPathOutput() + "flowchart_" + fileName, true);
-        flowchartImage = new File(Global.getPathOutput() + "flowchart_" + fileName);
+        wandImage = Global.JPanelToUpload(wand.getWandJPanel(), "wand.png");
+        flowchartImage = Global.bufferedImageToUpload(wand.getFlowchartImage(true), "flowchart.png");
 
         if(wandStatImage != null){
-            event.getHook().editOriginal("").setFiles(FileUpload.fromData(wandStatImage, "wandstats.png")).queue();
-            if(!wandStatImage.delete()){
-                System.out.println("\"" + wandStatImage.getAbsolutePath() + "\" not deleted");
-            }
+            event.getHook().editOriginal("").setFiles(wandStatImage).queue();
             eventReplied = true;
         }
 
         if(wandImage != null){
             if(eventReplied){
-                event.getChannel().sendFiles(FileUpload.fromData(wandImage, "wand.png")).queue();
+                event.getChannel().sendFiles(wandImage).queue();
             }else{
-                event.getHook().editOriginal("").setFiles(FileUpload.fromData(wandImage, "wand.png")).queue();
-            }
-            if(!wandImage.delete()){
-                System.out.println("\"" + wandImage.getAbsolutePath() + "\" not deleted");
+                event.getHook().editOriginal("").setFiles(wandImage).queue();
             }
             eventReplied = true;
         }
 
         if(eventReplied){
-            event.getChannel().sendFiles(FileUpload.fromData(flowchartImage, "flowchart.png")).queue();
+            event.getChannel().sendFiles(flowchartImage).queue();
         }else{
-            event.getHook().editOriginal("").setFiles(FileUpload.fromData(flowchartImage, "flowchart.png")).queue();
-        }
-        if(!flowchartImage.delete()){
-            System.out.println("\"" + flowchartImage.getAbsolutePath() + "\" not deleted");
+            event.getHook().editOriginal("").setFiles(flowchartImage).queue();
         }
     }
 }

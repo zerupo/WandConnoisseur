@@ -481,6 +481,30 @@ public class CardPool{
         }
     }
 
+    public void discardId(int id){
+        if(id < 0 || id > this.deck.size()){
+            return;
+        }
+        this.discard.add(this.deck.remove(id));
+        if(this.autoCardHistory){
+            this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+        }
+    }
+
+    public void discardId(int fromId, int toId){
+        int id = fromId;
+        for(int i=fromId; i <= toId; i++){
+            if(id >= 0 && id < this.deck.size()){
+                this.discard.add(this.deck.remove(id));
+                if(this.autoCardHistory){
+                    this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+                }
+            }else{
+                id++;
+            }
+        }
+    }
+
     public void discardAllDeck(){
         while(!this.deck.isEmpty()){
             this.discard.add(this.deck.remove(0));

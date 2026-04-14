@@ -397,7 +397,7 @@ class WandStat{
         String[] statValues = new String[6];
         BufferedImage currentImage;
         BufferedImage wandSprite = rotateImageByDegrees(scaleImage(loadImage(this.getSprite()), 2*imageScaleFactor), -90);;
-        Font font;
+        Font font = Global.getPixelFont().deriveFont(Font.PLAIN, baseIconSize*imageScaleFactor);
         FontMetrics fm;
         int textHeight;
         //int textWidth;//
@@ -416,15 +416,6 @@ class WandStat{
         statValues[3] = this.rechargeTime.toString("%1$3.2f", 1.0/60.0, false, "", " s");
         statValues[4] = this.nbSlot.toString();
         statValues[5] = this.spread.toString("%1$3.2f", 1, false, "", " DEG");
-
-        try{
-            InputStream myStream = new BufferedInputStream(new FileInputStream("./src/main/java/org/example/PixelFont.ttf"));
-            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, myStream);
-            font = baseFont.deriveFont(Font.PLAIN, baseIconSize*imageScaleFactor);
-        }catch(Exception e){
-            System.out.println("Pixel font not loaded.");
-            font = new Font("Arial", Font.PLAIN, baseIconSize*imageScaleFactor);
-        }
 
         Graphics2D gTemp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
         fm = gTemp.getFontMetrics(font);

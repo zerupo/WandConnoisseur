@@ -101,7 +101,7 @@ public class WandJPanel{
         String[] statImages = new String[]{"shuffle.png", "spell_cast.png", "cast_delay.png", "recharge_time.png", "max_mana.png", "mana_regen.png", "slot.png", "spread.png", "speed.png"};
         String[] statValues = new String[9];
         BufferedImage currentImage;
-        Font font;
+        Font font = Global.getPixelFont().deriveFont(Font.PLAIN, this.baseIconSize*this.imageScaleFactor);
         FontMetrics fm;
         int textHeight;
         //int textWidth;//
@@ -129,15 +129,6 @@ public class WandJPanel{
         statValues[6] = String.valueOf(this.wand.getNbSlot());
         statValues[7] = String.format("%1$2.1f DEG", this.wand.getSpread());
         statValues[8] = String.format("x%1$2.1f", this.wand.getSpeed());
-
-        try{
-            InputStream myStream = new BufferedInputStream(new FileInputStream("./src/main/java/org/example/PixelFont.ttf"));
-            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, myStream);
-            font = baseFont.deriveFont(Font.PLAIN, this.baseIconSize*this.imageScaleFactor);
-        }catch(Exception e){
-            System.out.println("Pixel font not loaded.");
-            font = new Font("Arial", Font.PLAIN, this.baseIconSize*this.imageScaleFactor);
-        }
 
         Graphics2D gTemp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
         fm = gTemp.getFontMetrics(font);

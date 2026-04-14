@@ -537,10 +537,10 @@ public abstract class Spell{
 
     public boolean imageInJLabel(){
         if(this.imageLabel == null){
-            // à refaire
-            this.chargeLabel = new JLabel("0") {
+            // TODO à refaire
+            this.chargeLabel = new JLabel("0"){
                 @Override
-                protected void paintComponent(Graphics g) {
+                protected void paintComponent(Graphics g){
                     Graphics2D g2d = (Graphics2D) g;
                     g2d.setRenderingHint(
                         RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -562,20 +562,9 @@ public abstract class Spell{
             this.chargeLabel.setVerticalAlignment(JLabel.TOP);
             this.chargeLabel.setOpaque(false);
             //this.chargeLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-            Font font = null;
-            try{
-                InputStream myStream = new FileInputStream("./src/main/java/org/example/PixelFont.ttf");
-                font = Font.createFont(Font.TRUETYPE_FONT, myStream).deriveFont(Font.PLAIN, this.imageScaleFactor*7);
-            }catch(Exception e){
-                font = new Font("Arial", Font.PLAIN, this.imageScaleFactor*7);
-            }
-            if(font != null){
-                this.chargeLabel.setFont(font);
-                //this.chargeLabel.setFont(new Font("Arial", Font.PLAIN, this.imageScaleFactor*10));
-            }
+            this.chargeLabel.setFont(Global.getPixelFont().deriveFont(Font.PLAIN, this.imageScaleFactor*7));
 
             this.updateChargeLabel();
-            //this.chargeLabel.setText("8");
 
             this.imageLabel = new JLabel();
             this.imageLabel.add(this.chargeLabel);
