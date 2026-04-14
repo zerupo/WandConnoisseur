@@ -19,6 +19,7 @@ public class LIGHT_BULLET_TRIGGER extends Spell{
         this.description = "A spark bolt that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LIGHT_BULLET();
+        this.triggerType = Projectile.TriggerType.trigger;
         this.spawnProbabilities = new SpawnProbabilities(1, 0.5, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0);
         this.price = 140;
         this.manaCost = 10;
@@ -29,12 +30,7 @@ public class LIGHT_BULLET_TRIGGER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
-        newProjectile.addTrigger(Projectile.TriggerType.trigger, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
     }
 }
 

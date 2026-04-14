@@ -19,6 +19,8 @@ public class SPITTER_TIMER extends Spell{
         this.description = "A short-lived magical bolt that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SPITTER();
+        this.triggerType = Projectile.TriggerType.timer;
+        this.timerLength = 40;
         this.spawnProbabilities = new SpawnProbabilities(0.5, 0.5, 0.5, 1, 0, 0, 0, 0, 0, 0, 0);
         this.price = 140;
         this.manaCost = 10;
@@ -30,12 +32,7 @@ public class SPITTER_TIMER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
-        newProjectile.addTrigger(Projectile.TriggerType.timer, 40, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
     }
 }
 

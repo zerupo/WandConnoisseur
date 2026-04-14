@@ -31,7 +31,12 @@ public class Global{
     private final static ProjectileList projectileList = new ProjectileList();
     private final static SpellList spellList = new SpellList();
     private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
+    private final static SpellList spellListModifier = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier);
+    private final static SpellList spellListStaticProjectile = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile);
     private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
+    private final static SpellList spellListNonRecursive = new SpellList(spell -> !spell.getRecursive());
+    private final static SpellList spellListModifierNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier && !spell.getRecursive());
+    private final static SpellList spellListStaticProjectileNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile && !spell.getRecursive());
     private final static String[] aliasList = spellList.getAllAlias();
     private final static String[] aliasListRelatedProjectile = spellListRelatedProjectile.getAllAlias();
     private final static String[] aliasListLifetimeModifier = spellListLifetimeModifier.getAllAlias();
@@ -86,8 +91,28 @@ public class Global{
         return spellListRelatedProjectile;
     }
 
+    public static SpellList getSpellListModifier(){
+        return spellListModifier;
+    }
+
+    public static SpellList getSpellListStaticProjectile(){
+        return spellListStaticProjectile;
+    }
+
     public static SpellList getSpellListLifetimeModifier(){
         return spellListLifetimeModifier;
+    }
+
+    public static SpellList getSpellListNonRecursive(){
+        return spellListNonRecursive;
+    }
+
+    public static SpellList getSpellListModifierNonRecursive(){
+        return spellListModifierNonRecursive;
+    }
+
+    public static SpellList getSpellListStaticProjectileNonRecursive(){
+        return spellListStaticProjectileNonRecursive;
     }
 
     public static String[] getAliasList(){
@@ -484,5 +509,13 @@ public class Global{
     public static FileUpload bufferedImageToUpload(BufferedImage bufferedImage, String name){
         byte[] data = bufferedImageToBytes(bufferedImage);
         return data != null ? FileUpload.fromData(data, name) : null;
+    }
+
+    public static int longToInt(Long nb){
+        return (int)(nb & 0xFFFFFFFFL);
+    }
+
+    public static long intToLong(int lower, int higher){
+        return ((long) higher << 32) | (lower & 0xffffffffL);
     }
 }

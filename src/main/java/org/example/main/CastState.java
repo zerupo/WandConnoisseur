@@ -150,6 +150,19 @@ public class CastState{
         this.castStateProjectiles.add(new CastStateProjectile(projectile));
     }
 
+    public CastState addProjectileTrigger(Projectile projectile, int timer, Projectile.TriggerType triggerType){
+        CastState newCastState = new CastState();
+
+        projectile.addTrigger(triggerType, timer, newCastState);
+        this.addProjectile(projectile);
+
+        return newCastState;
+    }
+
+    public CastState addProjectileTrigger(Projectile projectile, Projectile.TriggerType triggerType){
+        return this.addProjectileTrigger(projectile, 0, triggerType);
+    }
+
     public String toString(){
         StringBuilder result = new StringBuilder();
         StringBuilder innerBuilder = new StringBuilder();

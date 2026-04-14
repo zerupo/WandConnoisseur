@@ -19,6 +19,7 @@ public class SLOW_BULLET_TRIGGER extends Spell{
         this.description = "A slow but powerful orb of energy that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_SLOW_BULLET();
+        this.triggerType = Projectile.TriggerType.trigger;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.5, 0.5, 0.5, 0.5, 1, 0, 0, 0, 0, 0);
         this.price = 200;
         this.manaCost = 50;
@@ -31,16 +32,11 @@ public class SLOW_BULLET_TRIGGER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
         castState.addCastDelay(this.castDelay);
         castState.addSpread(this.spread);
         cardPool.addScreenshake(this.screenshake);
 
-        newProjectile.addTrigger(Projectile.TriggerType.trigger, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
 
         cardPool.addRecoil(this.recoil);
     }

@@ -19,6 +19,8 @@ public class LASER_LUMINOUS_DRILL extends Spell{
         this.description = "A pinpointed, short-ranged beam of concentrated light that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LUMINOUS_DRILL();
+        this.triggerType = Projectile.TriggerType.timer;
+        this.timerLength = 4;
         this.spawnProbabilities = new SpawnProbabilities(1, 0, 1, 0, 0, 0, 0.2, 0, 0, 0, 0.1);
         this.price = 220;
         this.manaCost = 30;
@@ -28,12 +30,7 @@ public class LASER_LUMINOUS_DRILL extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
-        newProjectile.addTrigger(Projectile.TriggerType.timer, 4, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
     }
 }
 

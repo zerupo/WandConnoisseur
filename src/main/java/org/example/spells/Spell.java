@@ -8,16 +8,14 @@ import java.awt.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public abstract class Spell{
     public enum SpellType {projectile, static_projectile, passif, utility, modifier, material, multicast, other};
-    protected final int recursionLimit = 2;
+    protected final static int recursionLimit = 2;
     protected String name = "spell_name";
     protected String[] alias = new String[0];
     protected String imagePath = "./src/main/java/org/example/image/spell/";
@@ -34,6 +32,8 @@ public abstract class Spell{
     protected SpellType type = SpellType.other;
     protected Projectile relatedProjectile = null;
     protected int relatedProjectileCount = 1;
+    protected Projectile.TriggerType triggerType = Projectile.TriggerType.none;
+    protected int timerLength = 0;
     protected SpawnProbabilities spawnProbabilities = new SpawnProbabilities();
     protected boolean recursive = false;
     protected int price = 0;
@@ -177,6 +177,14 @@ public abstract class Spell{
 
     public int getRelatedProjectileCount(){
         return this.relatedProjectileCount;
+    }
+
+    public Projectile.TriggerType getTriggerType(){
+        return this.triggerType;
+    }
+
+    public int getTimerLength(){
+        return this.timerLength;
     }
 
     public double[] getSpawnProbability(){
@@ -346,6 +354,10 @@ public abstract class Spell{
         result.append("\nMana cost: ").append(this.manaCost);
         result.append("\nSpawn probabilities: ").append(this.getTierString());
         result.append("\nPrice: ").append(this.price);
+        if(this.relatedProjectile == null){
+            if(this.triggerType != Projectile.TriggerType.none){result.append("\nTrigger type: ").append(this.triggerType);}
+            if(this.triggerType == Projectile.TriggerType.timer){result.append(String.format("\nTimer lifetime: %1$df (%2$3.2fs)", this.timerLength, this.timerLength/60.0));}
+        }
 
         // cast state
         if(this.castDelay != 0){innerString.append(String.format("\nCast delay: %1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
@@ -380,6 +392,8 @@ public abstract class Spell{
         // related projectile
         if(this.relatedProjectile != null){
             result.append("\n\n# Related Projectile");
+            if(this.triggerType != Projectile.TriggerType.none){result.append("\nTrigger type: ").append(this.triggerType);}
+            if(this.triggerType == Projectile.TriggerType.timer){result.append(String.format("\nTimer lifetime: %1$df (%2$3.2fs)", this.timerLength, this.timerLength/60.0));}
             result.append("\nLifetime: ").append(this.relatedProjectile.getLifetimeString());
             result.append("\nSpeed: ").append(this.relatedProjectile.getSpeedString());
         }

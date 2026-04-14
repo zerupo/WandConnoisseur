@@ -46,7 +46,7 @@ public class DIVIDE_2 extends Spell{
         }
 
         if(currentSpell != null && (!currentSpell.hasCharges || currentSpell.chargesLeft > 0)){
-            if(currentSpell.recursive && recursionLevel + 1 > this.recursionLimit){
+            if(currentSpell.recursive && recursionLevel + 1 > recursionLimit){
                 copyFailed = true;
             }
             currentCastDelay = castState.getCastDelay();
@@ -65,11 +65,8 @@ public class DIVIDE_2 extends Spell{
                     iter_max = imax;
                 }
             }
-
-            if(currentSpell.hasCharges && currentSpell.chargesLeft > 0){
-                currentSpell.removeCharge();
-                // does not remove a charge if already removed this cast
-            }
+            // TODO does not remove a charge if already removed this cast
+            currentSpell.removeCharge();
 
             if(iterationLevel == 1 && !copyFailed){
                 castState.setCastDelay(currentCastDelay);

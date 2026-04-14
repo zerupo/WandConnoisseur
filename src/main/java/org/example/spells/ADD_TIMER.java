@@ -17,6 +17,8 @@ public class ADD_TIMER extends Spell{
         this.emote = staticEmote;
         this.description = "Makes a projectile cast another spell after a short time";
         this.type = SpellType.other;
+        this.triggerType = Projectile.TriggerType.timer;
+        this.timerLength = 20;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.3, 0.6, 0.6, 0, 0, 0, 0, 1);
         this.price = 150;
         this.manaCost = 20;
@@ -57,20 +59,12 @@ public class ADD_TIMER extends Spell{
                     break;
                 }
             }
-
-            if(!currentSpell.getHasCharges() || currentSpell.getChargesLeft() >= 0){
-                currentSpell.removeCharge();
-                // does not remove a charge if already removed this cast
-            }
+            // TODO does not remove a charge if already removed this cast
+            currentSpell.removeCharge();
 
             if(validPayload){
                 for(int i=0; i < currentSpell.getRelatedProjectileCount(); i++){
-                    Projectile newProjectile = currentSpell.getRelatedProjectile().clone();
-                    CastState newCastState = new CastState();
-
-                    newProjectile.addTrigger(Projectile. TriggerType.timer, 20, newCastState);
-                    castState.addProjectile(newProjectile);
-                    cardPool.draw(1, true, newCastState);
+                    cardPool.draw(1, true, castState.addProjectileTrigger(currentSpell.getRelatedProjectile().clone(), this.timerLength, this.triggerType));
                 }
             }else{
                 cardPool.disableDraw();

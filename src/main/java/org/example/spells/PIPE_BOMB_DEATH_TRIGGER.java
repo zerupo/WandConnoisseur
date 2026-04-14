@@ -19,6 +19,7 @@ public class PIPE_BOMB_DEATH_TRIGGER extends Spell{
         this.description = "A crystal that explodes when caught in an explosion";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_PIPE_BOMB();
+        this.triggerType = Projectile.TriggerType.expiration;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.6, 0.8, 1, 0.8, 0, 0, 0, 0, 0);
         this.price = 230;
         this.manaCost = 20;
@@ -32,16 +33,11 @@ public class PIPE_BOMB_DEATH_TRIGGER extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
         castState.addCastDelay(this.castDelay);
         /*c.child_speed_multiplier = c.child_speed_multiplier * 0.75
 		c.speed_multiplier = c.speed_multiplier * 0.75*/
 
-        newProjectile.addTrigger(Projectile.TriggerType.expiration, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
 
         cardPool.addRecoil(this.recoil);
         /*if ( c.speed_multiplier >= 20 ) then

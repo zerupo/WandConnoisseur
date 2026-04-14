@@ -307,7 +307,7 @@ public class Wand{
                 waitingTime += Math.max(currentCastDelay, 0);
                 currentCastDelay = 0;
             }
-            Global.nextFrame(waitingTime);
+            Global.nextFrame(Math.max(waitingTime, 1));
             cardPoolCopy.endCast();
             if(!allCasts){
                 recharged = true;

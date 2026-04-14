@@ -19,6 +19,8 @@ public class BULLET_TIMER extends Spell{
         this.description = "A magical arrow that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BULLET();
+        this.triggerType = Projectile.TriggerType.timer;
+        this.timerLength = 10;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.5, 0.5, 0.5, 0.5, 0.6, 0, 0, 0, 0);
         this.price = 190;
         this.manaCost = 35;
@@ -31,12 +33,7 @@ public class BULLET_TIMER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
-        newProjectile.addTrigger(Projectile.TriggerType.timer, 10, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
     }
 }
 

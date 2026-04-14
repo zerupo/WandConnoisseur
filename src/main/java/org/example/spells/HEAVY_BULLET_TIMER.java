@@ -13,12 +13,14 @@ public class HEAVY_BULLET_TIMER extends Spell{
     @Override
     protected void initialization(){
         this.name = "Magic Bolt With Timer";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "magic bolt timer"};
         this.imageFile = "heavy_bullet_timer.png";
         this.emote = staticEmote;
         this.description = "A powerful magical bolt that casts another spell after a timer runs out";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_HEAVY_BULLET();
+        this.triggerType = Projectile.TriggerType.timer;
+        this.timerLength = 10;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.5, 0.5, 0.5, 0.5, 0.7, 0, 0, 0, 0);
         this.price = 240;
         this.manaCost = 40;
@@ -31,12 +33,7 @@ public class HEAVY_BULLET_TIMER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
-        newProjectile.addTrigger(Projectile.TriggerType.timer, 10, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
     }
 }
 

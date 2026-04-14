@@ -19,6 +19,7 @@ public class BUBBLESHOT_TRIGGER extends Spell{
         this.description = "A bouncy, inaccurate spell that casts another spell upon collision";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BUBBLESHOT();
+        this.triggerType = Projectile.TriggerType.trigger;
         this.spawnProbabilities = new SpawnProbabilities(0, 0.5, 0.5, 1, 0, 0, 0, 0, 0, 0, 0);
         this.price = 120;
         this.manaCost = 16;
@@ -28,13 +29,8 @@ public class BUBBLESHOT_TRIGGER extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
         // c.dampening = 0.1
-        newProjectile.addTrigger(Projectile.TriggerType.trigger, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
 
     }
 }

@@ -295,9 +295,9 @@ public class Flowchart{
             if(currentFlowchart.myself != null){
                 if(currentFlowchart.copyFailed){
                     if(formatting){
-                        sb.append(this.getFailedColor() + currentFlowchart.myself.getName() + this.getResetColor());
+                        sb.append(this.getFailedColor()).append(currentFlowchart.myself.getName()).append(this.getResetColor());
                     }else{
-                        sb.append("(" + currentFlowchart.myself.getName() + ")");
+                        sb.append("(").append(currentFlowchart.myself.getName()).append(")");
                     }
                 }else{
                     sb.append(currentFlowchart.myself.getName());
@@ -306,7 +306,7 @@ public class Flowchart{
                     sb.append(" (" + currentFlowchart.chargesLeft + ")");
                 }*/
                 if(currentFlowchart.count > 1){
-                    sb.append(" (x" + currentFlowchart.count + ")");
+                    sb.append(" (x").append(currentFlowchart.count).append(")");
                 }
                 sb.append("\n");
             }else{
@@ -355,7 +355,7 @@ public class Flowchart{
     }
 
     private Point toImageNode(ImageBuilder image, int x, int y){
-        Flowchart[] flowchartArray = this.spells.toArray(new Flowchart[this.spells.size()]);
+        Flowchart[] flowchartArray = this.spells.toArray(new Flowchart[0]);
         Flowchart currentFlowchart;
         BufferedImage currentImage = null;
         BufferedImage failedImage = this.getCopyFailedImage();

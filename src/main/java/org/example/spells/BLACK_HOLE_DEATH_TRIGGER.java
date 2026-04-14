@@ -19,6 +19,7 @@ public class BLACK_HOLE_DEATH_TRIGGER extends Spell{
         this.description = "A slow orb of void that eats through all obstacles and casts another spell as it expires";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_BLACK_HOLE();
+        this.triggerType = Projectile.TriggerType.expiration;
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.5, 0, 0.5, 0.5, 0.5, 0, 0, 0, 0);
         this.price = 220;
         this.manaCost = 200;
@@ -31,12 +32,7 @@ public class BLACK_HOLE_DEATH_TRIGGER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Projectile newProjectile = this.relatedProjectile.clone();
-        CastState newCastState = new CastState();
-
-        newProjectile.addTrigger(Projectile.TriggerType.expiration, newCastState);
-        castState.addProjectile(newProjectile);
-        cardPool.draw(1, true, newCastState);
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
     }
 }
 
