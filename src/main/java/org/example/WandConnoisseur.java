@@ -13,6 +13,9 @@ import org.example.projectiles.Projectile;
 import org.example.spells.Spell;
 
 import java.util.EnumSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import net.dv8tion.jda.api.entities.emoji.ApplicationEmoji;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.JDA;
@@ -24,6 +27,41 @@ import org.slf4j.LoggerFactory;
 public class WandConnoisseur{
     private static final Logger logger = LoggerFactory.getLogger(WandConnoisseur.class);
     public static JDA jda;
+
+    private static void generateEmotes(boolean newOnly){
+        Spell[] spells = Global.getSpellList().getSpells(false);
+        Projectile[] projectiles = Global.getProjectileList().getProjectiles(false);
+        Set<String> emojis = null;
+
+        if(newOnly){
+            emojis = jda.retrieveApplicationEmojis().complete().stream().map(ApplicationEmoji::getName).collect(Collectors.toSet());
+        }
+
+
+        for(int i=0; i < spells.length; i++){
+            if(!newOnly || !emojis.contains(spells[i].getClass().getSimpleName().toLowerCase())){
+                spells[i].createEmote();
+            }
+        }
+        for(int i=0; i < projectiles.length; i++){
+            if(!newOnly || !emojis.contains(projectiles[i].getClass().getSimpleName().toLowerCase())){
+                projectiles[i].createEmote();
+            }
+        }
+
+        // default emotes
+        if(!newOnly || !emojis.contains("spell")){
+            new Spell(){
+                @Override protected void initialization(){}
+                @Override protected void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){}
+            }.createEmote();
+        }
+        if(!newOnly || !emojis.contains("projectile")){
+            new Projectile(){
+                @Override protected void initialization(){}
+            }.createEmote();
+        }
+    }
 
     // TODO
     // better autocomplete for conditions
@@ -37,6 +75,7 @@ public class WandConnoisseur{
     public static void main(String[] args){
         String botToken = BotConfig.getBotToken();
         boolean generateEmotes = false;
+        boolean generateNewEmotes = false;
         boolean generateWandstat = false;
 
         Global.autoDeleteFiles();
@@ -44,30 +83,14 @@ public class WandConnoisseur{
         for(int i=0; i < args.length; i++){
             switch(args[i]){
                 case "-emote" -> generateEmotes = true;
+                case "-emote_new" -> generateNewEmotes = true;
                 case "-wandstat" -> generateWandstat = true;
                 default -> {System.err.println("Unknown option: " + args[i]);System.exit(1);}
             }
         }
 
         if(generateEmotes){
-            Spell[] spells = Global.getSpellList().getSpells(false);
-            Projectile[] projectiles = Global.getProjectileList().getProjectiles(false);
-
-            for(int i=0; i < spells.length; i++){
-                spells[i].createEmote();
-            }
-            for(int i=0; i < projectiles.length; i++){
-                projectiles[i].createEmote();
-            }
-
-            // default emotes
-            new Spell(){
-                @Override protected void initialization(){}
-                @Override protected void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){}
-            }.createEmote();
-            new Projectile(){
-                @Override protected void initialization(){}
-            }.createEmote();
+            generateEmotes(false);
         }
         if(generateWandstat){
             new WandList().generateAllSprites();
@@ -90,6 +113,9 @@ public class WandConnoisseur{
             jda.awaitReady();
 
             registerSlashCommands();
+            if(generateNewEmotes){
+                generateEmotes(true);
+            }
             EmoteConfig.initConfig(true);
             logger.info("Bot is online and ready!");
         }catch(Exception e){

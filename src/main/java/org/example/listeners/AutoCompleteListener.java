@@ -5,6 +5,7 @@ import org.example.main.Global;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +62,7 @@ public class AutoCompleteListener extends ListenerAdapter{
     @Override
     public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event){
         List<Command.Choice> options = new ArrayList<>();
+        List<String> values = new LinkedList<>();
         String currentInput = event.getFocusedOption().getValue().toLowerCase();
         String preInput = "";
         String postInput = "";
@@ -84,13 +86,9 @@ public class AutoCompleteListener extends ListenerAdapter{
                 if(event.getFocusedOption().getName().equals("sort")){
                     currentInput = currentInput.strip();
                     if(currentInput.equals("")){
-                        validSpells = Arrays.copyOf(Global.getAliasListRelatedProjectile(), Math.min(maxOutput, Global.getAliasListRelatedProjectile().length));
+                        values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasListRelatedProjectile(), Math.min(maxOutput, Global.getAliasListRelatedProjectile().length))));
                     }else{
-                        validSpells = getSpellAutocomplete(Global.getAliasListRelatedProjectile(), currentInput, maxOutput);
-                    }
-
-                    for(int i=0; i < validSpells.length; i++){
-                        options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(validSpells[i], validSpells[i]));
+                        values.addAll(Arrays.asList(getSpellAutocomplete(Global.getAliasListRelatedProjectile(), currentInput, maxOutput)));
                     }
                     break;
                 }
@@ -99,13 +97,9 @@ public class AutoCompleteListener extends ListenerAdapter{
                 switch(event.getFocusedOption().getName()){
                     case "propriete" -> {
                         if(currentInput.equals("")){
-                            validSpells = Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length));
+                            values.addAll(Arrays.asList(Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length))));
                         }else{
-                            validSpells = getSpellAutocomplete(Global.getSpellStringProperties(), currentInput, maxOutput);
-                        }
-
-                        for(int i=0; i < validSpells.length; i++){
-                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(preInput + validSpells[i], preInput + validSpells[i]));
+                            values.addAll(Arrays.asList(getSpellAutocomplete(Global.getSpellStringProperties(), currentInput, maxOutput)));
                         }
                     }
                     case "condition" -> {
@@ -120,7 +114,7 @@ public class AutoCompleteListener extends ListenerAdapter{
                         }
 
                         for(int i=0; i < validSpells.length; i++){
-                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice( preInput + validSpells[i], preInput + validSpells[i]));
+                            values.add(preInput + validSpells[i]);
                         }
                     }
                     case "tri" -> {
@@ -140,7 +134,7 @@ public class AutoCompleteListener extends ListenerAdapter{
                         }
 
                         for(int i=0; i < validSpells.length; i++){
-                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(preInput + validSpells[i] + postInput, preInput + validSpells[i] + postInput));
+                            values.add(preInput + validSpells[i] + postInput);
                         }
                     }
                     case "sorts" -> {
@@ -165,24 +159,19 @@ public class AutoCompleteListener extends ListenerAdapter{
                         }
 
                         for(int i=0; i < validSpells.length; i++){
-                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(preInput + validSpells[i] + postInput, preInput + validSpells[i] + postInput));
+                            values.add(preInput + validSpells[i] + postInput);
                         }
                     }
                     case "nom" -> {
                         currentInput = currentInput.strip();
                         if(currentInput.equals("")){
-                            validSpells = Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length));
+                            values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length))));
                         }else{
-                            validSpells = getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput);
-                        }
-
-                        for(int i=0; i < validSpells.length; i++){
-                            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(validSpells[i], validSpells[i]));
+                            values.addAll(Arrays.asList(getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput)));
                         }
                     }
                     case "cast_delay", "recharge_time" -> {
                         int intDelay = 0;
-                        String[] StringDelay;
 
                         try{
                             intDelay = Global.stringToDelay(currentInput);
@@ -190,14 +179,13 @@ public class AutoCompleteListener extends ListenerAdapter{
                             break;
                         }
 
-                        StringDelay = new String[]{String.format("%1$d f", intDelay).replace(',', '.'), String.format("%1$3.2f s", intDelay/60.0).replace(',', '.')};
-                        options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(StringDelay[0], StringDelay[0]));
-                        options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(StringDelay[1], StringDelay[1]));
+                        values.add(String.format("%1$d f", intDelay).replace(',', '.'));
+                        values.add(String.format("%1$3.2f s", intDelay/60.0).replace(',', '.'));
                     }
                     case "font" -> {
-                        options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("pixel", "pixel"));
-                        options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("title", "title"));
-                        options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("glyph", "glyph"));
+                        values.add("pixel");
+                        values.add("title");
+                        values.add("glyph");
                     }
                     case "commande" -> {
                         RestAction<List<Command>> commandList = WandConnoisseur.jda.retrieveCommands();
@@ -217,8 +205,15 @@ public class AutoCompleteListener extends ListenerAdapter{
                 }
         }
         if(event.getFocusedOption().getType() == OptionType.BOOLEAN){
-            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("true", "true"));
-            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice("false", "false"));
+            values.add("true");
+            values.add("false");
+        }
+
+        for(String string : values){
+            if(string.length() >= 100){
+                string = string.substring(0, 100);
+            }
+            options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(string, string));
         }
         event.replyChoices(options).queue();
     }
