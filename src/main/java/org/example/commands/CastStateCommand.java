@@ -26,11 +26,13 @@ public class CastStateCommand implements Command{
         OptionMapping menuOption = event.getOption("menu");
         boolean menuFormat = false;
         String fileName = event.getId() + ".png";
+        String[] statOptions = new String[]{"draw", "cast_delay", "recharge_time", "mana_max", "mana_regen", "spread", "speed"};
         Wand wand = Global.slashInteractionToWand(event);
         Spell[] spells;
         String spellsEmote = "";
         CastState[] castStates;
         boolean eventReplied = false;
+        boolean statChanged = false;
 
         if(wand == null){
             return;
@@ -58,11 +60,31 @@ public class CastStateCommand implements Command{
             Global.menuManager.add(menu);
             menu.replyHookEvent(event);
         }else{
-            FileUpload wandImage = Global.JPanelToUpload(wand.getWandJPanel(), "wand.png");
-            FileUpload castStateImage = Global.bufferedImageToUpload(CastState.toImage(castStates), "castState.png");
+            FileUpload wandStatImage = null;
 
+            for(int i=0; i < statOptions.length; i++){
+                if(event.getOption(statOptions[i]) != null){
+                    statChanged = true;
+                    break;
+                }
+            }
+
+            if(statChanged){
+                wandStatImage = Global.JPanelToUpload(wand.getStatJPanel(), "wandstats.png");
+            }
+            FileUpload wandImage = Global.JPanelToUpload(wand.getWandJPanel(), "wand.png");
+            FileUpload castStateImage = Global.bufferedImageToUpload(CastState.toImage(castStates), "caststate.png");
+
+            if(wandStatImage != null){
+                event.getHook().editOriginal("").setFiles(wandStatImage).queue();
+                eventReplied = true;
+            }
             if(wandImage != null){
-                event.getHook().editOriginal("").setFiles(wandImage).queue();
+                if(eventReplied){
+                    event.getChannel().sendFiles(wandImage).queue();
+                }else{
+                    event.getHook().editOriginal("").setFiles(wandImage).queue();
+                }
                 eventReplied = true;
             }
             if(castStateImage != null){
@@ -73,6 +95,7 @@ public class CastStateCommand implements Command{
                 }
                 eventReplied = true;
             }
+
             if(!eventReplied){
                 event.getHook().editOriginal("Erreur lors de la création de l'image").queue();
             }
