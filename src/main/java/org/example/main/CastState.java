@@ -352,7 +352,7 @@ public class CastState{
         if(this.damageComponent.getOvereating() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Overeating damage: ").append(this.damageComponent.getOvereating());}
         if(this.damageComponent.getCurse() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Curse damage: ").append(this.damageComponent.getCurse());}
         if(this.damageComponent.getHealing() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Holy damage: ").append(this.damageComponent.getHealing());}
-        if(this.lifetime != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append(String.format("Cast delay: %1$df (%2$3.2fs)", this.lifetime, this.lifetime/60.0));}
+        if(this.lifetime != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append(String.format("Lifetime: %1$df (%2$3.2fs)", this.lifetime, this.lifetime/60.0));}
         if(this.critRate != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Crit rate: ").append(this.critRate).append("%");}
         if(this.pattern != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Pattern: ").append(this.pattern).append(discordFormat ? "°" : " deg");}
         if(this.spread != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Spread: ").append(this.spread).append(discordFormat ? "°" : " deg");}
