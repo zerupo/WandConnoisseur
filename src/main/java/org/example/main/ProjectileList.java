@@ -1,13 +1,13 @@
 package org.example.main;
 
-import org.example.projectiles.*;
+import org.example.projectiles.Projectile;
 
 import java.util.*;
 import java.util.function.Predicate;
 import org.reflections.Reflections;
 
 public class ProjectileList{
-    private Projectile[] projectiles;
+    private final Projectile[] projectiles;
 
     public ProjectileList(Predicate<Projectile> filter, Comparator<Projectile> comparator){
         Reflections reflections = new Reflections("org.example.projectiles");
@@ -45,7 +45,6 @@ public class ProjectileList{
             return this.projectiles;
         }
 
-        System.out.println("CLONING ALL PROJECTILES");
         Projectile[] result = new Projectile[this.projectiles.length];
         for(int i=0; i < result.length; i++){
             result[i] = this.projectiles[i].clone();

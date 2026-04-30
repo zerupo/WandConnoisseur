@@ -3,6 +3,8 @@ package org.example.spells;
 import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LASER_EMITTER_CUTTER;
+import org.example.script.Script;
+import org.example.script.SCRIPT_EFFECT_DISINTEGRATED;
 
 import java.lang.invoke.MethodHandles;
 
@@ -18,6 +20,7 @@ public class LASER_EMITTER_CUTTER extends Spell{
         this.description = "A plasma beam specialized in cutting materials!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER_CUTTER();
+        this.relatedScripts = new Script[]{new SCRIPT_EFFECT_DISINTEGRATED()};
         this.spawnProbabilities = new SpawnProbabilities(0.2, 0.3, 1, 0.5, 1, 0, 0, 0, 0, 0, 0);
         this.price = 120;
         this.manaCost = 40;
@@ -27,7 +30,6 @@ public class LASER_EMITTER_CUTTER extends Spell{
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addProjectile(this.relatedProjectile.clone());
-        // c.game_effect_entities = c.game_effect_entities .. "data/entities/misc/effect_disintegrated.xml,"
     }
 }
 

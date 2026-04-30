@@ -3,6 +3,8 @@ package org.example.spells;
 import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_MATERIAL_BLOOD;
+import org.example.script.Script;
+import org.example.script.SCRIPT_EFFECT_APPLY_BLOODY;
 
 import java.lang.invoke.MethodHandles;
 
@@ -18,6 +20,7 @@ public class MATERIAL_BLOOD extends Spell{
         this.description = "Blood blood blood";
         this.type = SpellType.material;
         this.relatedProjectile = new PROJECTILE_MATERIAL_BLOOD();
+        this.relatedScripts = new Script[]{new SCRIPT_EFFECT_APPLY_BLOODY()};
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.4, 0.4, 0.4, 0.4, 0, 0, 0, 0, 0);
         this.price = 130;
         this.manaCost = 0;
@@ -27,10 +30,8 @@ public class MATERIAL_BLOOD extends Spell{
         this.rechargeTime = -10;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // c.game_effect_entities = c.game_effect_entities .. "data/entities/misc/effect_apply_bloody.xml,"
         castState.addProjectile(this.relatedProjectile.clone());
     }
 }

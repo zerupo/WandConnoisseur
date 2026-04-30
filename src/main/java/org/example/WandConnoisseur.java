@@ -10,6 +10,7 @@ import org.example.main.CastState;
 import org.example.main.Global;
 import org.example.main.WandList;
 import org.example.projectiles.Projectile;
+import org.example.script.Script;
 import org.example.spells.Spell;
 
 import java.util.EnumSet;
@@ -31,6 +32,7 @@ public class WandConnoisseur{
     private static void generateEmotes(boolean newOnly){
         Spell[] spells = Global.getSpellList().getSpells(false);
         Projectile[] projectiles = Global.getProjectileList().getProjectiles(false);
+        Script[] scripts = Global.getScriptList().getScripts(false);
         Set<String> emojis = null;
 
         if(newOnly){
@@ -39,13 +41,18 @@ public class WandConnoisseur{
 
 
         for(int i=0; i < spells.length; i++){
-            if(!newOnly || !emojis.contains(spells[i].getClass().getSimpleName().toLowerCase())){
+            if(!newOnly || !emojis.contains(Global.truncate(spells[i].getClass().getSimpleName().toLowerCase(), 32))){
                 spells[i].createEmote();
             }
         }
         for(int i=0; i < projectiles.length; i++){
-            if(!newOnly || !emojis.contains(projectiles[i].getClass().getSimpleName().toLowerCase())){
+            if(!newOnly || !emojis.contains(Global.truncate(projectiles[i].getClass().getSimpleName().toLowerCase(), 32))){
                 projectiles[i].createEmote();
+            }
+        }
+        for(int i=0; i < scripts.length; i++){
+            if(!newOnly || !emojis.contains(Global.truncate(scripts[i].getClass().getSimpleName().toLowerCase(), 32))){
+                scripts[i].createEmote();
             }
         }
 
@@ -58,6 +65,11 @@ public class WandConnoisseur{
         }
         if(!newOnly || !emojis.contains("projectile")){
             new Projectile(){
+                @Override protected void initialization(){}
+            }.createEmote();
+        }
+        if(!newOnly || !emojis.contains("script")){
+            new Script(){
                 @Override protected void initialization(){}
             }.createEmote();
         }
@@ -139,7 +151,8 @@ public class WandConnoisseur{
                 .addOption(OptionType.INTEGER, "mana_max", "Mana max de la baguette (défaut: 1000000).", false)
                 .addOption(OptionType.INTEGER, "mana_regen", "Régénération de mana de la baguette en mana/sec (défaut: 1000000).", false)
                 .addOption(OptionType.NUMBER, "spread", "Dispersion de la baguette (défaut: 0.0).", false)
-                .addOption(OptionType.NUMBER, "speed", "Multiplicateur caché de la vitesse des projectiles (défaut: 1.0).", false),
+                .addOption(OptionType.NUMBER, "speed", "Multiplicateur caché de la vitesse des projectiles (défaut: 1.0).", false)
+                .addOption(OptionType.BOOLEAN, "menu", "Affiche les cast states sous forme de menu plutôt que d'image (défaut: false).", false),
             Commands.slash("deck_animation", "Renvoie un menu permettant de voir les différentes étapes du deck/main/défausse")
                 .addOption(OptionType.STRING, "sorts", "Sorts à séparer par des \",\", précéder par 0: max: ou inf: pour modifier les charges (défaut: inf:).", true, true)
                 .addOption(OptionType.INTEGER, "draw", "Nombre de sorts/lancer de la baguette (défaut: 1).", false)

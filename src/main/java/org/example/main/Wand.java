@@ -365,10 +365,10 @@ public class Wand{
         return result.flowchartImage.toImage();
     }
 
-    public void saveFlowchartImage(String filename, boolean allCasts){
+    public boolean saveFlowchartImage(String filename, boolean allCasts){
         InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null);
         this.getAllInfo(allCasts, result, false);
-        result.flowchartImage.saveToFile(filename);
+        return result.flowchartImage.saveToFile(filename);
     }
 
     public boolean cast(){

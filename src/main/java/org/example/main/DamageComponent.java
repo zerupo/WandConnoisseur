@@ -35,22 +35,26 @@ public class DamageComponent{
         this.holy = holy;
     }
 
-    public DamageComponent(DamageComponent original){
-        this.projectile = original.projectile;
-        this.melee = original.melee;
-        this.explosion = original.explosion;
-        this.electricity = original.electricity;
-        this.fire = original.fire;
-        this.drill = original.drill;
-        this.slice = original.slice;
-        this.ice = original.ice;
-        this.healing = original.healing;
-        this.physics_hit = original.physics_hit;
-        this.radioactive = original.radioactive;
-        this.poison = original.poison;
-        this.overeating = original.overeating;
-        this.curse = original.curse;
-        this.holy = original.holy;
+    public DamageComponent clone(){
+        DamageComponent damageComponent = new DamageComponent();
+
+        damageComponent.projectile = this.projectile;
+        damageComponent.melee = this.melee;
+        damageComponent.explosion = this.explosion;
+        damageComponent.electricity = this.electricity;
+        damageComponent.fire = this.fire;
+        damageComponent.drill = this.drill;
+        damageComponent.slice = this.slice;
+        damageComponent.ice = this.ice;
+        damageComponent.healing = this.healing;
+        damageComponent.physics_hit = this.physics_hit;
+        damageComponent.radioactive = this.radioactive;
+        damageComponent.poison = this.poison;
+        damageComponent.overeating = this.overeating;
+        damageComponent.curse = this.curse;
+        damageComponent.holy = this.holy;
+
+        return damageComponent;
     }
 
     public DamageComponent(){
@@ -202,6 +206,24 @@ public class DamageComponent{
 
     public void setHoly(double holy){
         this.holy = holy;
+    }
+
+    public void setDamage(DamageComponent damageComponent){
+        this.projectile = damageComponent.projectile;
+        this.melee = damageComponent.melee;
+        this.explosion = damageComponent.explosion;
+        this.electricity = damageComponent.electricity;
+        this.fire = damageComponent.fire;
+        this.drill = damageComponent.drill;
+        this.slice = damageComponent.slice;
+        this.ice = damageComponent.ice;
+        this.healing = damageComponent.healing;
+        this.physics_hit = damageComponent.physics_hit;
+        this.radioactive = damageComponent.radioactive;
+        this.poison = damageComponent.poison;
+        this.overeating = damageComponent.overeating;
+        this.curse = damageComponent.curse;
+        this.holy = damageComponent.holy;
     }
 
     public void add(DamageComponent damageComponent){

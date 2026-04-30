@@ -2,6 +2,8 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.script.Script;
+import org.example.script.SCRIPT_TRUE_ORBIT;
 
 import java.lang.invoke.MethodHandles;
 
@@ -16,6 +18,7 @@ public class TRUE_ORBIT extends Spell{
         this.emote = staticEmote;
         this.description = "Makes a projectile rotate around the caster like an orbiting planet";
         this.type = SpellType.modifier;
+        this.relatedScripts = new Script[]{new SCRIPT_TRUE_ORBIT()};
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.3, 0.4, 0, 0, 0, 0, 0, 0);
         this.price = 40;
         this.manaCost = 2;
@@ -25,10 +28,9 @@ public class TRUE_ORBIT extends Spell{
         this.lifetime = 80;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // c.extra_entities = c.extra_entities .. "data/entities/misc/true_orbit.xml,"
+        castState.addScript(this.relatedScripts);
         cardPool.draw(1, true, castState);
         castState.addDamageComponent(this.damageComponent);
         castState.addCastDelay(this.castDelay);

@@ -10,7 +10,7 @@ public class PROJECTILE_BALL_LIGHTNING extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Ball Lightning";
-        this.imageFile = "ball_lightning.png";
+        this.imageFile = "ball_lightning_solo.png";
         this.emote = staticEmote;
         this.gravityY = 0;
         this.airFriction = 10.0;

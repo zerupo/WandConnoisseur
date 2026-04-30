@@ -7,7 +7,6 @@ import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Consumer;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
@@ -18,21 +17,10 @@ public class ImageBuilder{
     private int canvasWidth = 1;
     private int canvasHeight = 1;
     private final Color backgroundColor;
-    private LinkedList<DrawAction> drawActions = new LinkedList<>();
-
-    static class DrawAction{
-        Consumer<Object[]> function;
-        Object[] parameters;
-
-        DrawAction(Consumer<Object[]> function, Object[] parameters){
-            this.function = function;
-            this.parameters = parameters;
-        }
-
-        public void callFunction(){
-            function.accept(parameters);
-        }
-    }
+    private final LinkedList<Runnable> drawActions = new LinkedList<>();
+    private static final Font defaultFont = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics().getFont();
+    private Font currentFont = defaultFont;
+    private FontMetrics currentFontMetrics = new Canvas().getFontMetrics(currentFont);
 
     public ImageBuilder(Color backgroundColor){
         this.backgroundColor = backgroundColor;
@@ -74,56 +62,38 @@ public class ImageBuilder{
         return true;
     }
 
-    public void addImage(BufferedImage image, int x, int y){
-        this.canvasWidth = Math.max(this.canvasWidth, x + image.getWidth());
-        this.canvasHeight = Math.max(this.canvasHeight, y + image.getHeight());
-        drawActions.add(new DrawAction(this::addImage, new Object[]{image, x, y}));
-    }
-
-    public void drawArrow(int x1, int y1, int x2, int y2, Color color, boolean priorityX, boolean drawUnder){
-        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
-        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
-        if(drawUnder){
-            this.drawActions.addFirst(new DrawAction(this::drawArrow, new Object[]{x1, y1, x2, y2, color, priorityX}));
-        }else{
-            this.drawActions.add(new DrawAction(this::drawArrow, new Object[]{x1, y1, x2, y2, color, priorityX}));
-        }
-    }
-
-    public void drawCurlyBrackets(int x1, int y1, int x2, int y2, int nb, Color color){
-        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
-        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
-        drawActions.add(new DrawAction(this::drawCurlyBrackets, new Object[]{x1, y1, x2, y2, nb, color}));
-    }
-
     public BufferedImage toImage(){
         this.autoExpandCanvas();
 
-        for(DrawAction action : drawActions){
-            action.callFunction();
+        for(Runnable action : drawActions){
+            try{
+                action.run();
+            }catch (Exception e){
+                System.out.println("Error executing draw action: " + e.getMessage());
+            }
         }
         this.drawActions.clear();
 
         return this.canvas;
     }
 
-    private void addImage(Object[] objects){
-        try{
-            this.add_image((BufferedImage)objects[0], (int)objects[1], (int)objects[2]);
-        }catch(Exception e){
-            System.out.println("Error executing addImage() " + e.getMessage());
-        }
+    public void addImage(BufferedImage image, int x, int y){
+        this.canvasWidth = Math.max(this.canvasWidth, x + image.getWidth());
+        this.canvasHeight = Math.max(this.canvasHeight, y + image.getHeight());
+        drawActions.add(() -> add_image(image, x, y));
     }
 
     private void add_image(BufferedImage image, int x, int y){
         this.g2d.drawImage(image, x + this.margin, y + this.margin, null);
     }
 
-    private void drawArrow(Object[] objects){
-        try{
-            this.draw_arrow((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (Color)objects[4], (boolean)objects[5]);
-        }catch(Exception e){
-            System.out.println("Error executing drawArrow() " + e.getMessage());
+    public void drawArrow(int x1, int y1, int x2, int y2, Color color, boolean priorityX, boolean drawUnder){
+        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
+        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
+        if(drawUnder){
+            this.drawActions.addFirst(() -> draw_arrow(x1, y1, x2, y2, color, priorityX));
+        }else{
+            this.drawActions.add(() -> draw_arrow(x1, y1, x2, y2, color, priorityX));
         }
     }
 
@@ -166,12 +136,10 @@ public class ImageBuilder{
         this.g2d.fill(arrowhead);
     }
 
-    private void drawCurlyBrackets(Object[] objects){
-        try{
-            this.draw_curly_brackets((int)objects[0], (int)objects[1], (int)objects[2], (int)objects[3], (int)objects[4], (Color)objects[5]);
-        }catch(Exception e){
-            System.out.println("Error executing drawCurlyBrackets() " + e.getMessage());
-        }
+    public void drawCurlyBrackets(int x1, int y1, int x2, int y2, int nb, Color color){
+        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
+        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
+        drawActions.add(() -> draw_curly_brackets(x1, y1, x2, y2, nb, color));
     }
 
     private void draw_curly_brackets(int x1, int y1, int x2, int y2, int nb, Color color){
@@ -217,6 +185,50 @@ public class ImageBuilder{
 
         this.g2d.drawString("x" + nb, (x2 + x1)/2 - this.g2d.getFontMetrics().stringWidth("x" + nb)/2 + this.margin, y2 + this.g2d.getFontMetrics().getHeight() + this.margin);
         this.g2d.draw(path);
+    }
+
+    public void setFont(Font font){
+        if(this.currentFont.equals(font)){
+            return;
+        }
+        this.currentFont = font;
+        this.currentFontMetrics = new Canvas().getFontMetrics(currentFont);
+        drawActions.add(() -> set_font(font));
+    }
+
+    private void set_font(Font font){
+        this.g2d.setFont(font);
+    }
+
+    public Point getTextSize(String text){
+        return new Point(this.currentFontMetrics.stringWidth(text), this.currentFontMetrics.getHeight());
+    }
+
+    public Point drawText(String text, int x, int y, Color color){
+        int textWidth = this.currentFontMetrics.stringWidth(text);
+        int textHeight = this.currentFontMetrics.getHeight();
+
+        this.canvasWidth = Math.max(this.canvasWidth, x + textWidth);
+        this.canvasHeight = Math.max(this.canvasHeight, y + textHeight);
+        drawActions.add(() -> draw_text(text, x, y + this.currentFontMetrics.getMaxAscent(), color));
+
+        return new Point(x + textWidth, y + textHeight);
+    }
+
+    private void draw_text(String text, int x, int y, Color color){
+        this.g2d.setColor(color);
+        this.g2d.drawString(text, x + this.margin, y + this.margin);
+    }
+
+    public void drawRectangle(int x1, int y1, int x2, int y2, Color color){
+        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
+        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
+        drawActions.add(() -> draw_rectangle(x1, y1, x2, y2, color));
+    }
+
+    private void draw_rectangle(int x1, int y1, int x2, int y2, Color color){
+        this.g2d.setColor(color);
+        this.g2d.drawRect(x1 + this.margin, y1 + this.margin, x2 - x1, y2 - y1);
     }
 
     public boolean saveToFile(String filePath){

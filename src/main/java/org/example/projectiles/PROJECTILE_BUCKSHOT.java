@@ -10,7 +10,7 @@ public class PROJECTILE_BUCKSHOT extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Triplicate Bolt";
-        this.imageFile = "buckshot.png";
+        this.imageFile = "buckshot_solo.png";
         this.emote = staticEmote;
         this.lifetime = 120;
         this.lifetimeRandomness = 7;

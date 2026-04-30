@@ -2,6 +2,8 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.script.Script;
+import org.example.script.SCRIPT_PHASING_ARC;
 
 import java.lang.invoke.MethodHandles;
 
@@ -16,6 +18,7 @@ public class PHASING_ARC extends Spell{
         this.emote = staticEmote;
         this.description = "Makes a projectile fly much slower, but teleport short distances over its flight";
         this.type = SpellType.modifier;
+        this.relatedScripts = new Script[]{new SCRIPT_PHASING_ARC()};
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.2, 0.3, 0.6, 0.1, 0, 0, 0, 0, 0);
         this.price = 170;
         this.manaCost = 2;
@@ -28,7 +31,7 @@ public class PHASING_ARC extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // c.extra_entities = c.extra_entities .. "data/entities/misc/phasing_arc.xml,"
+        castState.addScript(this.relatedScripts);
         cardPool.draw(1, true, castState);
         castState.addCastDelay(this.castDelay);
         // castState.addSpeedMultiplier(this.speed);

@@ -5,6 +5,7 @@ import org.example.main.CastState;
 import org.example.main.DamageComponent;
 import org.example.main.Global;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 import javax.imageio.ImageIO;
@@ -14,11 +15,12 @@ public abstract class Projectile{
     protected TriggerType triggerType = TriggerType.none;
     protected int timer = 0;
     protected CastState triggerCastState = null;
-    protected String imagePath = "./src/main/java/org/example/image/spell/";
+    protected static final String imagePath = "./src/main/java/org/example/image/spell/";
     protected String imageFile = "_unidentified.png";
     protected String name = "projectile_name";
     protected static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
     protected String emote = staticEmote;
+    protected BufferedImage image = null;
 
     // velocity component
     protected double gravityX = 0.0;
@@ -59,14 +61,20 @@ public abstract class Projectile{
         Projectile newProjectile;
 
         try{
-            newProjectile = projectileClass.newInstance();
+            newProjectile = projectileClass.getDeclaredConstructor().newInstance();
         }catch(Exception e){
             return null;
         }
 
         newProjectile.triggerType = this.triggerType;
         newProjectile.timer = this.timer;
-        newProjectile.triggerCastState = this.triggerCastState;
+        if(this.triggerCastState != null){
+            newProjectile.triggerCastState = this.triggerCastState.clone(); // clone
+        }
+        newProjectile.imageFile = this.imageFile;
+        newProjectile.name = this.name;
+        newProjectile.emote = this.emote;
+        newProjectile.image = Global.cloneBufferedImage(this.image); // clone
 
         // velocity component
         newProjectile.gravityX = this.gravityX;
@@ -90,7 +98,7 @@ public abstract class Projectile{
         newProjectile.speedMax = this.speedMax;
         newProjectile.spreadRad = this.spreadRad;
         newProjectile.friction = this.friction;
-        newProjectile.damageComponent = new DamageComponent(this.damageComponent);
+        newProjectile.damageComponent = this.damageComponent.clone(); // clone
         newProjectile.explodeOnDeath = this.explodeOnDeath;
         newProjectile.collideWithWorld = this.collideWithWorld;
         newProjectile.onLifetimeOutExplode = this.onLifetimeOutExplode;
@@ -136,12 +144,23 @@ public abstract class Projectile{
         return this.triggerCastState;
     }
 
+    public String getImageFullPath(){
+        return imagePath + this.imageFile;
+    }
+
     public String getName(){
         return this.name;
     }
 
     public String getEmote(){
         return this.emote;
+    }
+
+    public BufferedImage getImage(){
+        if(this.image == null){
+            this.image = Global.loadImage(imagePath + this.imageFile);
+        }
+        return this.image;
     }
 
     public int getLifetimeMin(){
@@ -181,7 +200,8 @@ public abstract class Projectile{
             if(name.equals("")){
                 name = "projectile";
             }
-            ImageIO.write(Global.scaleImage(Global.loadImage(this.imagePath + this.imageFile), 8),"png", new File(Global.getPathOutput() + name + ".png"));
+            name = Global.truncate(name, 32);
+            ImageIO.write(Global.scaleImage(this.getImage(), 8),"png", new File(Global.getPathOutput() + name + ".png"));
         }catch(Exception e){
             System.out.println("Error trying to create emote for spell \"" + this.name + "\" : " + e.getMessage());
         }

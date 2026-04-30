@@ -2,8 +2,12 @@ package org.example.main;
 
 import org.example.menu.MenuTree;
 import org.example.projectiles.Projectile;
+import org.example.script.Script;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Objects;
 
 class CastStateProjectile{
     private Projectile projectile;
@@ -17,6 +21,10 @@ class CastStateProjectile{
     public CastStateProjectile(Projectile projectile, int count){
         this.projectile = projectile;
         this.count = count;
+    }
+
+    public CastStateProjectile clone(){
+        return new CastStateProjectile(this.projectile.clone(), this.count);
     }
 
     // getters
@@ -46,8 +54,57 @@ class CastStateProjectile{
     }
 }
 
+class CastStateScript{
+    private Script script;
+    private int count;
+
+    public CastStateScript(Script script){
+        this.script = script;
+        this.count = 1;
+    }
+
+    public CastStateScript(Script script, int count){
+        this.script = script;
+        this.count = count;
+    }
+
+    public CastStateScript clone(){
+        return new CastStateScript(this.script.clone(), this.count);
+    }
+
+    // getters
+    public Script getScript(){
+        return this.script;
+    }
+
+    public int getCount(){
+        return this.count;
+    }
+
+    // setters
+    public void setScript(Script script){
+        this.script = script;
+    }
+
+    public void setCount(int count){
+        this.count = count;
+    }
+
+    public void addCount(int count){
+        this.count += count;
+    }
+
+    public void addCount(){
+        this.count++;
+    }
+}
+
 public class CastState{
-    private ArrayList<CastStateProjectile> castStateProjectiles = new ArrayList<>();
+    private static final BufferedImage triggerImage = Global.loadImage("./src/main/java/org/example/image/other/projectile_trigger.png");
+    private static final BufferedImage timerImage = Global.loadImage("./src/main/java/org/example/image/other/projectile_timer.png");
+    private static final BufferedImage expirationImage = Global.loadImage("./src/main/java/org/example/image/other/projectile_expiration.png");
+    private final ArrayList<CastStateProjectile> castStateProjectiles = new ArrayList<>();
+    private final ArrayList<CastStateScript> castStateScripts = new ArrayList<>();
     private int castDelay = 0;
     private DamageComponent damageComponent = new DamageComponent();
     private int lifetime = 0;
@@ -59,9 +116,32 @@ public class CastState{
         // nothing
     }
 
+    public CastState clone(){
+        CastState castState = new CastState();
+
+        for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
+            castState.castStateProjectiles.add(castStateProjectile.clone());
+        }
+        for(CastStateScript castStateScript : this.castStateScripts){
+            castState.castStateScripts.add(castStateScript.clone());
+        }
+        castState.castDelay = this.castDelay;
+        castState.damageComponent = this.damageComponent.clone();
+        castState.lifetime = this.lifetime;
+        castState.critRate = this.critRate;
+        castState.pattern = this.pattern;
+        castState.spread = this.spread;
+
+        return castState;
+    }
+
     // getters
     public CastStateProjectile[] getCastStateProjectile(){
         return this.castStateProjectiles.toArray(new CastStateProjectile[0]);
+    }
+
+    public CastStateScript[] getCastStateScript(){
+        return this.castStateScripts.toArray(new CastStateScript[0]);
     }
 
     public int getCastDelay(){
@@ -91,6 +171,10 @@ public class CastState{
     // setters
     public void setCastDelay(int castDelay){
         this.castDelay = castDelay;
+    }
+
+    public void setDamage(DamageComponent damageComponent){
+        this.damageComponent.setDamage(damageComponent);
     }
 
     public void setDamageComponent(DamageComponent damageComponent){
@@ -140,14 +224,30 @@ public class CastState{
 
     public void addProjectile(Projectile projectile){
         if(projectile.getTriggerType() == Projectile.TriggerType.none){
-            for(int i=0; i < this.castStateProjectiles.size(); i++){
-                if(this.castStateProjectiles.get(i).getProjectile().getClass() == projectile.getClass()){
-                    this.castStateProjectiles.get(i).addCount();
+            for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
+                if(castStateProjectile.getProjectile().getClass() == projectile.getClass()){
+                    castStateProjectile.addCount();
                     return;
                 }
             }
         }
         this.castStateProjectiles.add(new CastStateProjectile(projectile));
+    }
+
+    public void addScript(Script script){
+        for(CastStateScript castStateScript : this.castStateScripts){
+            if(castStateScript.getScript().getClass() == script.getClass()){
+                castStateScript.addCount();
+                return;
+            }
+        }
+        this.castStateScripts.add(new CastStateScript(script));
+    }
+
+    public void addScript(Script[] scripts){
+        for(Script script : scripts){
+            this.addScript(script);
+        }
     }
 
     public CastState addProjectileTrigger(Projectile projectile, int timer, Projectile.TriggerType triggerType){
@@ -163,54 +263,134 @@ public class CastState{
         return this.addProjectileTrigger(projectile, 0, triggerType);
     }
 
-    public String toString(){
+    public String toString(boolean discordFormat){
         StringBuilder result = new StringBuilder();
         StringBuilder innerBuilder = new StringBuilder();
+        ArrayList<Projectile> soloProjectiles = null;
+        ArrayList<CastStateProjectile> multiProjectiles = null;
+        ArrayList<Script> soloScript = null;
+        ArrayList<CastStateScript> multiScript = null;
+        boolean skipFlag;
 
-        for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
-            innerBuilder.append("\n").append(castStateProjectile.getProjectile().getEmote());
-            if(castStateProjectile.getCount() > 1){
-                innerBuilder.append(" (x").append(castStateProjectile.getCount()).append(")");
+        if(discordFormat){
+            soloProjectiles = new ArrayList<>();
+            multiProjectiles = new ArrayList<>();
+            soloScript = new ArrayList<>();
+            multiScript = new ArrayList<>();
+
+            for(CastStateProjectile castStateProjectile : castStateProjectiles){
+                if(castStateProjectile.getCount() > 1){
+                    multiProjectiles.add(castStateProjectile.clone());
+                }else{
+                    soloProjectiles.add(castStateProjectile.getProjectile());
+                }
+            }
+
+            for(int i=0; i < soloProjectiles.size(); i++){
+                skipFlag = false;
+                for(CastStateProjectile castStateProjectile : multiProjectiles){
+                    if(soloProjectiles.get(i).getClass() == castStateProjectile.getProjectile().getClass()){
+                        soloProjectiles.remove(i);
+                        castStateProjectile.addCount();
+                        i--;
+                        skipFlag = true;
+                        break;
+                    }
+                }
+                if(skipFlag){
+                    continue;
+                }
+                for(int j=i+1; j < soloProjectiles.size(); j++){
+                    if(soloProjectiles.get(i).getClass() == soloProjectiles.get(j).getClass()){
+                        soloProjectiles.remove(j);
+                        multiProjectiles.add(new CastStateProjectile(soloProjectiles.remove(i), 2));
+                        i--;
+                        break;
+                    }
+                }
+            }
+
+            for(CastStateScript castStateScript : this.castStateScripts){
+                if(castStateScript.getCount() > 1){
+                    multiScript.add(castStateScript.clone());
+                }else{
+                    soloScript.add(castStateScript.getScript());
+                }
+            }
+
+            for(Projectile projectile : soloProjectiles){
+                innerBuilder.append(projectile.getEmote());
+            }
+            for(CastStateProjectile castStateProjectile : multiProjectiles){
+                if(!innerBuilder.isEmpty()){
+                    innerBuilder.append("\n");
+                }
+                innerBuilder.append(castStateProjectile.getProjectile().getEmote()).append(" (x").append(castStateProjectile.getCount()).append(")");
+            }
+            if(!innerBuilder.isEmpty()){
+                if(!result.isEmpty()){
+                    result.append("\n");
+                }
+                result.append("# Projectiles\n").append(innerBuilder);
+                innerBuilder.setLength(0);
             }
         }
-        if(!innerBuilder.isEmpty()){
-            result.append("# Projectiles").append(innerBuilder);
-            innerBuilder.setLength(0);
-        }
 
-        if(this.castDelay != 0){innerBuilder.append(String.format("\nCast delay: %1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
-        if(this.damageComponent.getProjectile() != 0){innerBuilder.append("\nProjectile damage: ").append(this.damageComponent.getProjectile());}
-        if(this.damageComponent.getMelee() != 0){innerBuilder.append("\nMelee damage: ").append(this.damageComponent.getMelee());}
-        if(this.damageComponent.getExplosion() != 0){innerBuilder.append("\nExplosion damage: ").append(this.damageComponent.getExplosion());}
-        if(this.damageComponent.getElectricity() != 0){innerBuilder.append("\nElectricity damage: ").append(this.damageComponent.getElectricity());}
-        if(this.damageComponent.getFire() != 0){innerBuilder.append("\nFire damage: ").append(this.damageComponent.getFire());}
-        if(this.damageComponent.getDrill() != 0){innerBuilder.append("\nDrill damage: ").append(this.damageComponent.getDrill());}
-        if(this.damageComponent.getSlice() != 0){innerBuilder.append("\nSlice damage: ").append(this.damageComponent.getSlice());}
-        if(this.damageComponent.getIce() != 0){innerBuilder.append("\nIce damage: ").append(this.damageComponent.getIce());}
-        if(this.damageComponent.getHealing() != 0){innerBuilder.append("\nHealing damage: ").append(this.damageComponent.getHealing());}
-        if(this.damageComponent.getPhysics_hit() != 0){innerBuilder.append("\nPhysics_hit damage: ").append(this.damageComponent.getPhysics_hit());}
-        if(this.damageComponent.getRadioactive() != 0){innerBuilder.append("\nRadioactive damage: ").append(this.damageComponent.getRadioactive());}
-        if(this.damageComponent.getPoison() != 0){innerBuilder.append("\nPoison damage: ").append(this.damageComponent.getPoison());}
-        if(this.damageComponent.getOvereating() != 0){innerBuilder.append("\nOvereating damage: ").append(this.damageComponent.getOvereating());}
-        if(this.damageComponent.getCurse() != 0){innerBuilder.append("\nCurse damage: ").append(this.damageComponent.getCurse());}
-        if(this.damageComponent.getHealing() != 0){innerBuilder.append("\nHoly damage: ").append(this.damageComponent.getHealing());}
-        if(this.lifetime != 0){innerBuilder.append("\nLifetime: ").append(this.lifetime).append("f");}
-        if(this.critRate != 0){innerBuilder.append("\nCrit rate: ").append(this.critRate).append("%");}
-        if(this.pattern != 0){innerBuilder.append("\nPattern: ").append(this.pattern).append("°");}
-        if(this.spread != 0){innerBuilder.append("\nSpread: ").append(this.spread).append("°");}
+        if(this.castDelay != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append(String.format("Cast delay: %1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
+        if(this.damageComponent.getProjectile() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Projectile damage: ").append(this.damageComponent.getProjectile());}
+        if(this.damageComponent.getMelee() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Melee damage: ").append(this.damageComponent.getMelee());}
+        if(this.damageComponent.getExplosion() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Explosion damage: ").append(this.damageComponent.getExplosion());}
+        if(this.damageComponent.getElectricity() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Electricity damage: ").append(this.damageComponent.getElectricity());}
+        if(this.damageComponent.getFire() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Fire damage: ").append(this.damageComponent.getFire());}
+        if(this.damageComponent.getDrill() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Drill damage: ").append(this.damageComponent.getDrill());}
+        if(this.damageComponent.getSlice() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Slice damage: ").append(this.damageComponent.getSlice());}
+        if(this.damageComponent.getIce() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Ice damage: ").append(this.damageComponent.getIce());}
+        if(this.damageComponent.getHealing() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Healing damage: ").append(this.damageComponent.getHealing());}
+        if(this.damageComponent.getPhysics_hit() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Physics_hit damage: ").append(this.damageComponent.getPhysics_hit());}
+        if(this.damageComponent.getRadioactive() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Radioactive damage: ").append(this.damageComponent.getRadioactive());}
+        if(this.damageComponent.getPoison() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Poison damage: ").append(this.damageComponent.getPoison());}
+        if(this.damageComponent.getOvereating() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Overeating damage: ").append(this.damageComponent.getOvereating());}
+        if(this.damageComponent.getCurse() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Curse damage: ").append(this.damageComponent.getCurse());}
+        if(this.damageComponent.getHealing() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Holy damage: ").append(this.damageComponent.getHealing());}
+        if(this.lifetime != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append(String.format("Cast delay: %1$df (%2$3.2fs)", this.lifetime, this.lifetime/60.0));}
+        if(this.critRate != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Crit rate: ").append(this.critRate).append("%");}
+        if(this.pattern != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Pattern: ").append(this.pattern).append(discordFormat ? "°" : " deg");}
+        if(this.spread != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Spread: ").append(this.spread).append(discordFormat ? "°" : " deg");}
+
+        if(!discordFormat){
+            return innerBuilder.toString();
+        }
 
         if(!innerBuilder.isEmpty()){
             if(!result.isEmpty()){
                 result.append("\n");
             }
-            result.append("# Stats").append(innerBuilder);
+            result.append("# Stats\n").append(innerBuilder);
+            innerBuilder.setLength(0);
+        }
+
+        for(Script script : soloScript){
+            innerBuilder.append(script.getEmote());
+        }
+        for(CastStateScript castStateScript : multiScript){
+            if(!innerBuilder.isEmpty()){
+                innerBuilder.append("\n");
+            }
+            innerBuilder.append(castStateScript.getScript().getEmote()).append(" (x").append(castStateScript.getCount()).append(")");
+        }
+        if(!innerBuilder.isEmpty()){
+            if(!result.isEmpty()){
+                result.append("\n");
+            }
+            result.append("# Scripts\n").append(innerBuilder);
+            innerBuilder.setLength(0);
         }
 
         return result.toString();
     }
 
     public MenuTree toMenuTree(String id, String title){
-        MenuTree menu = new MenuTree("", title, this.toString(), null, "");
+        MenuTree menu = new MenuTree("", title, this.toString(true), null, "");
         CastState innerCastState;
 
         for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
@@ -224,5 +404,189 @@ public class CastState{
 
     private MenuTree toMenuTree(String title){
         return this.toMenuTree("", title);
+    }
+
+    public static boolean saveToImage(CastState[] castStates, String filename){
+        ImageBuilder imageBuilder = new ImageBuilder(new Color(0, 0, 0));
+        imageBuilder.setFont(Global.getPixelFont().deriveFont((float)15));
+        int y = 0;
+
+        for(int i=0; i < castStates.length; i++){
+            y = castStates[i].toImage(imageBuilder, 0, y) + 40;
+        }
+        return imageBuilder.saveToFile(filename);
+    }
+
+    public boolean saveToImage(String filename){
+        ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
+        image.setFont(Global.getPixelFont().deriveFont((float)15));
+        this.toImageNode(image, 0, 0);
+        return image.saveToFile(filename);
+    }
+
+    public BufferedImage toImage(){
+        ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
+        image.setFont(Global.getPixelFont().deriveFont((float)15));
+        this.toImageNode(image, 0, 0);
+        return image.toImage();
+    }
+
+    public static BufferedImage toImage(CastState[] castStates){
+        ImageBuilder imageBuilder = new ImageBuilder(new Color(0, 0, 0));
+        imageBuilder.setFont(Global.getPixelFont().deriveFont((float)15));
+        int y = 0;
+
+        for(int i=0; i < castStates.length; i++){
+            y = castStates[i].toImage(imageBuilder, 0, y) + 40;
+        }
+        return imageBuilder.toImage();
+    }
+
+    private int toImage(ImageBuilder image, int x, int y){
+        return (int)this.toImageNode(Objects.requireNonNullElseGet(image, () -> new ImageBuilder(new Color(0, 0, 0))), x, y).getY();
+    }
+
+    private Point toImageNode(ImageBuilder image, int x, int y){
+        String[] castStateInfo = this.toString(false).split("\\r?\\n");
+        CastStateProjectile[] castStateProjectiles = this.castStateProjectiles.toArray(new CastStateProjectile[0]);
+        Projectile currentProjectile;
+        BufferedImage currentImage;
+        int imageSize = 16;
+        int arrowSizeX = 40;
+        int boxOutsideMargin = 10;
+        int boxInsideMargin = 5;
+        int nextX = x + boxInsideMargin;
+        int nextY = y + boxInsideMargin;
+        int triggerY = y;
+        Point tempPoint = new Point(x + boxInsideMargin, y + boxInsideMargin);
+        ArrayList<Projectile> soloProjectiles = new ArrayList<>();
+        ArrayList<CastStateProjectile> multiProjectiles = new ArrayList<>();
+        ArrayList<Projectile> triggerProjectiles = new ArrayList<>();
+        ArrayList<Script> soloScript = new ArrayList<>();
+        ArrayList<CastStateScript> multiScript = new ArrayList<>();
+        boolean skipFlag;
+
+        if(castStateInfo.length == 1 && castStateInfo[0].equals("")){
+            castStateInfo = new String[0];
+        }
+
+        for(CastStateProjectile castStateProjectile : castStateProjectiles){
+            currentProjectile = castStateProjectile.getProjectile();
+            if(currentProjectile.getTriggerCastState() != null){
+                triggerProjectiles.add(currentProjectile);
+                soloProjectiles.add(currentProjectile);
+                continue;
+            }
+
+            if(castStateProjectile.getCount() > 1){
+                multiProjectiles.add(castStateProjectile.clone());
+            }else{
+                soloProjectiles.add(currentProjectile);
+            }
+        }
+
+        for(int i=0; i < soloProjectiles.size(); i++){
+            skipFlag = false;
+            for(CastStateProjectile castStateProjectile : multiProjectiles){
+                if(soloProjectiles.get(i).getClass() == castStateProjectile.getProjectile().getClass()){
+                    soloProjectiles.remove(i);
+                    castStateProjectile.addCount();
+                    i--;
+                    skipFlag = true;
+                    break;
+                }
+            }
+            if(skipFlag){
+                continue;
+            }
+            for(int j=i+1; j < soloProjectiles.size(); j++){
+                if(soloProjectiles.get(i).getClass() == soloProjectiles.get(j).getClass()){
+                    soloProjectiles.remove(j);
+                    multiProjectiles.add(new CastStateProjectile(soloProjectiles.remove(i), 2));
+                    i--;
+                    break;
+                }
+            }
+        }
+
+        for(CastStateScript castStateScript : this.castStateScripts){
+            if(castStateScript.getCount() > 1){
+                multiScript.add(castStateScript.clone());
+            }else{
+                soloScript.add(castStateScript.getScript());
+            }
+        }
+
+        for(Projectile projectile : soloProjectiles){
+            currentImage = projectile.getImage();
+            if(currentImage != null){
+                image.addImage(currentImage, nextX, y + boxInsideMargin);
+                nextX += currentImage.getWidth();
+                nextY = Math.max(nextY, y + boxInsideMargin + currentImage.getHeight());
+            }
+        }
+
+        for(CastStateProjectile castStateProjectile : multiProjectiles){
+            currentImage = castStateProjectile.getProjectile().getImage();
+            if(currentImage != null){
+                image.addImage(currentImage, x + boxInsideMargin, nextY);
+                tempPoint = image.drawText("x" + castStateProjectile.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
+                nextX = Math.max(nextX, (int)tempPoint.getX());
+                nextY += currentImage.getHeight();
+            }
+        }
+
+        for(String info : castStateInfo){
+            tempPoint = image.drawText(info, x + boxInsideMargin, nextY, Color.WHITE);
+            nextY = Math.max(nextY, (int)tempPoint.getY());
+            nextX = Math.max(nextX, (int)tempPoint.getX());
+        }
+
+        tempPoint.setLocation(x + boxInsideMargin, nextY);
+        for(Script script : soloScript){
+            currentImage = script.getImage();
+            if(currentImage != null){
+                image.addImage(currentImage, (int)tempPoint.getX(), (int)tempPoint.getY());
+                tempPoint.setLocation(tempPoint.getX() + currentImage.getWidth(), tempPoint.getY());
+                nextX = Math.max(nextX, (int)tempPoint.getY());
+                nextY = Math.max(nextY, (int)tempPoint.getY() + currentImage.getHeight());
+            }
+        }
+
+        for(CastStateScript castStateScript : multiScript){
+            currentImage = castStateScript.getScript().getImage();
+            if(currentImage != null){
+                image.addImage(currentImage, x + boxInsideMargin, nextY);
+                tempPoint = image.drawText("x" + castStateScript.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
+                nextX = Math.max(nextX, (int)tempPoint.getX());
+                nextY += currentImage.getHeight();
+            }
+        }
+
+        nextX += boxInsideMargin;
+        nextY += boxInsideMargin;
+        nextX = Math.max(nextX, x + imageSize);
+        nextY = Math.max(nextY, y + imageSize);
+        image.drawRectangle(x, y, nextX, nextY, Color.WHITE);
+
+        for(Projectile projectile : triggerProjectiles){
+            if(triggerY != y){
+                triggerY += boxOutsideMargin;
+            }
+            image.drawArrow(nextX, y + imageSize/2, nextX + arrowSizeX, triggerY + imageSize/2, Color.WHITE, true, false);
+            currentImage = projectile.getImage();
+            if(currentImage != null){
+                image.addImage(currentImage, nextX + arrowSizeX, triggerY);
+                switch(projectile.getTriggerType()){
+                    case trigger -> {if(triggerImage != null){image.addImage(triggerImage, nextX + arrowSizeX, triggerY);}}
+                    case timer -> {if(timerImage != null){image.addImage(timerImage, nextX + arrowSizeX, triggerY);}}
+                    case expiration -> {if(expirationImage != null){image.addImage(expirationImage, nextX + arrowSizeX, triggerY);}}
+                }
+            }
+            triggerY = Math.max(triggerY, (int)projectile.getTriggerCastState().toImageNode(image, nextX + arrowSizeX + imageSize, triggerY).getY());
+            nextY = Math.max(nextY, triggerY);
+        }
+
+        return new Point(nextX, nextY);
     }
 }

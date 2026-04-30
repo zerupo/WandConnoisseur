@@ -1,13 +1,13 @@
 package org.example.main;
 
-import org.example.spells.*;
+import org.example.spells.Spell;
 
 import java.util.*;
 import java.util.function.Predicate;
 import org.reflections.Reflections;
 
 public class SpellList{
-    private Spell[] spells;
+    private final Spell[] spells;
 
     public SpellList(Predicate<Spell> filter, Comparator<Spell> comparator){
         Reflections reflections = new Reflections("org.example.spells");
@@ -55,7 +55,6 @@ public class SpellList{
             return this.spells;
         }
 
-        System.out.println("CLONING ALL SPELLS");
         Spell[] result = new Spell[this.spells.length];
         for(int i=0; i < result.length; i++){
             result[i] = this.spells[i].clone();

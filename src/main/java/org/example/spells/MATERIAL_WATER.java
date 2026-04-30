@@ -3,6 +3,8 @@ package org.example.spells;
 import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_MATERIAL_WATER;
+import org.example.script.Script;
+import org.example.script.SCRIPT_EFFECT_APPLY_WET;
 
 import java.lang.invoke.MethodHandles;
 
@@ -18,6 +20,7 @@ public class MATERIAL_WATER extends Spell{
         this.description = "Transmute drops of water from nothing";
         this.type = SpellType.material;
         this.relatedProjectile = new PROJECTILE_MATERIAL_WATER();
+        this.relatedScripts = new Script[]{new SCRIPT_EFFECT_APPLY_WET()};
         this.spawnProbabilities = new SpawnProbabilities(0, 0.4, 0.4, 0.4, 0.4, 0.4, 0, 0, 0, 0, 0);
         this.price = 110;
         this.manaCost = 0;
@@ -25,10 +28,8 @@ public class MATERIAL_WATER extends Spell{
         this.rechargeTime = -10;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // c.game_effect_entities = c.game_effect_entities .. "data/entities/misc/effect_apply_wet.xml,"
         castState.addProjectile(this.relatedProjectile.clone());
     }
 }

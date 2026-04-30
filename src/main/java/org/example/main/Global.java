@@ -29,6 +29,7 @@ public class Global{
     private final static String[] spellProperties = SpellFilter.PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
     private final static String[] spellStringProperties = SpellFilter.STRING_PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
     private final static ProjectileList projectileList = new ProjectileList();
+    private final static ScriptList scriptList = new ScriptList();
     private final static SpellList spellList = new SpellList();
     private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
     private final static SpellList spellListModifier = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier);
@@ -81,6 +82,10 @@ public class Global{
 
     public static ProjectileList getProjectileList(){
         return projectileList;
+    }
+
+    public static ScriptList getScriptList(){
+        return scriptList;
     }
 
     public static SpellList getSpellList(){
@@ -502,13 +507,21 @@ public class Global{
     }
 
     public static FileUpload JPanelToUpload(JPanel panel, String name){
-        byte[] data = JPanelToBytes(panel);
-        return data != null ? FileUpload.fromData(data, name) : null;
+        try{
+            byte[] data = JPanelToBytes(panel);
+            return data != null ? FileUpload.fromData(data, name) : null;
+        }catch(Exception e){
+            return null;
+        }
     }
 
     public static FileUpload bufferedImageToUpload(BufferedImage bufferedImage, String name){
-        byte[] data = bufferedImageToBytes(bufferedImage);
-        return data != null ? FileUpload.fromData(data, name) : null;
+        try{
+            byte[] data = bufferedImageToBytes(bufferedImage);
+            return data != null ? FileUpload.fromData(data, name) : null;
+        }catch(Exception e){
+            return null;
+        }
     }
 
     public static int longToInt(Long nb){
@@ -517,5 +530,25 @@ public class Global{
 
     public static long intToLong(int lower, int higher){
         return ((long) higher << 32) | (lower & 0xffffffffL);
+    }
+
+    public static BufferedImage cloneBufferedImage(BufferedImage image){
+        if(image == null){
+            return null;
+        }
+
+        BufferedImage clone = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        Graphics2D g2d = clone.createGraphics();
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return clone;
+    }
+
+    public static String truncate(String text, int length){
+        if(text.length() <= length){
+            return text;
+        }else{
+            return text.substring(0, length);
+        }
     }
 }

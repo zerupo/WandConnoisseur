@@ -2,6 +2,8 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.script.Script;
+import org.example.script.SCRIPT_ZERO_DAMAGE;
 
 import java.lang.invoke.MethodHandles;
 
@@ -16,10 +18,10 @@ public class ZERO_DAMAGE extends Spell{
         this.emote = staticEmote;
         this.description = "Increases a projectile's duration dramatically but removes all damage and explosion from it";
         this.type = SpellType.modifier;
+        this.relatedScripts = new Script[]{new SCRIPT_ZERO_DAMAGE()};
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0.3, 0.3, 0.6, 0, 0, 0, 0, 0.3);
         this.price = 50;
         this.manaCost = 5;
-        this.autoStat = false;
         this.castDelay = -5;
         this.lifetime = 280;
         this.recoil = -10.0;
@@ -28,11 +30,10 @@ public class ZERO_DAMAGE extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // c.extra_entities = c.extra_entities .. "data/entities/misc/spiraling_shot.xml,"
-        castState.setDamageComponent(this.damageComponent);
+        castState.setDamage(this.damageComponent);
         // c.damage_null_all = 1
         // c.gore_particles    = 0
-        // c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_white_small.xml,data/entities/misc/zero_damage.xml,"
+        // c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_white_small.xml"
         cardPool.draw(1, true, castState);
     }
 }

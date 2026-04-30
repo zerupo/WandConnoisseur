@@ -2,6 +2,8 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.script.Script;
+import org.example.script.SCRIPT_CHAIN_SHOT;
 
 import java.lang.invoke.MethodHandles;
 
@@ -16,6 +18,7 @@ public class CHAIN_SHOT extends Spell{
         this.emote = staticEmote;
         this.description = "Causes a projectile to cast a copy of itself upon expiring, up to 5 times";
         this.type = SpellType.modifier;
+        this.relatedScripts = new Script[]{new SCRIPT_CHAIN_SHOT()};
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0, 0.6, 0.8, 0, 0, 0, 0, 0);
         this.price = 240;
         this.manaCost = 70;
@@ -27,8 +30,7 @@ public class CHAIN_SHOT extends Spell{
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        /*c.extra_entities = c.extra_entities .. "data/entities/misc/chain_shot.xml,"
-        if (c.explosion_radius < 0) then
+        /*if (c.explosion_radius < 0) then
             c.explosion_radius = 0
         end*/
         cardPool.draw(1, true, castState);

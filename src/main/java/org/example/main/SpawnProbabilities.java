@@ -16,12 +16,12 @@ public class SpawnProbabilities{
         this.spawnProbability = new double[11];
     }
 
-    public SpawnProbabilities(SpawnProbabilities original){
-        this.spawnProbability = new double[original.spawnProbability.length];
+    public SpawnProbabilities clone(){
+        SpawnProbabilities spawnProbabilities = new SpawnProbabilities();
 
-        for(int i=0; i < this.spawnProbability.length; i++){
-            this.spawnProbability[i] = original.spawnProbability[i];
-        }
+        System.arraycopy(this.spawnProbability, 0, spawnProbabilities.spawnProbability, 0, spawnProbabilities.spawnProbability.length);
+
+        return spawnProbabilities;
     }
 
     public double[] getSpawnProbability(){

@@ -4,6 +4,8 @@ import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LASER_EMITTER;
 import org.example.projectiles.PROJECTILE_LASER_EMITTER_FOUR;
+import org.example.script.Script;
+import org.example.script.SCRIPT_EFFECT_DISINTEGRATED;
 
 import java.lang.invoke.MethodHandles;
 
@@ -19,6 +21,7 @@ public class LASER_EMITTER_FOUR extends Spell{
         this.description = "Four deadly plasma beams in a cross-shape. Look out, they can hurt you as well!";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER();
+        this.relatedScripts = new Script[]{new SCRIPT_EFFECT_DISINTEGRATED()};
         this.spawnProbabilities = new SpawnProbabilities(0.2, 0.3, 1, 0.5, 1, 0, 0, 0, 0, 0, 0);
         this.price = 200;
         this.manaCost = 80;
@@ -26,12 +29,10 @@ public class LASER_EMITTER_FOUR extends Spell{
         this.recoil = 30.0;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         // it's not the same as related projectile...
         castState.addProjectile(new PROJECTILE_LASER_EMITTER_FOUR());
-        // c.game_effect_entities = c.game_effect_entities .. "data/entities/misc/effect_disintegrated.xml,"
     }
 }
 

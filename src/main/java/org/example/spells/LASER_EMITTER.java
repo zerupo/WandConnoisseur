@@ -3,6 +3,8 @@ package org.example.spells;
 import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LASER_EMITTER;
+import org.example.script.Script;
+import org.example.script.SCRIPT_EFFECT_DISINTEGRATED;
 
 import java.lang.invoke.MethodHandles;
 
@@ -18,6 +20,7 @@ public class LASER_EMITTER extends Spell{
         this.description = "An instantaneous, dangerous beam of light";
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_LASER_EMITTER();
+        this.relatedScripts = new Script[]{new SCRIPT_EFFECT_DISINTEGRATED()};
         this.spawnProbabilities = new SpawnProbabilities(0, 0.2, 0.8, 1, 0.5, 0, 0, 0, 0, 0, 0);
         this.price = 180;
         this.manaCost = 60;
@@ -25,11 +28,9 @@ public class LASER_EMITTER extends Spell{
         this.recoil = 20.0;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addProjectile(this.relatedProjectile.clone());
-        // c.game_effect_entities = c.game_effect_entities .. "data/entities/misc/effect_disintegrated.xml,"
     }
 }
 

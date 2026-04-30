@@ -10,6 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Flowchart{
+    private static final BufferedImage copyFailedImage = Global.loadImage("./src/main/java/org/example/image/other/failed.png");
+    private static final String copyColor = "\u001b[0;33m"; // yellow
+    //private static String copyColor = "\033[0;32m"; // green
+    private static final String failedColor = "\u001b[0;31m"; // red
+    //private static String failedColor = "\033[0;31m"; // red
+    private static final String resetColor = "\u001b[0;0m"; // "\u001B[0m";
     private Spell myself;
     private int chargesLeft = 0;
     private int count = 1;
@@ -17,17 +23,8 @@ public class Flowchart{
     private boolean isRoot;
     private boolean isCopy = false;
     private boolean copyFailed = false;
-    private String copyFailedImagePath = "./src/main/java/org/example/image/other/";
-    //private String copyFailedImagePath = "./image/other/";
-    private String copyFailedImageFile = "failed.png";
-    private BufferedImage copyFailedImage;
     private String rootName = "wand";
     private int width = 3;
-    private String copyColor = "\u001b[0;33m"; // yellow
-    //private String copyColor = "\033[0;32m"; // green
-    private String failedColor = "\u001b[0;31m"; // red
-    //private String failedColor = "\033[0;31m"; // red
-    private String resetColor = "\u001b[0;0m"; // "\u001B[0m";
     private StringBuilder flowchartString = new StringBuilder();
     private Flowchart root;
 
@@ -53,13 +50,7 @@ public class Flowchart{
         this.myself = spell;
         this.rootName = null;
         this.width = 0;
-        this.copyColor = null;
-        this.failedColor = null;
-        this.resetColor = null;
         this.flowchartString = null;
-        this.copyFailedImagePath = null;
-        this.copyFailedImageFile = null;
-        this.copyFailedImage = null;
         if(spell != null && spell.getHasCharges()){
             this.chargesLeft = spell.getChargesLeft();
         }
@@ -109,8 +100,8 @@ public class Flowchart{
             return true;
         }
 
-        subNodes1 = node1.spells.toArray(new Flowchart[node1.spells.size()]);
-        subNodes2 = node2.spells.toArray(new Flowchart[node2.spells.size()]);
+        subNodes1 = node1.spells.toArray(new Flowchart[0]);
+        subNodes2 = node2.spells.toArray(new Flowchart[0]);
 
         for(int i=0; i < subNodes1.length; i++){
             if(!equals(subNodes1[i], subNodes2[i])){
@@ -137,42 +128,6 @@ public class Flowchart{
         return this.copyFailed;
     }
 
-    public BufferedImage getCopyFailedImage(){
-        if(this.isRoot){
-            if(this.copyFailedImage == null){
-                this.copyFailedImage = Global.loadImage(this.copyFailedImagePath + this.copyFailedImageFile);
-                //this.loadImage();
-            }
-            return this.copyFailedImage;
-        }else{
-            return this.root.getCopyFailedImage();
-        }
-    }
-
-    public String getCopyColor(){
-        if(this.isRoot){
-            return this.copyColor;
-        }else{
-            return this.root.getCopyColor();
-        }
-    }
-
-    public String getFailedColor(){
-        if(this.isRoot){
-            return this.failedColor;
-        }else{
-            return this.root.getFailedColor();
-        }
-    }
-
-    public String getResetColor(){
-        if(this.isRoot){
-            return this.resetColor;
-        }else{
-            return this.root.getResetColor();
-        }
-    }
-
     public String getRootName(){
         if(this.isRoot){
             return this.rootName;
@@ -196,30 +151,6 @@ public class Flowchart{
 
     public void setCopyFailed(boolean copyFailed){
         this.copyFailed = copyFailed;
-    }
-
-    public void setCopyColor(String copyColor){
-        if(this.isRoot){
-            this.copyColor = copyColor;
-        }else{
-            this.root.setCopyColor(copyColor);
-        }
-    }
-
-    public void setFailedColor(String failedColor){
-        if(this.isRoot){
-            this.failedColor = failedColor;
-        }else{
-            this.root.setFailedColor(failedColor);
-        }
-    }
-
-    public void setResetColor(String resetColor){
-        if(this.isRoot){
-            this.resetColor = resetColor;
-        }else{
-            this.root.setResetColor(resetColor);
-        }
     }
 
     public void setRootName(String rootName){
@@ -278,9 +209,9 @@ public class Flowchart{
             sb.append(currentFlow);
             if(formatting){
                 if(failed){
-                    sb.append(this.getFailedColor());
+                    sb.append(failedColor);
                 }else if(copy){
-                    sb.append(this.getCopyColor());
+                    sb.append(copyColor);
                 }
             }
             if(last){
@@ -290,12 +221,12 @@ public class Flowchart{
             }
             sb.append("\u2500".repeat(this.getWidth()));
             if(formatting && (copy || failed)){
-                sb.append(this.getResetColor());
+                sb.append(resetColor);
             }
             if(currentFlowchart.myself != null){
                 if(currentFlowchart.copyFailed){
                     if(formatting){
-                        sb.append(this.getFailedColor()).append(currentFlowchart.myself.getName()).append(this.getResetColor());
+                        sb.append(failedColor).append(currentFlowchart.myself.getName()).append(resetColor);
                     }else{
                         sb.append("(").append(currentFlowchart.myself.getName()).append(")");
                     }
@@ -316,9 +247,9 @@ public class Flowchart{
                 currentFlowchart.toString(sb, currentFlow + " ".repeat(this.getWidth() + 1), formatting);
             }else{
                 if(formatting && flowchartArray[i+1].myself == null){
-                    currentFlowchart.toString(sb, currentFlow + this.getFailedColor() + "\u2502" + this.getResetColor() + " ".repeat(this.getWidth()), formatting);
+                    currentFlowchart.toString(sb, currentFlow + failedColor + "\u2502" + resetColor + " ".repeat(this.getWidth()), formatting);
                 }else if(formatting && flowchartArray[i+1].isCopy){
-                    currentFlowchart.toString(sb, currentFlow + this.getCopyColor() + "\u2502" + this.getResetColor() + " ".repeat(this.getWidth()), formatting);
+                    currentFlowchart.toString(sb, currentFlow + copyColor + "\u2502" + resetColor + " ".repeat(this.getWidth()), formatting);
                 }else{
                     currentFlowchart.toString(sb, currentFlow + "\u2502" + " ".repeat(this.getWidth()), formatting);
                 }
@@ -326,19 +257,21 @@ public class Flowchart{
         }
     }
 
-    public void saveToImage(String filename){
+    public boolean saveToImage(String filename){
         if(this.isRoot){
             ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
+            image.setFont(Global.getPixelFont().deriveFont((float)15));
             this.toImageNode(image, 0, 0);
-            image.saveToFile(filename);
+            return image.saveToFile(filename);
         }else{
-            this.root.toImage();
+            return this.root.saveToImage(filename);
         }
     }
 
     public BufferedImage toImage(){
         if(this.isRoot){
             ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
+            image.setFont(Global.getPixelFont().deriveFont((float)15));
             this.toImageNode(image, 0, 0);
             return image.toImage();
         }else{
@@ -348,6 +281,7 @@ public class Flowchart{
 
     public int toImage(ImageBuilder image, int x, int y){
         if(this.isRoot){
+            image.setFont(Global.getPixelFont().deriveFont((float)15));
             return (int)this.toImageNode(image, x, y).getY() + 40;
         }else{
             return this.root.toImage(image, x, y);
@@ -358,7 +292,6 @@ public class Flowchart{
         Flowchart[] flowchartArray = this.spells.toArray(new Flowchart[0]);
         Flowchart currentFlowchart;
         BufferedImage currentImage = null;
-        BufferedImage failedImage = this.getCopyFailedImage();
         boolean copy = false;
         int imageSize = 16;
         int arrowSizeX = 40;
@@ -372,34 +305,29 @@ public class Flowchart{
         for(int i=0; i < flowchartArray.length; i++){
             maxX = x;
             currentFlowchart = flowchartArray[i];
-            if(currentFlowchart.isCopy){
-                copy = true;
-            }else{
-                copy = false;
-            }
+            copy = currentFlowchart.isCopy;
 
             if(currentFlowchart.myself != null){
                 currentImage = currentFlowchart.myself.getImage();
                 if(currentImage != null){
-                    image.addImage(currentImage, x + arrowSizeX + (imageSize - currentImage.getWidth())/2, nextY - (currentImage.getHeight() - 1)/2);
+                    image.addImage(currentImage, x + arrowSizeX + (imageSize - currentImage.getWidth())/2, nextY + (imageSize - currentImage.getHeight())/2);
                     maxX = Math.max(maxX, x + arrowSizeX + imageSize - currentImage.getWidth()/2);
                 }
             }
-            if(failedImage != null && (currentFlowchart.copyFailed || currentFlowchart.myself == null)){
-                image.addImage(failedImage, x + arrowSizeX + (imageSize - failedImage.getWidth())/2, nextY - (failedImage.getHeight() - 1)/2);
-                maxX = Math.max(maxX, x + arrowSizeX + imageSize - failedImage.getWidth()/2);
+            if(copyFailedImage != null && (currentFlowchart.copyFailed || currentFlowchart.myself == null)){
+                image.addImage(copyFailedImage, x + arrowSizeX + (imageSize - copyFailedImage.getWidth())/2, nextY + (imageSize - copyFailedImage.getHeight())/2);
+                maxX = Math.max(maxX, x + arrowSizeX + imageSize - copyFailedImage.getWidth()/2);
             }
             if(currentFlowchart.myself == null){
-                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.RED, true, true);
+                image.drawArrow(x, y + imageSize/2, x + arrowSizeX - 1, nextY + imageSize/2, Color.RED, true, true);
             }else if(copy){
-                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.YELLOW, true, true);
+                image.drawArrow(x, y + imageSize/2, x + arrowSizeX - 1, nextY + imageSize/2, Color.YELLOW, true, true);
             }else{
-                image.drawArrow(x, y, x + arrowSizeX - 1, nextY, Color.WHITE, true, true);
+                image.drawArrow(x, y + imageSize/2, x + arrowSizeX - 1, nextY + imageSize/2, Color.WHITE, true, true);
             }
             maxX = Math.max(maxX, x + arrowSizeX - 1);
-            //System.out.println("(" + x + ", " + y + ") -> (" + (x + arrowSizeX - 1) + ", " + nextY + ")");
 
-            maxPoint = currentFlowchart.toImageNode(image, nextX , nextY);
+            maxPoint = currentFlowchart.toImageNode(image, nextX, nextY);
             nextY = (int)maxPoint.getY();
             maxX = Math.max(maxX, (int)maxPoint.getX());
             maxMaxX = Math.max(maxMaxX, maxX);
@@ -411,7 +339,7 @@ public class Flowchart{
                 nextY += arrowSizeY;
             }
         }
-        //System.out.println(this.myself.getName() + " (" + this.count + ") return " + maxX);
+
         return new Point(maxMaxX, nextY);
     }
 }

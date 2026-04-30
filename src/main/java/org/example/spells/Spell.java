@@ -3,6 +3,7 @@ package org.example.spells;
 import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.Projectile;
+import org.example.script.Script;
 
 import java.awt.*;
 import java.awt.Graphics;
@@ -18,7 +19,7 @@ public abstract class Spell{
     protected final static int recursionLimit = 2;
     protected String name = "spell_name";
     protected String[] alias = new String[0];
-    protected String imagePath = "./src/main/java/org/example/image/spell/";
+    protected static final String imagePath = "./src/main/java/org/example/image/spell/";
     protected String imageFile = "_unidentified.png";
     protected String typeFile = "item_bg_other.png";
     protected static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
@@ -32,6 +33,7 @@ public abstract class Spell{
     protected SpellType type = SpellType.other;
     protected Projectile relatedProjectile = null;
     protected int relatedProjectileCount = 1;
+    protected Script[] relatedScripts = new Script[0];
     protected Projectile.TriggerType triggerType = Projectile.TriggerType.none;
     protected int timerLength = 0;
     protected SpawnProbabilities spawnProbabilities = new SpawnProbabilities();
@@ -73,29 +75,33 @@ public abstract class Spell{
         Spell newSpell;
 
         try{
-            newSpell = spellClass.newInstance();
+            newSpell = spellClass.getDeclaredConstructor().newInstance();
         }catch(Exception e){
             return null;
         }
 
         newSpell.name = this.name;
         newSpell.alias = new String[this.alias.length];
-        for(int i=0; i < newSpell.alias.length; i++){
-            newSpell.alias[i] = this.alias[i];
-        }
-        newSpell.imagePath = this.imagePath;
+        System.arraycopy(this.alias, 0, newSpell.alias, 0, newSpell.alias.length);
         newSpell.imageFile = this.imageFile;
         newSpell.typeFile = this.typeFile;
+        newSpell.emote = this.emote;
         newSpell.defaultImage = this.defaultImage;
         newSpell.description = this.description;
-        if(this.image == null){
-            newSpell.image = null;
-        }else{
-            newSpell.image = cloneBufferedImage(this.image);
-        }
+        newSpell.image = Global.cloneBufferedImage(this.image); // clone
         newSpell.imageScaleFactor = this.imageScaleFactor;
         newSpell.type = this.type;
-        newSpell.spawnProbabilities = new SpawnProbabilities(this.spawnProbabilities); // clone
+        if(this.relatedProjectile != null){
+            newSpell.relatedProjectile = this.relatedProjectile.clone(); // clone
+        }
+        newSpell.relatedProjectileCount = this.relatedProjectileCount;
+        newSpell.relatedScripts = new Script[this.relatedScripts.length];
+        for(int i=0; i < newSpell.relatedScripts.length; i++){
+            newSpell.relatedScripts[i] = this.relatedScripts[i].clone();
+        }
+        newSpell.triggerType = this.triggerType;
+        newSpell.timerLength = this.timerLength;
+        newSpell.spawnProbabilities = this.spawnProbabilities.clone(); // clone
         newSpell.recursive = this.recursive;
         newSpell.price = this.price;
         newSpell.manaCost = this.manaCost;
@@ -103,13 +109,15 @@ public abstract class Spell{
         newSpell.maxCharges = this.maxCharges;
         newSpell.chargesLeft = this.chargesLeft;
         newSpell.neverUnlimited = this.neverUnlimited;
+        newSpell.autoStat = this.autoStat;
         newSpell.castDelay = this.castDelay;
         newSpell.rechargeTime = this.rechargeTime;
-        newSpell.damageComponent = new DamageComponent(this.damageComponent); // clone
+        newSpell.damageComponent = this.damageComponent.clone(); // clone
         newSpell.lifetime = this.lifetime;
         newSpell.critRate = this.critRate;
         newSpell.pattern = this.pattern;
         newSpell.spread = this.spread;
+        newSpell.setRecoil = this.setRecoil;
         newSpell.recoil = this.recoil;
         newSpell.screenshake = this.screenshake;
         if(this.imageLabel != null){
@@ -117,16 +125,6 @@ public abstract class Spell{
         }
 
         return newSpell;
-    }
-
-    private BufferedImage cloneBufferedImage(BufferedImage original){
-        BufferedImage clone = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
-
-        Graphics g = clone.getGraphics();
-        g.drawImage(original, 0, 0, null);
-        g.dispose();
-
-        return clone;
     }
 
     // getters
@@ -152,11 +150,11 @@ public abstract class Spell{
     }
 
     public String getFullImagePath(){
-        return this.imagePath + this.imageFile;
+        return imagePath + this.imageFile;
     }
 
     public String getImagePath(){
-        return this.imagePath;
+        return imagePath;
     }
 
     public String getImageFile(){
@@ -468,13 +466,13 @@ public abstract class Spell{
         boolean result = true;
         BufferedImage imageType;
 
-        getTypeImage();
+        this.typeFile = this.getTypeImage();
         try{
-            this.image = ImageIO.read(new File(this.imagePath + this.imageFile));
+            this.image = ImageIO.read(new File(imagePath + this.imageFile));
         }catch(IOException e1){
             try{
-                this.image = ImageIO.read(new File(this.imagePath + this.defaultImage));
-                System.out.println(this.imagePath + this.imageFile + " not found, using default image");
+                this.image = ImageIO.read(new File(imagePath + this.defaultImage));
+                System.out.println(imagePath + this.imageFile + " not found, using default image");
             }catch(IOException e2){
                 // no image
                 System.out.println("no image found for " + this.name);
@@ -484,10 +482,10 @@ public abstract class Spell{
 
         if(result){
             try{
-                imageType = ImageIO.read(new File(this.imagePath + this.typeFile));
+                imageType = ImageIO.read(new File(imagePath + this.typeFile));
                 this.image = combineImages(imageType, this.image, null);
             }catch(IOException e1){
-                System.out.println(this.imagePath + this.typeFile + " not found");
+                System.out.println(imagePath + this.typeFile + " not found");
             }
         }
         return result;
@@ -495,58 +493,29 @@ public abstract class Spell{
 
     public void createEmote(){
         try{
-            BufferedImage type = null;
-            switch(this.type){
-                case projectile -> type = ImageIO.read(new File(this.imagePath + "item_bg_projectile_emote.png"));
-                case static_projectile -> type = ImageIO.read(new File(this.imagePath + "item_bg_static_projectile_emote.png"));
-                case passif -> type = ImageIO.read(new File(this.imagePath + "item_bg_passive_emote.png"));
-                case utility -> type = ImageIO.read(new File(this.imagePath + "item_bg_utility_emote.png"));
-                case modifier -> type = ImageIO.read(new File(this.imagePath + "item_bg_modifier_emote.png"));
-                case material -> type = ImageIO.read(new File(this.imagePath + "item_bg_material_emote.png"));
-                case multicast -> type = ImageIO.read(new File(this.imagePath + "item_bg_draw_many_emote.png"));
-                case other -> type = ImageIO.read(new File(this.imagePath + "item_bg_other_emote.png"));
-                default -> type = ImageIO.read(new File(this.imagePath + "item_bg_other_emote.png"));
-            }
+            BufferedImage type = ImageIO.read(new File(imagePath + this.getTypeImage()));
             String name = this.getClass().getSimpleName().toLowerCase();
             if(name.equals("")){
                 name = "spell";
             }
-            ImageIO.write(scaleImage(combineImages(type, ImageIO.read(new File(this.imagePath + this.imageFile)), new Color(54, 43, 39)), 8),"png",new File(Global.getPathOutput() + name + ".png"));
+            name = Global.truncate(name, 32);
+            ImageIO.write(scaleImage(combineImages(type, ImageIO.read(new File(imagePath + this.imageFile)), new Color(54, 43, 39)), 8),"png",new File(Global.getPathOutput() + name + ".png"));
         }catch(IOException e){
             System.out.println("Error trying to create emote for spell \"" + this.name + "\" : " + e.getMessage());
         }
     }
 
-    protected void getTypeImage(){
-        switch(this.type){
-            case projectile:
-                this.typeFile = "item_bg_projectile.png";
-                break;
-            case static_projectile:
-                this.typeFile = "item_bg_static_projectile.png";
-                break;
-            case passif:
-                this.typeFile = "item_bg_passive.png";
-                break;
-            case utility:
-                this.typeFile = "item_bg_utility.png";
-                break;
-            case modifier:
-                this.typeFile = "item_bg_modifier.png";
-                break;
-            case material:
-                this.typeFile = "item_bg_material.png";
-                break;
-            case multicast:
-                this.typeFile = "item_bg_draw_many.png";
-                break;
-            case other:
-                this.typeFile = "item_bg_other.png";
-                break;
-            default:
-                this.typeFile = "item_bg_other.png";
-                break;
-        }
+    private String getTypeImage(){
+        return switch(this.type){
+            case projectile -> "item_bg_projectile.png";
+            case static_projectile -> "item_bg_static_projectile.png";
+            case passif -> "item_bg_passive.png";
+            case utility -> "item_bg_utility.png";
+            case modifier -> "item_bg_modifier.png";
+            case material -> "item_bg_material.png";
+            case multicast -> "item_bg_draw_many.png";
+            default -> "item_bg_other.png";
+        };
     }
 
     public boolean imageInJLabel(){
@@ -653,8 +622,6 @@ public abstract class Spell{
         if(spell != null){
             if(spell.recursive){
                 nextRecursionLevel = recursionLevel + 1;
-            }else{
-                nextRecursionLevel = recursionLevel;
             }
 
             if(nextRecursionLevel <= recursionLimit){
@@ -705,6 +672,9 @@ public abstract class Spell{
         }
         if(this.spread != 0){
             castState.addSpread(this.spread);
+        }
+        for(Script script : this.relatedScripts){
+            castState.addScript(script);
         }
     }
 

@@ -58,6 +58,7 @@ public class EmoteConfig{
         if(!loaded){
             initConfig(false);
         }
+        className = Global.truncate(className, 32);
         return properties.getProperty(className, properties.getProperty("spell", "<:" + className + ":>"));
     }
 
