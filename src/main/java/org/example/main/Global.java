@@ -2,6 +2,7 @@ package org.example.main;
 
 import org.example.menu.MenuManager;
 import org.example.spells.*;
+import static org.example.WandConnoisseur.jda;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -12,12 +13,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 
@@ -41,6 +44,7 @@ public class Global{
     private final static String[] aliasList = spellList.getAllAlias();
     private final static String[] aliasListRelatedProjectile = spellListRelatedProjectile.getAllAlias();
     private final static String[] aliasListLifetimeModifier = spellListLifetimeModifier.getAllAlias();
+    private static Command[] commandList = null;
     private final static WandList wandList = new WandList();
     private final static int baseImageSize = 16;
     private final static int baseIconSize = 7;
@@ -130,6 +134,30 @@ public class Global{
 
     public static String[] getAliasListLifetimeModifier(){
         return aliasListLifetimeModifier;
+    }
+
+    public static Command[] getCommandList(){
+        if(commandList == null){
+            commandList = jda.retrieveCommands().complete().toArray(new Command[0]);
+        }
+
+        return commandList;
+    }
+
+    public static Command[] getCommandList(String name){
+        return Arrays.stream(getCommandList()).filter(command -> command.getName().contains(name)).toArray(Command[]::new);
+    }
+
+    public static Command getCommand(String name){
+        Command[] commandListTemp = getCommandList();
+
+        for(Command command : commandListTemp){
+            if(command.getName().equals(name)){
+                return command;
+            }
+        }
+
+        return null;
     }
 
     public static WandList getWandList(){

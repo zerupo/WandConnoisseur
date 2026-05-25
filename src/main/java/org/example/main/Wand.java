@@ -2,7 +2,7 @@ package org.example.main;
 
 import org.example.spells.*;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,12 +11,14 @@ import javax.swing.JPanel;
 class InfoResult{
     public CastState[] castStates;
     public ImageBuilder flowchartImage;
+    public ImageBuilder castStateImage;
     public StringBuilder flowchartString;
     public CardHistory cardHistory;
 
-    public InfoResult(CastState[] castStates, ImageBuilder flowchartImage, StringBuilder flowchartString, CardHistory cardHistory){
+    public InfoResult(CastState[] castStates, ImageBuilder flowchartImage, ImageBuilder castStateImage, StringBuilder flowchartString, CardHistory cardHistory){
         this.castStates = castStates;
         this.flowchartImage = flowchartImage;
+        this.castStateImage = castStateImage;
         this.flowchartString = flowchartString;
         this.cardHistory = cardHistory;
     }
@@ -52,6 +54,7 @@ public class Wand{
         this.spread = 0.0;
         this.speed = 1.0;
         this.spells = new Spell[this.nbSlot];
+        this.cardPool.setRechargeTime(this.rechargeTime);
     }
 
     public Wand(int nbDraw, int castDelay, int rechargeTime, int maxMana, int regenMana, int nbSlot, double spread, double speed){
@@ -66,6 +69,7 @@ public class Wand{
         this.spread = spread;
         this.speed = speed;
         this.spells = new Spell[nbSlot];
+        this.cardPool.setRechargeTime(this.rechargeTime);
     }
 
     // setters
@@ -261,7 +265,8 @@ public class Wand{
     }
 
     public void getAllInfo(boolean allCasts, InfoResult infoResult, boolean formatting){
-        ArrayList<CastState> castStateList = infoResult.castStates == null ? null : new ArrayList<>();
+        ArrayList<CastState> castStateList = infoResult.castStates == null && infoResult.castStateImage == null ? null : new ArrayList<>();
+        ArrayList<String> castInfo = infoResult.castStates == null && infoResult.castStateImage == null ? null : new ArrayList<>();
         CardPool cardPoolCopy = new CardPool(Arrays.stream(this.spells).map(spell -> spell != null ? spell.clone() : null).toArray(Spell[]::new));
         boolean historyCreated = false;
         CastState primaryCastState;
@@ -279,17 +284,18 @@ public class Wand{
         if(infoResult.cardHistory != null){
             cardPoolCopy.setAutoCardHistory(true);
         }
+        cardPoolCopy.setRechargeTime(this.rechargeTime);
 
         while(!recharged && nbCast < this.nbSlot){
             currentMana = Math.min(currentMana + this.regenMana*waitingTime, this.maxMana*60);
             waitingTime = 0;
             nbCast++;
-            cardPoolCopy.setStats((int)Math.floor(currentMana/60.0), this.rechargeTime);
+            cardPoolCopy.setMana((int)Math.floor(currentMana/60.0));
             cardPoolCopy.resetFlowchart();
             primaryCastState = new CastState();
             primaryCastState.setCastDelay(this.castDelay);
             cardPoolCopy.draw(this.nbDraw, false, primaryCastState);
-            currentRechargeTime += cardPoolCopy.getRechargeTime();
+            currentRechargeTime = cardPoolCopy.getRechargeTime();
             currentCastDelay += primaryCastState.getCastDelay();
             currentMana -= cardPoolCopy.getManaUsage()*60;
             if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
@@ -297,8 +303,6 @@ public class Wand{
                     infoResult.flowchartString.append("Mana cost: ").append(cardPoolCopy.getManaUsage()).append("\n").append("Recharge time").append(currentCastDelay > currentRechargeTime ? " (cast delay): " : ": ").append(String.format("%1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime / 60.0)).append("\n").append(nbCast).append(")\n").append(cardPoolCopy.getFlowchartString(formatting));
                 }
                 waitingTime += Math.max(Math.max(currentCastDelay, currentRechargeTime), 0);
-                currentCastDelay = 0;
-                currentRechargeTime = 0;
                 recharged = true;
             }else{
                 if(infoResult.flowchartString != null){
@@ -315,8 +319,12 @@ public class Wand{
             if(castStateList != null){
                 castStateList.add(primaryCastState);
             }
+            if(castInfo != null){
+                castInfo.add(cardPoolCopy.CastInfoToString());
+            }
+
             if(infoResult.flowchartImage != null){
-                y = cardPoolCopy.computeFlowchartImage(infoResult.flowchartImage, 0, y);
+                y = cardPoolCopy.computeFlowchartImage(infoResult.flowchartImage, 0, y).y;
             }
             if(infoResult.cardHistory != null && !historyCreated){
                 infoResult.cardHistory = cardPoolCopy.getCardHistory();
@@ -325,12 +333,17 @@ public class Wand{
         }
 
         if(castStateList != null){
-            infoResult.castStates = castStateList.toArray(new CastState[0]);
+            if(infoResult.castStates != null){
+                infoResult.castStates = castStateList.toArray(new CastState[0]);
+            }
+            if(infoResult.castStateImage != null){
+                CastState.addToImage(0, 0, infoResult.castStateImage, String.format("Recharge time: %1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime/60.0), castInfo.toArray(new String[0]), castStateList.toArray(new CastState[0]));
+            }
         }
     }
 
     public CardHistory getCardHistory(boolean allCasts){
-        InfoResult result = new InfoResult(null, null, null, new CardHistory(this.spells));
+        InfoResult result = new InfoResult(null, null, null, null, new CardHistory(this.spells));
         this.getAllInfo(allCasts, result, false);
         return result.cardHistory;
     }
@@ -348,25 +361,37 @@ public class Wand{
     }
 
     public String getFlowchartString(boolean allCasts, boolean formatting){
-        InfoResult result = new InfoResult(null, null, new StringBuilder(), null);
+        InfoResult result = new InfoResult(null, null, null, new StringBuilder(), null);
         this.getAllInfo(allCasts, result, formatting);
         return result.flowchartString.toString();
     }
 
     public CastState[] getCastState(boolean allCasts){
-        InfoResult result = new InfoResult(new CastState[0], null, null, null);
+        InfoResult result = new InfoResult(new CastState[0], null, null, null, null);
         this.getAllInfo(allCasts, result, false);
         return result.castStates;
     }
 
+    public BufferedImage getCastStateImage(boolean allCasts){
+        InfoResult result = new InfoResult(new CastState[0], null, new ImageBuilder(new Color(0, 0, 0)), null, null);
+        this.getAllInfo(allCasts, result, false);
+        return result.castStateImage.toImage();
+    }
+
+    public boolean saveCastStateImage(String filename, boolean allCasts){
+        InfoResult result = new InfoResult(new CastState[0], null, new ImageBuilder(new Color(0, 0, 0)), null, null);
+        this.getAllInfo(allCasts, result, false);
+        return result.castStateImage.saveToFile(filename);
+    }
+
     public BufferedImage getFlowchartImage(boolean allCasts){
-        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null);
+        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null, null);
         this.getAllInfo(allCasts, result, false);
         return result.flowchartImage.toImage();
     }
 
     public boolean saveFlowchartImage(String filename, boolean allCasts){
-        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null);
+        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null, null);
         this.getAllInfo(allCasts, result, false);
         return result.flowchartImage.saveToFile(filename);
     }
@@ -375,17 +400,18 @@ public class Wand{
         CastState castState = new CastState();
 
         if(this.waitingTime <= 0){
-            this.cardPool.setStats((int)Math.floor(currentMana/60.0), this.rechargeTime);
+            this.cardPool.setMana((int)Math.floor(currentMana/60.0));
             this.cardPool.resetFlowchart();
             castState.setCastDelay(this.castDelay);
             this.cardPool.draw(this.nbDraw, false, castState);
-            this.currentRechargeTime += this.cardPool.getRechargeTime();
+            this.currentRechargeTime = this.cardPool.getRechargeTime();
             this.currentCastDelay += castState.getCastDelay();
             this.currentMana -= this.cardPool.getManaUsage()*60;
             if(this.cardPool.getWrappedThisCast() || this.cardPool.getDeckSize() <= 0){
                 this.waitingTime += Math.max(Math.max(this.currentCastDelay, this.currentRechargeTime), 0);
                 this.currentCastDelay = 0;
                 this.currentRechargeTime = 0;
+                this.cardPool.setRechargeTime(this.rechargeTime);
             }else{
                 this.waitingTime += Math.max(this.currentCastDelay, 0);
                 this.currentCastDelay = 0;

@@ -7,7 +7,6 @@ import org.example.script.Script;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Objects;
 
 class CastStateProjectile{
     private Projectile projectile;
@@ -412,7 +411,7 @@ public class CastState{
         int y = 0;
 
         for(int i=0; i < castStates.length; i++){
-            y = castStates[i].toImage(imageBuilder, 0, y) + 40;
+            y = castStates[i].toImage(imageBuilder, 0, y).y + 40;
         }
         return imageBuilder.saveToFile(filename);
     }
@@ -431,19 +430,51 @@ public class CastState{
         return image.toImage();
     }
 
-    public static BufferedImage toImage(CastState[] castStates){
-        ImageBuilder imageBuilder = new ImageBuilder(new Color(0, 0, 0));
+    public static void addToImage(int x, int y, ImageBuilder imageBuilder, String globalValues, String[] castValues, CastState[] castStates){
         imageBuilder.setFont(Global.getPixelFont().deriveFont((float)15));
-        int y = 0;
+        int imageSize = 16;
+        int arrowSizeX = 40;
+        int nextY = y;
+        int tempY = imageBuilder.drawTextRectangle(globalValues.split("\\r?\\n"), x, nextY, 5, Color.WHITE, Color.WHITE).y;
+        nextY = tempY + arrowSizeX;
 
         for(int i=0; i < castStates.length; i++){
-            y = castStates[i].toImage(imageBuilder, 0, y) + 40;
+            imageBuilder.drawSingleTurnArrow(x + imageSize/2, tempY + 1, x + arrowSizeX, nextY + imageSize/2, new Color(128, 152, 198), false, false);
+            nextY = imageBuilder.drawText(((i + 1) + ")\n" + (i < castValues.length ? castValues[i] : "")).split("\\r?\\n"), x + arrowSizeX, nextY, 0, Color.WHITE).y;
+            nextY = castStates[i].toImage(imageBuilder, x + arrowSizeX, nextY).y + 40;
         }
+    }
+
+    public static BufferedImage toImage(String globalValues, String[] castValues, CastState[] castStates){
+        ImageBuilder imageBuilder = new ImageBuilder(new Color(0, 0, 0));
+
+        addToImage(0, 0, imageBuilder, globalValues, castValues, castStates);
+
         return imageBuilder.toImage();
     }
 
-    private int toImage(ImageBuilder image, int x, int y){
-        return (int)this.toImageNode(Objects.requireNonNullElseGet(image, () -> new ImageBuilder(new Color(0, 0, 0))), x, y).getY();
+    public static void addToImage(int x, int y, ImageBuilder imageBuilder, CastState[] castStates){
+        imageBuilder.setFont(Global.getPixelFont().deriveFont((float)15));
+
+        for(CastState castState : castStates){
+            y = castState.toImage(imageBuilder, x, y).y + 40;
+        }
+    }
+
+    public static BufferedImage toImage(CastState[] castStates){
+        ImageBuilder imageBuilder = new ImageBuilder(new Color(0, 0, 0));
+
+        addToImage(0, 0, imageBuilder, castStates);
+
+        return imageBuilder.toImage();
+    }
+
+    private Point toImage(ImageBuilder image, int x, int y){
+        if(image == null){
+            return new Point(x, y);
+        }
+
+        return this.toImageNode(image, x, y);
     }
 
     private Point toImageNode(ImageBuilder image, int x, int y){
@@ -465,6 +496,7 @@ public class CastState{
         ArrayList<Script> soloScript = new ArrayList<>();
         ArrayList<CastStateScript> multiScript = new ArrayList<>();
         boolean skipFlag;
+        boolean isEmpty = true;
 
         if(castStateInfo.length == 1 && castStateInfo[0].equals("")){
             castStateInfo = new String[0];
@@ -524,6 +556,7 @@ public class CastState{
                 nextX += currentImage.getWidth();
                 nextY = Math.max(nextY, y + boxInsideMargin + currentImage.getHeight());
             }
+            isEmpty = false;
         }
 
         for(CastStateProjectile castStateProjectile : multiProjectiles){
@@ -531,26 +564,29 @@ public class CastState{
             if(currentImage != null){
                 image.addImage(currentImage, x + boxInsideMargin, nextY);
                 tempPoint = image.drawText("x" + castStateProjectile.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
-                nextX = Math.max(nextX, (int)tempPoint.getX());
+                nextX = Math.max(nextX, tempPoint.x);
                 nextY += currentImage.getHeight();
             }
+            isEmpty = false;
         }
 
         for(String info : castStateInfo){
             tempPoint = image.drawText(info, x + boxInsideMargin, nextY, Color.WHITE);
-            nextY = Math.max(nextY, (int)tempPoint.getY());
-            nextX = Math.max(nextX, (int)tempPoint.getX());
+            nextX = Math.max(nextX, tempPoint.x);
+            nextY = Math.max(nextY, tempPoint.y);
+            isEmpty = false;
         }
 
         tempPoint.setLocation(x + boxInsideMargin, nextY);
         for(Script script : soloScript){
             currentImage = script.getImage();
             if(currentImage != null){
-                image.addImage(currentImage, (int)tempPoint.getX(), (int)tempPoint.getY());
-                tempPoint.setLocation(tempPoint.getX() + currentImage.getWidth(), tempPoint.getY());
-                nextX = Math.max(nextX, (int)tempPoint.getY());
-                nextY = Math.max(nextY, (int)tempPoint.getY() + currentImage.getHeight());
+                image.addImage(currentImage, tempPoint.x, tempPoint.y);
+                tempPoint.setLocation(tempPoint.x + currentImage.getWidth(), tempPoint.y);
+                nextX = Math.max(nextX, tempPoint.x);
+                nextY = Math.max(nextY, tempPoint.y + currentImage.getHeight());
             }
+            isEmpty = false;
         }
 
         for(CastStateScript castStateScript : multiScript){
@@ -558,9 +594,16 @@ public class CastState{
             if(currentImage != null){
                 image.addImage(currentImage, x + boxInsideMargin, nextY);
                 tempPoint = image.drawText("x" + castStateScript.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
-                nextX = Math.max(nextX, (int)tempPoint.getX());
+                nextX = Math.max(nextX, tempPoint.x);
                 nextY += currentImage.getHeight();
             }
+            isEmpty = false;
+        }
+
+        if(isEmpty){
+            tempPoint = image.drawText("<empty>", x + boxInsideMargin, nextY, Color.RED);
+            nextX = Math.max(nextX, tempPoint.x);
+            nextY = Math.max(nextY, tempPoint.y);
         }
 
         nextX += boxInsideMargin;
@@ -583,7 +626,7 @@ public class CastState{
                     case expiration -> {if(expirationImage != null){image.addImage(expirationImage, nextX + arrowSizeX, triggerY);}}
                 }
             }
-            triggerY = Math.max(triggerY, (int)projectile.getTriggerCastState().toImageNode(image, nextX + arrowSizeX + imageSize, triggerY).getY());
+            triggerY = Math.max(triggerY, projectile.getTriggerCastState().toImageNode(image, nextX + arrowSizeX + imageSize, triggerY).y);
             nextY = Math.max(nextY, triggerY);
         }
 

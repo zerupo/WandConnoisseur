@@ -87,6 +87,28 @@ public class ImageBuilder{
         this.g2d.drawImage(image, x + this.margin, y + this.margin, null);
     }
 
+    private void drawArrowhead(int x, int y, boolean invertX, boolean invertY){
+        int arrowLength = 8;
+        int arrowWidth = 4;
+        int x1 = x + (invertY ? (invertX ? 1 : -1)*arrowLength : arrowWidth);
+        int y1 = y + (invertY ? arrowWidth : (invertX ? 1 : -1)*arrowLength);
+        int x2 = x - (invertY ? (invertX ? -1 : 1)*arrowLength : arrowWidth);
+        int y2 = y - (invertY ? arrowWidth : (invertX ? -1 : 1)*arrowLength);
+
+        if(!invertX && invertY){
+            x += 1;
+            x1 += 1;
+            x2 += 1;
+        }
+
+        Path2D arrowhead = new Path2D.Double();
+        arrowhead.moveTo(x + this.margin, y + this.margin);
+        arrowhead.lineTo(x1 + this.margin + (invertY ? 0 : 0.1), y1 + this.margin);
+        arrowhead.lineTo(x2 + this.margin, y2 + this.margin);
+        arrowhead.closePath();
+        this.g2d.fill(arrowhead);
+    }
+
     public void drawArrow(int x1, int y1, int x2, int y2, Color color, boolean priorityX, boolean drawUnder){
         this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
         this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
@@ -111,29 +133,43 @@ public class ImageBuilder{
 
         this.g2d.setColor(color);
         path.moveTo(x1 + this.margin, y1 + this.margin);
-        for(int i=0; i < points.length; i++){
-            path.append(new Arc2D.Double(points[i][0], points[i][1], 2*radius, 2*radius, points[i][2], points[i][3], Arc2D.OPEN), true);
+        for(int[] point : points){
+            path.append(new Arc2D.Double(point[0], point[1], 2*radius, 2*radius, point[2], point[3], Arc2D.OPEN), true);
         }
         path.lineTo(x2 + this.margin, y2 + this.margin);
 
         this.g2d.draw(path);
-        this.drawArrowhead(x2 + (priorityX ? (invertX ? -1 : 1) : 0), y2, priorityX ? invertX : invertY, priorityX);
+        this.drawArrowhead(x2, y2, priorityX ? invertX : invertY, priorityX);
     }
 
-    private void drawArrowhead(int x, int y, boolean invertX, boolean invertY){
-        int arrowLength = 8;
-        int arrowWidth = 4;
-        int x1 = x + (invertY ? (invertX ? 1 : -1)*arrowLength : arrowWidth);
-        int y1 = y + (invertY ? arrowWidth : (invertX ? 1 : -1)*arrowLength);
-        int x2 = x - (invertY ? (invertX ? -1 : 1)*arrowLength : arrowWidth);
-        int y2 = y - (invertY ? arrowWidth : (invertX ? -1 : 1)*arrowLength);
+    public void drawSingleTurnArrow(int x1, int y1, int x2, int y2, Color color, boolean priorityX, boolean drawUnder){
+        this.canvasWidth = Math.max(this.canvasWidth, Math.max(x1, x2));
+        this.canvasHeight = Math.max(this.canvasHeight, Math.max(y1, y2));
+        if(drawUnder){
+            this.drawActions.addFirst(() -> draw_single_turn_arrow(x1, y1, x2, y2, color, priorityX));
+        }else{
+            this.drawActions.add(() -> draw_single_turn_arrow(x1, y1, x2, y2, color, priorityX));
+        }
+    }
 
-        Path2D arrowhead = new Path2D.Double();
-        arrowhead.moveTo(x + this.margin, y + this.margin);
-        arrowhead.lineTo(x1 + this.margin + (invertY ? 0 : 0.1), y1 + this.margin);
-        arrowhead.lineTo(x2 + this.margin, y2 + this.margin);
-        arrowhead.closePath();
-        this.g2d.fill(arrowhead);
+    private void draw_single_turn_arrow(int x1, int y1, int x2, int y2, Color color, boolean priorityX){
+        Path2D path = new Path2D.Double();
+        boolean invertX = x1 > x2;
+        boolean invertY = y1 > y2;
+        int radius = Math.max(Math.min(Math.abs(y2 - y1)/2, Math.abs((x2 - x1)/2)), 0);
+        int[][] points = new int[][]{
+            {(priorityX ? x2 : x1) + (invertX == priorityX ? 0 : -2*radius) + this.margin, (priorityX ? y1 : y2) + (invertY == priorityX ? -2*radius : 0) + this.margin, priorityX ? (invertY ? 270 : 90) : (invertX ? 0 : 180), (invertX ^ invertY) ^ !priorityX ? 90 : -90}
+        };
+
+        this.g2d.setColor(color);
+        path.moveTo(x1 + this.margin, y1 + this.margin);
+        for(int[] point : points){
+            path.append(new Arc2D.Double(point[0], point[1], 2*radius, 2*radius, point[2], point[3], Arc2D.OPEN), true);
+        }
+        path.lineTo(x2 + this.margin, y2 + this.margin);
+
+        this.g2d.draw(path);
+        this.drawArrowhead(x2, y2, priorityX ? invertY : invertX, !priorityX);
     }
 
     public void drawCurlyBrackets(int x1, int y1, int x2, int y2, int nb, Color color){
@@ -172,8 +208,8 @@ public class ImageBuilder{
 
         this.g2d.setColor(color);
         path.moveTo(x1 + this.margin, y1 + this.margin);
-        for(int i=0; i < points.length; i++){
-            path.append(new Arc2D.Double(points[i][0], points[i][1], 2*radius, 2*radius, points[i][2], points[i][3], Arc2D.OPEN), true);
+        for(int[] point : points){
+            path.append(new Arc2D.Double(point[0], point[1], 2*radius, 2*radius, point[2], point[3], Arc2D.OPEN), true);
         }
         path.lineTo(middleWidth + this.margin, y2 + this.margin);
 
@@ -198,10 +234,6 @@ public class ImageBuilder{
 
     private void set_font(Font font){
         this.g2d.setFont(font);
-    }
-
-    public Point getTextSize(String text){
-        return new Point(this.currentFontMetrics.stringWidth(text), this.currentFontMetrics.getHeight());
     }
 
     public Point drawText(String text, int x, int y, Color color){
@@ -229,6 +261,48 @@ public class ImageBuilder{
     private void draw_rectangle(int x1, int y1, int x2, int y2, Color color){
         this.g2d.setColor(color);
         this.g2d.drawRect(x1 + this.margin, y1 + this.margin, x2 - x1, y2 - y1);
+    }
+
+    public Point drawTextRectangle(String[] text, int x, int y, int rectangleMargin, Color fontColor, Color rectangleColor){
+        int textHeight = this.currentFontMetrics.getHeight();
+        Point nextPoint = new Point(x + rectangleMargin, y + rectangleMargin);
+
+        for(String str : text){
+            int currentY = nextPoint.y;
+            drawActions.add(() -> draw_text(str, x + rectangleMargin, currentY + this.currentFontMetrics.getMaxAscent(), fontColor));
+            nextPoint.x = Math.max(nextPoint.x, x + rectangleMargin + this.currentFontMetrics.stringWidth(str));
+            nextPoint.y += textHeight;
+        }
+        nextPoint.x += rectangleMargin;
+        nextPoint.y += rectangleMargin;
+
+        int currentX = nextPoint.x;
+        int currentY = nextPoint.y;
+        drawActions.add(() -> draw_rectangle(x, y, currentX, currentY, rectangleColor));
+
+        this.canvasWidth = Math.max(this.canvasWidth, nextPoint.x);
+        this.canvasHeight = Math.max(this.canvasHeight, nextPoint.y);
+
+        return new Point(nextPoint.x, nextPoint.y);
+    }
+
+    public Point drawText(String[] text, int x, int y, int margin, Color fontColor){
+        int textHeight = this.currentFontMetrics.getHeight();
+        Point nextPoint = new Point(x + margin, y + margin);
+
+        for(String str : text){
+            int currentY = nextPoint.y;
+            drawActions.add(() -> draw_text(str, x + margin, currentY + this.currentFontMetrics.getMaxAscent(), fontColor));
+            nextPoint.x = Math.max(nextPoint.x, x + margin + this.currentFontMetrics.stringWidth(str));
+            nextPoint.y += textHeight;
+        }
+        nextPoint.x += margin;
+        nextPoint.y += margin;
+
+        this.canvasWidth = Math.max(this.canvasWidth, nextPoint.x);
+        this.canvasHeight = Math.max(this.canvasHeight, nextPoint.y);
+
+        return new Point(nextPoint.x, nextPoint.y);
     }
 
     public boolean saveToFile(String filePath){

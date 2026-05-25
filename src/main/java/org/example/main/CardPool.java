@@ -2,11 +2,11 @@ package org.example.main;
 
 import org.example.spells.*;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.StringBuilder;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.ListIterator;
 
 public class CardPool{
     private List<Spell> startingDeck;
@@ -23,7 +23,7 @@ public class CardPool{
     private int maxMana = 0;
     private int manaUsage = 0;
     private int rechargeTime = 0;
-    private double recoil = 0;
+    private double recoil = 0.0;
     private double screenshake = 0.0;
     private boolean forceStopDraws = false;
 
@@ -109,6 +109,11 @@ public class CardPool{
         this.manaUsage = 0;
     }
 
+    public void setMana(int maxMana){
+        this.maxMana = maxMana;
+        this.manaUsage = 0;
+    }
+
     public int getMaxMana(){
         return this.maxMana;
     }
@@ -135,6 +140,9 @@ public class CardPool{
 
     public void addScreenshake(double screenshake){
         this.screenshake += screenshake;
+        if(this.screenshake < 0.0){
+            this.screenshake = 0.0;
+        }
     }
 
     // getters
@@ -173,7 +181,7 @@ public class CardPool{
         this.flowchart.saveToImage(filename);
     }
 
-    public int computeFlowchartImage(ImageBuilder image, int x, int y){
+    public Point computeFlowchartImage(ImageBuilder image, int x, int y){
         this.flowchart.refactor();
         return this.flowchart.toImage(image, x, y);
     }
@@ -255,21 +263,15 @@ public class CardPool{
     }
 
     public void addDeck(Spell[] spells){
-        for(int i=0; i < spells.length; i++){
-            this.deck.add(spells[i]);
-        }
+        this.deck.addAll(Arrays.asList(spells));
     }
 
     public void addHand(Spell[] spells){
-        for(int i=0; i < spells.length; i++){
-            this.hand.add(spells[i]);
-        }
+        this.hand.addAll(Arrays.asList(spells));
     }
 
     public void addDiscard(Spell[] spells){
-        for(int i=0; i < spells.length; i++){
-            this.discard.add(spells[i]);
-        }
+        this.discard.addAll(Arrays.asList(spells));
     }
 
     public void clear(){
@@ -298,10 +300,10 @@ public class CardPool{
     public void reset(Spell[] spells){
         this.startingDeck.clear();
         this.deck.clear();
-        for(int i=0; i < spells.length; i++){
-            if(spells[i] != null){
-                this.deck.add(spells[i]);
-                this.startingDeck.add(spells[i]);
+        for(Spell spell : spells){
+            if(spell != null){
+                this.deck.add(spell);
+                this.startingDeck.add(spell);
             }
         }
         this.hand.clear();
@@ -569,5 +571,62 @@ public class CardPool{
         str.append("]");
 
         return str.toString();
+    }
+
+    public String infoToString(){
+        StringBuilder result = new StringBuilder();
+
+        result.append("Mana cost: ").append(this.manaUsage);
+        if(this.rechargeTime != 0){result.append("\n").append(String.format("Recharge time: %1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
+        if(this.recoil != 0){result.append("\n").append("Recoil: ").append(this.recoil);}
+        if(this.screenshake != 0){result.append("\n").append("Screenshake: ").append(this.screenshake);}
+
+        return result.toString();
+    }
+
+    public String CastInfoToString(){
+        StringBuilder result = new StringBuilder();
+
+        result.append("Mana cost: ").append(this.manaUsage);
+        if(this.recoil != 0){result.append("\n").append("Recoil: ").append(this.recoil);}
+        if(this.screenshake != 0){result.append("\n").append("Screenshake: ").append(this.screenshake);}
+
+        return result.toString();
+    }
+
+    public boolean saveToImage(String fileName){
+        ImageBuilder imageBuilder = new ImageBuilder(new Color(0, 0, 0));
+        imageBuilder.setFont(Global.getPixelFont().deriveFont((float)15));
+
+        this.toImageNode(imageBuilder, 0, 0);
+
+        return imageBuilder.saveToFile(fileName);
+    }
+
+    public BufferedImage toImage(){
+        ImageBuilder imageBuilder = new ImageBuilder(new Color(0, 0, 0));
+        imageBuilder.setFont(Global.getPixelFont().deriveFont((float)15));
+
+        this.toImageNode(imageBuilder, 0, 0);
+
+        return imageBuilder.toImage();
+    }
+
+    public Point addToImage(ImageBuilder image, int x, int y){
+        if(image == null){
+            return new Point(x, y);
+        }
+
+        return this.toImageNode(image, x, y);
+    }
+
+    private Point toImageNode(ImageBuilder image, int x, int y){
+        String[] castInfo = this.infoToString().split("\\r?\\n");
+
+        if(castInfo.length == 1 && castInfo[0].equals("")){
+            return new Point(x, y);
+        }
+
+        return image.drawTextRectangle(castInfo, x, y, 5, Color.WHITE, Color.WHITE);
     }
 }

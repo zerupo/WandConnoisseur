@@ -40,19 +40,19 @@ public class WandConnoisseur{
         }
 
 
-        for(int i=0; i < spells.length; i++){
-            if(!newOnly || !emojis.contains(Global.truncate(spells[i].getClass().getSimpleName().toLowerCase(), 32))){
-                spells[i].createEmote();
+        for(Spell spell : spells){
+            if(!newOnly || !emojis.contains(Global.truncate(spell.getClass().getSimpleName().toLowerCase(), 32))){
+                spell.createEmote();
             }
         }
-        for(int i=0; i < projectiles.length; i++){
-            if(!newOnly || !emojis.contains(Global.truncate(projectiles[i].getClass().getSimpleName().toLowerCase(), 32))){
-                projectiles[i].createEmote();
+        for(Projectile projectile : projectiles){
+            if(!newOnly || !emojis.contains(Global.truncate(projectile.getClass().getSimpleName().toLowerCase(), 32))){
+                projectile.createEmote();
             }
         }
-        for(int i=0; i < scripts.length; i++){
-            if(!newOnly || !emojis.contains(Global.truncate(scripts[i].getClass().getSimpleName().toLowerCase(), 32))){
-                scripts[i].createEmote();
+        for(Script script : scripts){
+            if(!newOnly || !emojis.contains(Global.truncate(script.getClass().getSimpleName().toLowerCase(), 32))){
+                script.createEmote();
             }
         }
 
@@ -92,12 +92,15 @@ public class WandConnoisseur{
 
         Global.autoDeleteFiles();
 
-        for(int i=0; i < args.length; i++){
-            switch(args[i]){
+        for(String arg : args){
+            switch(arg){
                 case "-emote" -> generateEmotes = true;
                 case "-emote_new" -> generateNewEmotes = true;
                 case "-wandstat" -> generateWandstat = true;
-                default -> {System.err.println("Unknown option: " + args[i]);System.exit(1);}
+                default -> {
+                    System.err.println("Unknown option: " + arg);
+                    System.exit(1);
+                }
             }
         }
 
@@ -143,7 +146,7 @@ public class WandConnoisseur{
 
         logger.info("Registering Slash Commands...");
         jda.updateCommands().addCommands(
-            Commands.slash("cast_state", "Renvoie un menu contenant les différent cast states.")
+            Commands.slash("cast_state", "Renvoie une image ou un menu contenant les différent cast states.")
                 .addOption(OptionType.STRING, "sorts", "Sorts à séparer par des \",\", précéder par 0: max: ou inf: pour modifier les charges (défaut: inf:).", true, true)
                 .addOption(OptionType.INTEGER, "draw", "Nombre de sorts/lancer de la baguette (défaut: 1).", false)
                 .addOption(OptionType.STRING, "cast_delay", "Délais des sorts en frames ou secondes, ajouter \"f\" ou \"s\" à la fin pour préciser (défaut: 0).", false, true)

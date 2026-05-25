@@ -18,7 +18,7 @@ public class CastStateCommand implements Command{
 
     @Override
     public String getDescription() {
-        return "Renvoie un menu contenant les différent cast states.";
+        return "Renvoie une image ou un menu contenant les différent cast states.";
     }
 
     @Override
@@ -28,9 +28,6 @@ public class CastStateCommand implements Command{
         String fileName = event.getId() + ".png";
         String[] statOptions = new String[]{"draw", "cast_delay", "recharge_time", "mana_max", "mana_regen", "spread", "speed"};
         Wand wand = Global.slashInteractionToWand(event);
-        Spell[] spells;
-        String spellsEmote = "";
-        CastState[] castStates;
         boolean eventReplied = false;
         boolean statChanged = false;
 
@@ -44,14 +41,16 @@ public class CastStateCommand implements Command{
 
         event.deferReply(false).queue();
 
-        spells = wand.getSpells();
-        for(Spell spell : spells){
-            spellsEmote += spell.getEmote();
-            wand.putSpellEnd(spell);
-        }
-        castStates = wand.getCastState(true);
-
         if(menuFormat){
+            CastState[] castStates = wand.getCastState(true);
+            Spell[] spells = wand.getSpells();
+            String spellsEmote = "";
+
+            for(Spell spell : spells){
+                spellsEmote += spell.getEmote();
+                wand.putSpellEnd(spell);
+            }
+
             MenuTree menu = new MenuTree(event.getId(), "Cast state", "", Global.JPanelToFile(wand.getWandJPanel(), Global.getPathAutoDelete() + "wand_" + fileName), spellsEmote);
             for(int i=0; i < castStates.length; i++){
                 menu.addChild(castStates[i].toMenuTree("",(i + 1) + ") Cast state initial"));
@@ -73,7 +72,7 @@ public class CastStateCommand implements Command{
                 wandStatImage = Global.JPanelToUpload(wand.getStatJPanel(), "wandstats.png");
             }
             FileUpload wandImage = Global.JPanelToUpload(wand.getWandJPanel(), "wand.png");
-            FileUpload castStateImage = Global.bufferedImageToUpload(CastState.toImage(castStates), "caststate.png");
+            FileUpload castStateImage = Global.bufferedImageToUpload(wand.getCastStateImage(true), "caststate.png");
 
             if(wandStatImage != null){
                 event.getHook().editOriginal("").setFiles(wandStatImage).queue();

@@ -1,13 +1,9 @@
 package org.example.commands;
 
-import static org.example.WandConnoisseur.jda;
+import org.example.main.Global;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.requests.RestAction;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.List;
 
 public class HelpCommand implements Command{
     @Override
@@ -23,53 +19,38 @@ public class HelpCommand implements Command{
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
         OptionMapping commandeOption = event.getOption("commande");
-        String commandName;
-        RestAction<List<net.dv8tion.jda.api.interactions.commands.Command>> commandList = jda.retrieveCommands();
-        AtomicBoolean commandFound = new AtomicBoolean(false); // why ???
+        StringBuilder result = new StringBuilder();
 
         if(commandeOption != null){
-            commandName = commandeOption.getAsString();
-        }else{
-            commandName = "";
-        }
+            String commandName = commandeOption.getAsString();
+            net.dv8tion.jda.api.interactions.commands.Command command = Global.getCommand(commandName);
 
-        commandList.queue(commands -> {
-            List<String> result = new ArrayList<>();
-            for(net.dv8tion.jda.api.interactions.commands.Command command : commands){
-                if(commandeOption == null){
-                    result.add("- **" + command.getName() + "**: " + command.getDescription());
-                }else if(command.getName().equals(commandName)){
-                    commandFound.set(true);
-                    List<net.dv8tion.jda.api.interactions.commands.Command.Option> options = command.getOptions();
-                    for(net.dv8tion.jda.api.interactions.commands.Command.Option option : options){
-                        result.add("- **" + option.getName() + "**: " + option.getDescription());
-                    }
-                    break;
-                }
+            if(command == null){
+                event.reply("Commande \"" + commandName + "\" inconnue").setEphemeral(true).queue();
+                return;
             }
-            if(commandeOption == null){
-                result.sort(String::compareTo);
+
+            for(net.dv8tion.jda.api.interactions.commands.Command.Option option : command.getOptions()){
+                result.append("\n").append("- **").append(option.getName()).append("**: ").append(option.getDescription());
             }
-            if(result.size() == 0){
-                if(commandeOption == null){
-                    event.reply("Aucune commande n'as été trouvée.").setEphemeral(true).queue();
-                }else{
-                    if(commandFound.get()){
-                        event.reply("Aucune option pour la commande " + commandName).setEphemeral(true).queue();
-                    }else{
-                        event.reply("Commande inconnue").setEphemeral(true).queue();
-                    }
-                }
+
+            if(result.isEmpty()){
+                event.reply("Aucune option pour la commande " + commandName + "").setEphemeral(true).queue();
             }else{
-                if(commandeOption == null){
-                    event.reply("Liste des commandes disponibles:\n\n" + String.join("\n", result)).queue();
-                }else{
-                    event.reply("Liste des options disponibles pour la commande **" + commandName + "**:\n\n" + String.join("\n", result)).queue();
-                }
+                event.reply("Liste des options disponibles pour la commande **" + commandName + "**:\n" + result).queue();
             }
-        }, failure -> {
-            event.reply("Erreur lors de la récupération des commandes").setEphemeral(true).queue();
-            System.out.println("Failed to retrieve commands: " + failure.getMessage());
-        });
+        }else{
+            net.dv8tion.jda.api.interactions.commands.Command[] commandList = Global.getCommandList();
+
+            for(net.dv8tion.jda.api.interactions.commands.Command command : commandList){
+                result.append("\n").append("- **").append(command.getName()).append("**: ").append(command.getDescription());
+            }
+
+            if(result.isEmpty()){
+                event.reply("Aucune commande disponible").setEphemeral(true).queue();
+            }else{
+                event.reply("Liste des commandes disponibles:\n" + result).queue();
+            }
+        }
     }
 }

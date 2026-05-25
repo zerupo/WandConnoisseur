@@ -4,6 +4,7 @@ import org.example.commands.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -28,14 +29,14 @@ public class CommandListener extends ListenerAdapter{
         commands.put("sort_info", new SpellInfoCommand());
         commands.put("texte", new TextCommand());
         commands.put("wisp", new WispCommand());
-        logger.info("Registered {} commands.", commands.size());
+        logger.info("Registered " + commands.size() + " commands.");
     }
 
     @Override
     public void onReady(@NotNull ReadyEvent event){
-        logger.info("JDA is ready! Logged in as {}#{}",
-                event.getJDA().getSelfUser().getName(),
-                event.getJDA().getSelfUser().getDiscriminator());
+        SelfUser user = event.getJDA().getSelfUser();
+
+        logger.info("JDA is ready! Logged in as " + user.getName() + "#" + user.getDiscriminator());
     }
 
     @Override
@@ -44,10 +45,12 @@ public class CommandListener extends ListenerAdapter{
         Command command = commands.get(commandName);
 
         if(command != null){
-            logger.debug("Executing slash command: {} from user: {}", commandName, event.getUser().getName());
+            long startTime = System.nanoTime();
+            logger.debug("User \033[0;31m" + event.getUser().getName() + "\u001b[0;0m executing slash command \"" + event.getInteraction().getCommandString() + "\"");
             command.executeSlash(event);
+            logger.debug("Executed slash command in " + (System.nanoTime() - startTime)/1000000.0 + "ms \"" + event.getInteraction().getCommandString() + "\"");
         }else{
-            logger.warn("Unknown slash command: {} from user: {}", commandName, event.getUser().getName());
+            logger.warn("Unknown slash command: " + commandName + " from user: \033[0;31m" + event.getUser().getName() + "\u001b[0;0m");
             event.reply("Unknown command!").setEphemeral(true).queue();
         }
     }

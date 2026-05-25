@@ -279,10 +279,12 @@ public class Flowchart{
         }
     }
 
-    public int toImage(ImageBuilder image, int x, int y){
+    public Point toImage(ImageBuilder image, int x, int y){
         if(this.isRoot){
             image.setFont(Global.getPixelFont().deriveFont((float)15));
-            return (int)this.toImageNode(image, x, y).getY() + 40;
+            Point tempPoint = this.toImageNode(image, x, y);
+            tempPoint.y += 40;
+            return tempPoint;
         }else{
             return this.root.toImage(image, x, y);
         }
