@@ -493,7 +493,7 @@ public abstract class Spell{
 
     public void createEmote(){
         try{
-            BufferedImage type = ImageIO.read(new File(imagePath + this.getTypeImage()));
+            BufferedImage type = ImageIO.read(new File(imagePath + this.getTypeImageEmote()));
             String name = this.getClass().getSimpleName().toLowerCase();
             if(name.equals("")){
                 name = "spell";
@@ -515,6 +515,19 @@ public abstract class Spell{
             case material -> "item_bg_material.png";
             case multicast -> "item_bg_draw_many.png";
             default -> "item_bg_other.png";
+        };
+    }
+
+    private String getTypeImageEmote(){
+        return switch(this.type){
+            case projectile -> "item_bg_projectile_emote.png";
+            case static_projectile -> "item_bg_static_projectile_emote.png";
+            case passif -> "item_bg_passive_emote.png";
+            case utility -> "item_bg_utility_emote.png";
+            case modifier -> "item_bg_modifier_emote.png";
+            case material -> "item_bg_material_emote.png";
+            case multicast -> "item_bg_draw_many_emote.png";
+            default -> "item_bg_other_emote.png";
         };
     }
 
