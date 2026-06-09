@@ -375,25 +375,43 @@ public class Wand{
     public BufferedImage getCastStateImage(boolean allCasts){
         InfoResult result = new InfoResult(new CastState[0], null, new ImageBuilder(new Color(0, 0, 0)), null, null);
         this.getAllInfo(allCasts, result, false);
-        return result.castStateImage.toImage();
+        return result.castStateImage.toPNG();
+    }
+
+    public byte[] getCastStateImageSVG(boolean allCasts, boolean embed){
+        InfoResult result = new InfoResult(new CastState[0], null, new ImageBuilder(new Color(0, 0, 0)), null, null);
+        this.getAllInfo(allCasts, result, false);
+        return result.castStateImage.toBytes(embed);
     }
 
     public boolean saveCastStateImage(String filename, boolean allCasts){
         InfoResult result = new InfoResult(new CastState[0], null, new ImageBuilder(new Color(0, 0, 0)), null, null);
         this.getAllInfo(allCasts, result, false);
-        return result.castStateImage.saveToFile(filename);
+        return result.castStateImage.saveAsPNG(filename);
     }
 
     public BufferedImage getFlowchartImage(boolean allCasts){
         InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null, null);
         this.getAllInfo(allCasts, result, false);
-        return result.flowchartImage.toImage();
+        return result.flowchartImage.toPNG();
     }
 
     public boolean saveFlowchartImage(String filename, boolean allCasts){
         InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null, null);
         this.getAllInfo(allCasts, result, false);
-        return result.flowchartImage.saveToFile(filename);
+        return result.flowchartImage.saveAsPNG(filename);
+    }
+
+    public byte[] getFlowchartImageSVG(boolean allCasts, boolean embed){
+        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null, null);
+        this.getAllInfo(allCasts, result, false);
+        return result.flowchartImage.toBytes(embed);
+    }
+
+    public boolean saveFlowchartImageSVG(String filename, boolean allCasts, boolean embed){
+        InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null, null);
+        this.getAllInfo(allCasts, result, false);
+        return result.flowchartImage.saveAsSVG(filename, embed);
     }
 
     public boolean cast(){

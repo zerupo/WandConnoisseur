@@ -4,7 +4,6 @@ import org.example.main.Global;
 import org.example.main.SpellFilter;
 import org.example.spells.*;
 
-import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -78,12 +77,6 @@ public class SpellListCommand implements Command{
 
         event.deferReply(false).queue();
         event.getHook().editOriginal(result.toString()).queue();
-
-        try{
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
         for(int i=0; i < spellList.length; i++){
             if(i != 0){

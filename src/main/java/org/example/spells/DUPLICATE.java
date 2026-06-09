@@ -36,8 +36,8 @@ public class DUPLICATE extends Spell{
                 copy(cardPool, castState, currentSpell, recursionLevel);
             }
         }
-        castState.setCastDelay(this.castDelay);
-        cardPool.setRechargeTime(this.rechargeTime);
+        castState.addCastDelay(this.castDelay);
+        cardPool.addRechargeTime(this.rechargeTime);
 
         cardPool.draw(1, true, castState);
     }

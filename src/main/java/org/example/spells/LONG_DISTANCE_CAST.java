@@ -3,6 +3,7 @@ package org.example.spells;
 import org.example.config.EmoteConfig;
 import org.example.main.*;
 import org.example.projectiles.PROJECTILE_LONG_DISTANCE_CAST;
+import org.example.projectiles.Projectile;
 
 import java.lang.invoke.MethodHandles;
 
@@ -18,15 +19,18 @@ public class LONG_DISTANCE_CAST extends Spell{
         this.description = "Casts a spell some distance away from the caster";
         this.type = SpellType.utility;
         this.relatedProjectile = new PROJECTILE_LONG_DISTANCE_CAST();
+        this.triggerType = Projectile.TriggerType.expiration;
         this.spawnProbabilities = new SpawnProbabilities(0.6, 0.7, 0.8, 0, 0.6, 0.3, 0.4, 0, 0, 0, 0);
         this.price = 90;
         this.manaCost = 0;
+        this.autoStat = false;
         this.castDelay = -5;
     }
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        castState.addProjectile(this.relatedProjectile.clone());
+        cardPool.draw(3, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
+        castState.addCastDelay(this.castDelay);
     }
 }
 

@@ -73,134 +73,143 @@ class Expression{
     private final String value1;
     private final String value2;
     private final Operator operator;
-    private LogicGate logicGate;
-    private Expression expression;
+    private final LogicGate logicGate;
+    private final Expression left;
+    private final Expression right;
 
-    // leaf
-    public Expression(String value1, Operator operator, String value2){
+    public Expression(String value1, Operator operator, String value2) {
         this.value1 = value1.toLowerCase().trim();
         this.operator = operator;
         this.value2 = value2.toLowerCase().trim();
         this.logicGate = null;
-        this.expression = null;
+        this.left = null;
+        this.right = null;
     }
 
-    // node
-    public Expression(String value1, Operator operator, String value2, LogicGate logicGate, Expression expression){
-        this.value1 = value1.toLowerCase().trim();
-        this.operator = operator;
-        this.value2 = value2.toLowerCase().trim();
+    public Expression(Expression left, LogicGate logicGate, Expression right){
+        this.value1 = null;
+        this.operator = null;
+        this.value2 = null;
+        this.left = left;
         this.logicGate = logicGate;
-        this.expression = expression;
+        this.right = right;
     }
 
-    public void add(LogicGate logicGate, Expression expression){
-        this.logicGate = logicGate;
-        this.expression = expression;
+    public boolean isLeaf(){
+        return this.logicGate == null;
     }
 
     public Result evaluate(Spell spell){
-        Function<Spell, TypedProperty> resolver = SpellFilter.PROPERTY_RESOLVERS.get(this.value1.toLowerCase());
-        TypedProperty typedProperty;
+        if(!this.isLeaf()){
+            Result leftResult = this.left.evaluate(spell);
+
+            if(leftResult.getState() == State.INVALID || leftResult.getState() == State.TRUE && this.logicGate == LogicGate.OR || leftResult.getState() == State.FALSE && this.logicGate == LogicGate.AND){
+                return leftResult;
+            }
+
+            return this.right.evaluate(spell);
+        }
+
+        return evaluateLeaf(spell);
+    }
+
+    private Result evaluateLeaf(Spell spell){
+        Function<Spell, TypedProperty> resolver = SpellFilter.PROPERTY_RESOLVERS.get(this.value1);
         Result result = new Result(State.INVALID, "Erreur inconnue");
-        boolean valueBoolean;
-        int[] valueInt = new int[2];
-        double[] valueDouble = new double[2];
 
         if(resolver == null){
             result.setState(State.INVALID, "\"" + this + "\" -> la propriété \"" + this.value1 + "\" est inconnue");
             return result;
         }
 
-        typedProperty = resolver.apply(spell);
+        TypedProperty typedProperty = resolver.apply(spell);
         if(typedProperty == null){
             return result;
         }
 
-        if(typedProperty.value() == null){
-            result.setState(State.FALSE);
-        }else{
-            switch(typedProperty.type()){
-                case BOOLEAN -> {
-                    if(this.operator != Operator.EQUALS && this.operator != Operator.DIFFERENT){
-                        result.setError("\"" + this + "\" -> \"" + operatorToString(this.operator) + "\" n'est pas un comparateur valide pour un booléen");
-                        return result;
-                    }
-                    if(!this.value2.equalsIgnoreCase("true") && !this.value2.equalsIgnoreCase("false")){
-                        result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un booléen valide, remplacez par \"true\" ou \"false\"");
-                        return result;
-                    }
-
-                    valueBoolean = (Boolean)typedProperty.value();
-                    if(this.operator == Operator.DIFFERENT){
-                        valueBoolean = !valueBoolean;
-                    }
-                    result.setState((valueBoolean == Boolean.parseBoolean(this.value2)) ? State.TRUE : State.FALSE);
+        switch(typedProperty.type()){
+            case BOOLEAN -> {
+                if(this.operator != Operator.EQUALS && this.operator != Operator.DIFFERENT){
+                    result.setError("\"" + this + "\" -> \"" + operatorToString(this.operator) + "\" n'est pas un comparateur valide pour un booléen");
+                    return result;
                 }
-                case INT -> {
-                    if(this.value2.equalsIgnoreCase("true") || this.value2.equalsIgnoreCase("false")){
-                        result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un entier valide");
-                        return result;
-                    }
 
-                    valueInt[0] = (Integer) typedProperty.value();
-                    valueInt[1] = Integer.parseInt(this.value2);
-                    result.setState(switch(this.operator){
-                        case GREATER -> (valueInt[0] > valueInt[1]) ? State.TRUE : State.FALSE;
-                        case GREATER_OR_EQUAL -> (valueInt[0] >= valueInt[1]) ? State.TRUE : State.FALSE;
-                        case LOWER -> (valueInt[0] < valueInt[1]) ? State.TRUE : State.FALSE;
-                        case LOWER_OR_EQUAL -> (valueInt[0] <= valueInt[1]) ? State.TRUE : State.FALSE;
-                        case EQUALS -> (valueInt[0] == valueInt[1]) ? State.TRUE : State.FALSE;
-                        case DIFFERENT -> (valueInt[0] != valueInt[1]) ? State.TRUE : State.FALSE;
-                    });
+                boolean valueBoolean = (Boolean)typedProperty.value();
+                switch(this.value2){
+                    case "true" -> result.setState((this.operator == Operator.EQUALS) == valueBoolean ? State.TRUE : State.FALSE);
+                    case "false" -> result.setState((this.operator == Operator.DIFFERENT) == valueBoolean ? State.TRUE : State.FALSE);
+                    case default -> result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un booléen valide, remplacez par \"true\" ou \"false\"");
                 }
-                case DOUBLE -> {
-                    if(this.value2.equalsIgnoreCase("true") || this.value2.equalsIgnoreCase("false")){
-                        result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un nombre valide");
-                        return result;
-                    }
+            }
+            case INT -> {
+                int actual = (Integer)typedProperty.value();
+                int expected;
+                try{
+                    expected = Integer.parseInt(this.value2);
+                }catch(NumberFormatException e){
+                    result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un entier valide");
+                    return result;
+                }
 
-                    valueDouble[0] = (Double) typedProperty.value();
-                    valueDouble[1] = Double.parseDouble(this.value2);
-                    result.setState(switch(this.operator){
-                        case GREATER -> (valueDouble[0] > valueDouble[1]) ? State.TRUE : State.FALSE;
-                        case GREATER_OR_EQUAL -> (valueDouble[0] >= valueDouble[1]) ? State.TRUE : State.FALSE;
-                        case LOWER -> (valueDouble[0] < valueDouble[1]) ? State.TRUE : State.FALSE;
-                        case LOWER_OR_EQUAL -> (valueDouble[0] <= valueDouble[1]) ? State.TRUE : State.FALSE;
-                        case EQUALS -> (valueDouble[0] == valueDouble[1]) ? State.TRUE : State.FALSE;
-                        case DIFFERENT -> (valueDouble[0] != valueDouble[1]) ? State.TRUE : State.FALSE;
-                    });
+                result.setState(
+                        switch(this.operator){
+                            case GREATER -> actual > expected ? State.TRUE : State.FALSE;
+                            case GREATER_OR_EQUAL -> actual >= expected ? State.TRUE : State.FALSE;
+                            case LOWER -> actual < expected ? State.TRUE : State.FALSE;
+                            case LOWER_OR_EQUAL -> actual <= expected ? State.TRUE : State.FALSE;
+                            case EQUALS -> actual == expected ? State.TRUE : State.FALSE;
+                            case DIFFERENT -> actual != expected ? State.TRUE : State.FALSE;
+                        }
+                );
+            }
+            case DOUBLE -> {
+                double actual = (Double)typedProperty.value();
+                double expected;
+                try{
+                    expected = Double.parseDouble(this.value2);
+                }catch(NumberFormatException e){
+                    result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un nombre valide");
+                    return result;
                 }
+
+                result.setState(
+                        switch(this.operator){
+                            case GREATER -> actual > expected ? State.TRUE : State.FALSE;
+                            case GREATER_OR_EQUAL -> actual >= expected ? State.TRUE : State.FALSE;
+                            case LOWER -> actual < expected ? State.TRUE : State.FALSE;
+                            case LOWER_OR_EQUAL -> actual <= expected ? State.TRUE : State.FALSE;
+                            case EQUALS -> actual == expected ? State.TRUE : State.FALSE;
+                            case DIFFERENT -> actual != expected ? State.TRUE : State.FALSE;
+                        }
+                );
             }
         }
 
-        if(this.expression == null || result.getState() == State.INVALID || result.getState() == State.TRUE && this.logicGate == LogicGate.OR || result.getState() == State.FALSE && this.logicGate == LogicGate.AND){
-            return result;
-        }
-
-        return this.expression.evaluate(spell);
+        return result;
     }
 
     public String toString(){
-        return this.value1 + " " + operatorToString(this.operator) + " " + this.value2;
+        if(isLeaf()){
+            return this.value1 + " " + operatorToString(this.operator) + " " + this.value2;
+        }
+
+        return "(" + this.left + " " + this.logicGate + " " + this.right + ")";
     }
 
-    private String operatorToString(Operator operator){
-        String result = "";
-        result = switch(operator){
+    private static String operatorToString(Operator operator){
+        return switch(operator){
             case GREATER -> ">";
             case GREATER_OR_EQUAL -> ">=";
             case LOWER -> "<";
             case LOWER_OR_EQUAL -> "<=";
             case EQUALS -> "=";
-            case DIFFERENT -> " !=";
+            case DIFFERENT -> "!=";
         };
-        return result;
     }
 }
 
 class ExpressionParser{
-    private final Pattern p = Pattern.compile("^ *(?i)([a-z0-9_]+) *([><]=?|!?=) *([+-]?[0-9]+(?:\\.[0-9]+)?|true|false) *$");
+    private final static Pattern pattern = Pattern.compile("^ *(?i)([a-z0-9_]+) *([><]=?|!?=) *([+-]?[0-9]+(?:\\.[0-9]+)?|true|false) *$");
     private final String[] tokens;
     private int pos = 0;
 
@@ -213,23 +222,27 @@ class ExpressionParser{
         return this.parseOr();
     }
 
-    private Expression parseOr(){
+    private Expression parseOr() {
         Expression left = parseAnd();
+
         while(pos < tokens.length && tokens[pos].equals("or")){
-            pos++; // skip "or"
+            pos++;
             Expression right = parseAnd();
-            left.add(LogicGate.OR, right);
+            left = new Expression(left, LogicGate.OR, right);
         }
+
         return left;
     }
 
     private Expression parseAnd(){
         Expression left = parsePrimary();
+
         while(pos < tokens.length && tokens[pos].equals("and")){
-            pos++; // skip "and"
+            pos++;
             Expression right = parsePrimary();
-            left.add(LogicGate.AND, right);
+            left = new Expression(left, LogicGate.AND, right);
         }
+
         return left;
     }
 
@@ -258,9 +271,9 @@ class ExpressionParser{
 
         String expr = tokens[pos++];
 
-        Matcher m = this.p.matcher(expr);
+        Matcher m = pattern.matcher(expr);
         if(m.find()){
-            Operator operator = switch (m.group(2)){
+            Operator operator = switch(m.group(2)){
                 case ">" -> Operator.GREATER;
                 case ">=" -> Operator.GREATER_OR_EQUAL;
                 case "<" -> Operator.LOWER;
@@ -353,10 +366,14 @@ class ExpressionParser{
 public class SpellFilter{
     public static final Map<String, Function<Spell, TypedProperty>> PROPERTY_RESOLVERS = Map.ofEntries(
         // boolean
+        entry("friendly_fire", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getFriendlyFire())),
         entry("has_charges", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getHasCharges())),
         entry("has_related_projectile", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getRelatedProjectile() != null)),
+        entry("multiply_speed", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getMultiplySpeed())),
         entry("never_unlimited", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getNeverUnlimited())),
         entry("recursive", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getRecursive())),
+        entry("set_cast_delay", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetCastDelay())),
+        entry("set_friendly_fire", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetFriendlyFire())),
         entry("set_recoil", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetRecoil())),
 
         // int
@@ -391,10 +408,12 @@ public class SpellFilter{
         entry("damage_projectile", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getDamageComponent().getProjectile())),
         entry("damage_radioactive", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getDamageComponent().getRadioactive())),
         entry("damage_slice", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getDamageComponent().getSlice())),
+        entry("gravity", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getGravity())),
         entry("projectile_speed_min", spell -> {Projectile projectile = spell.getRelatedProjectile(); return new TypedProperty(PropertyType.DOUBLE, projectile != null ? projectile.getSpeedMin() : null);}),
         entry("projectile_speed_max", spell -> {Projectile projectile = spell.getRelatedProjectile(); return new TypedProperty(PropertyType.DOUBLE, projectile != null ? projectile.getSpeedMax() : null);}),
         entry("recoil", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getRecoil())),
         entry("screenshake", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getScreenshake())),
+        entry("speed", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpeed())),
         entry("spread", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpread())),
         entry("t0", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[0])),
         entry("t1", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getSpawnProbability()[1])),
@@ -420,14 +439,18 @@ public class SpellFilter{
         entry("type", spell -> spell.getType().toString()),
 
         // boolean
+        entry("friendly_fire", spell -> String.valueOf(spell.getFriendlyFire())),
         entry("has_charges", spell -> String.valueOf(spell.getHasCharges())),
         entry("has_related_projectile", spell -> String.valueOf(spell.getRelatedProjectile() != null)),
+        entry("multiply_speed", spell -> String.valueOf(spell.getMultiplySpeed())),
         entry("never_unlimited", spell -> String.valueOf(spell.getNeverUnlimited())),
         entry("recursive", spell -> String.valueOf(spell.getRecursive())),
+        entry("set_cast_delay", spell -> String.valueOf(spell.getSetCastDelay())),
+        entry("set_friendly_fire", spell -> String.valueOf(spell.getSetFriendlyFire())),
         entry("set_recoil", spell -> String.valueOf(spell.getSetRecoil())),
 
         // int
-        entry("cast_delay", spell -> String.format("%1$df (%2$3.2fs)", spell.getCastDelay(), spell.getCastDelay()/60.0)),
+        entry("cast_delay", spell -> (spell.getSetCastDelay() ? "=" : "") + String.format("%1$df (%2$3.2fs)", spell.getCastDelay(), spell.getCastDelay()/60.0)),
         entry("crit_rate", spell -> String.valueOf(spell.getCritRate()) + "%"),
         entry("lifetime", spell -> String.format("%1$df (%2$3.2fs)", spell.getLifetime(), spell.getLifetime()/60.0)),
         entry("mana", spell -> String.valueOf(spell.getManaCost())),
@@ -458,10 +481,12 @@ public class SpellFilter{
         entry("damage_projectile", spell -> String.valueOf(spell.getDamageComponent().getProjectile())),
         entry("damage_radioactive", spell -> String.valueOf(spell.getDamageComponent().getRadioactive())),
         entry("damage_slice", spell -> String.valueOf(spell.getDamageComponent().getSlice())),
+        entry("gravity", spell -> String.valueOf(spell.getGravity())),
         entry("projectile_speed_min", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getSpeedMin()) : "<null>";}),
         entry("projectile_speed_max", spell -> {Projectile projectile = spell.getRelatedProjectile(); return projectile != null ? String.valueOf(projectile.getSpeedMax()) : "<null>";}),
         entry("recoil", spell -> (spell.getSetRecoil() ? "=" : "") + String.valueOf(spell.getRecoil())),
         entry("screenshake", spell -> String.valueOf(spell.getScreenshake())),
+        entry("speed", spell -> (spell.getMultiplySpeed() ? "x" : "") +  String.valueOf(spell.getSpeed())),
         entry("spread", spell -> String.valueOf(spell.getSpread()) + "°"),
         entry("t0", spell -> String.valueOf(spell.getSpawnProbability()[0])),
         entry("t1", spell -> String.valueOf(spell.getSpawnProbability()[1])),

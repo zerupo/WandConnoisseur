@@ -28,23 +28,24 @@ public class PIPE_BOMB_DEATH_TRIGGER extends Spell{
         this.autoStat = false;
         this.castDelay = 30;
         this.recoil = 60.0;
+        this.speed = 0.75;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addCastDelay(this.castDelay);
-        /*c.child_speed_multiplier = c.child_speed_multiplier * 0.75
-		c.speed_multiplier = c.speed_multiplier * 0.75*/
+        // c.child_speed_multiplier = c.child_speed_multiplier * 0.75
+        castState.multiplySpeed(this.speed);
 
         cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
 
         cardPool.addRecoil(this.recoil);
-        /*if ( c.speed_multiplier >= 20 ) then
-			c.speed_multiplier = math.min( c.speed_multiplier, 20 )
-		elseif ( c.speed_multiplier < 0 ) then
-			c.speed_multiplier = 0
-		end*/
+        if(castState.getSpeedMultiplier() > 20.0){
+            castState.setSpeedMultiplier(20.0);
+        }else if(castState.getSpeedMultiplier() < 0.0){
+            castState.setSpeedMultiplier(0.0);
+        }
     }
 }
 

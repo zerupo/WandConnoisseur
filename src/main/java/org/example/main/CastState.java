@@ -109,7 +109,10 @@ public class CastState{
     private int lifetime = 0;
     private int critRate = 0;
     private int pattern = 0;
-    private double spread = 0;
+    private double spread = 0.0;
+    private double gravity = 0.0;
+    private boolean friendlyFire = false;
+    private double speedMultiplier = 1.0;
 
     public CastState(){
         // nothing
@@ -130,6 +133,9 @@ public class CastState{
         castState.critRate = this.critRate;
         castState.pattern = this.pattern;
         castState.spread = this.spread;
+        castState.gravity = this.gravity;
+        castState.friendlyFire = this.friendlyFire;
+        castState.speedMultiplier = this.speedMultiplier;
 
         return castState;
     }
@@ -167,6 +173,18 @@ public class CastState{
         return this.spread;
     }
 
+    public double getGravity(){
+        return this.gravity;
+    }
+
+    public boolean getFriendlyFire(){
+        return this.friendlyFire;
+    }
+
+    public double getSpeedMultiplier(){
+        return this.speedMultiplier;
+    }
+
     // setters
     public void setCastDelay(int castDelay){
         this.castDelay = castDelay;
@@ -196,6 +214,18 @@ public class CastState{
         this.spread = spread;
     }
 
+    public void setGravity(double gravity){
+        this.gravity = gravity;
+    }
+
+    public void setFriendlyFire(boolean friendlyFire){
+        this.friendlyFire = friendlyFire;
+    }
+
+    public void setSpeedMultiplier(double speedMultiplier){
+        this.speedMultiplier = speedMultiplier;
+    }
+
     // adders
     public void addCastDelay(int castDelay){
         this.castDelay += castDelay;
@@ -219,6 +249,36 @@ public class CastState{
 
     public void addSpread(double spread){
         this.spread += spread;
+    }
+
+    public void addGravity(double gravity){
+        this.gravity += gravity;
+    }
+
+    public void multiplySpeed(double speed, double min, double max){
+        this.speedMultiplier *= speed;
+        if(this.speedMultiplier > max){
+            this.speedMultiplier = max;
+        }else if(this.speedMultiplier < min){
+            this.speedMultiplier = min;
+        }
+    }
+
+    public void multiplySpeed(double speed){
+        this.speedMultiplier *= speed;
+    }
+
+    public void addSpeed(double speed, double min, double max){
+        this.speedMultiplier += speed;
+        if(this.speedMultiplier > max){
+            this.speedMultiplier = max;
+        }else if(this.speedMultiplier < min){
+            this.speedMultiplier = min;
+        }
+    }
+
+    public void addSpeed(double speed){
+        this.speedMultiplier += speed;
     }
 
     public void addProjectile(Projectile projectile){
@@ -355,6 +415,9 @@ public class CastState{
         if(this.critRate != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Crit rate: ").append(this.critRate).append("%");}
         if(this.pattern != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Pattern: ").append(this.pattern).append(discordFormat ? "°" : " deg");}
         if(this.spread != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Spread: ").append(this.spread).append(discordFormat ? "°" : " deg");}
+        if(this.gravity != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Gravity: ").append(this.gravity);}
+        if(this.friendlyFire){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Friendly fire: true");}
+        if(this.speedMultiplier != 1.0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Speed multiplier: x").append(this.speedMultiplier);}
 
         if(!discordFormat){
             return innerBuilder.toString();
@@ -413,21 +476,21 @@ public class CastState{
         for(int i=0; i < castStates.length; i++){
             y = castStates[i].toImage(imageBuilder, 0, y).y + 40;
         }
-        return imageBuilder.saveToFile(filename);
+        return imageBuilder.saveAsPNG(filename);
     }
 
     public boolean saveToImage(String filename){
         ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
         image.setFont(Global.getPixelFont().deriveFont((float)15));
         this.toImageNode(image, 0, 0);
-        return image.saveToFile(filename);
+        return image.saveAsPNG(filename);
     }
 
     public BufferedImage toImage(){
         ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
         image.setFont(Global.getPixelFont().deriveFont((float)15));
         this.toImageNode(image, 0, 0);
-        return image.toImage();
+        return image.toPNG();
     }
 
     public static void addToImage(int x, int y, ImageBuilder imageBuilder, String globalValues, String[] castValues, CastState[] castStates){
@@ -450,7 +513,7 @@ public class CastState{
 
         addToImage(0, 0, imageBuilder, globalValues, castValues, castStates);
 
-        return imageBuilder.toImage();
+        return imageBuilder.toPNG();
     }
 
     public static void addToImage(int x, int y, ImageBuilder imageBuilder, CastState[] castStates){
@@ -466,7 +529,7 @@ public class CastState{
 
         addToImage(0, 0, imageBuilder, castStates);
 
-        return imageBuilder.toImage();
+        return imageBuilder.toPNG();
     }
 
     private Point toImage(ImageBuilder image, int x, int y){
@@ -552,7 +615,7 @@ public class CastState{
         for(Projectile projectile : soloProjectiles){
             currentImage = projectile.getImage();
             if(currentImage != null){
-                image.addImage(currentImage, nextX, y + boxInsideMargin);
+                image.addImage(currentImage, nextX, y + boxInsideMargin, projectile.getClass().getSimpleName());
                 nextX += currentImage.getWidth();
                 nextY = Math.max(nextY, y + boxInsideMargin + currentImage.getHeight());
             }
@@ -562,7 +625,7 @@ public class CastState{
         for(CastStateProjectile castStateProjectile : multiProjectiles){
             currentImage = castStateProjectile.getProjectile().getImage();
             if(currentImage != null){
-                image.addImage(currentImage, x + boxInsideMargin, nextY);
+                image.addImage(currentImage, x + boxInsideMargin, nextY, castStateProjectile.getProjectile().getClass().getSimpleName());
                 tempPoint = image.drawText("x" + castStateProjectile.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
                 nextX = Math.max(nextX, tempPoint.x);
                 nextY += currentImage.getHeight();
@@ -581,7 +644,7 @@ public class CastState{
         for(Script script : soloScript){
             currentImage = script.getImage();
             if(currentImage != null){
-                image.addImage(currentImage, tempPoint.x, tempPoint.y);
+                image.addImage(currentImage, tempPoint.x, tempPoint.y, script.getClass().getSimpleName());
                 tempPoint.setLocation(tempPoint.x + currentImage.getWidth(), tempPoint.y);
                 nextX = Math.max(nextX, tempPoint.x);
                 nextY = Math.max(nextY, tempPoint.y + currentImage.getHeight());
@@ -592,7 +655,7 @@ public class CastState{
         for(CastStateScript castStateScript : multiScript){
             currentImage = castStateScript.getScript().getImage();
             if(currentImage != null){
-                image.addImage(currentImage, x + boxInsideMargin, nextY);
+                image.addImage(currentImage, x + boxInsideMargin, nextY, castStateScript.getScript().getClass().getSimpleName());
                 tempPoint = image.drawText("x" + castStateScript.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
                 nextX = Math.max(nextX, tempPoint.x);
                 nextY += currentImage.getHeight();
@@ -610,7 +673,7 @@ public class CastState{
         nextY += boxInsideMargin;
         nextX = Math.max(nextX, x + imageSize);
         nextY = Math.max(nextY, y + imageSize);
-        image.drawRectangle(x, y, nextX, nextY, Color.WHITE);
+        image.drawRectangle(x, y, nextX, nextY, Color.WHITE, false);
 
         for(Projectile projectile : triggerProjectiles){
             if(triggerY != y){
@@ -619,11 +682,11 @@ public class CastState{
             image.drawArrow(nextX, y + imageSize/2, nextX + arrowSizeX, triggerY + imageSize/2, Color.WHITE, true, false);
             currentImage = projectile.getImage();
             if(currentImage != null){
-                image.addImage(currentImage, nextX + arrowSizeX, triggerY);
+                image.addImage(currentImage, nextX + arrowSizeX, triggerY, projectile.getClass().getSimpleName());
                 switch(projectile.getTriggerType()){
-                    case trigger -> {if(triggerImage != null){image.addImage(triggerImage, nextX + arrowSizeX, triggerY);}}
-                    case timer -> {if(timerImage != null){image.addImage(timerImage, nextX + arrowSizeX, triggerY);}}
-                    case expiration -> {if(expirationImage != null){image.addImage(expirationImage, nextX + arrowSizeX, triggerY);}}
+                    case trigger -> {if(triggerImage != null){image.addImage(triggerImage, nextX + arrowSizeX, triggerY, "TRIGGER");}}
+                    case timer -> {if(timerImage != null){image.addImage(timerImage, nextX + arrowSizeX, triggerY, "TIMER");}}
+                    case expiration -> {if(expirationImage != null){image.addImage(expirationImage, nextX + arrowSizeX, triggerY, "EXPIRATION");}}
                 }
             }
             triggerY = Math.max(triggerY, projectile.getTriggerCastState().toImageNode(image, nextX + arrowSizeX + imageSize, triggerY).y);

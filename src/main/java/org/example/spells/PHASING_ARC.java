@@ -24,8 +24,8 @@ public class PHASING_ARC extends Spell{
         this.manaCost = 2;
         this.autoStat = false;
         this.castDelay = -12;
-        //this.speedMultiplier = 0.33;
         this.lifetime = 80;
+        this.speed = 0.33;
     }
 
     // TODO
@@ -34,14 +34,9 @@ public class PHASING_ARC extends Spell{
         castState.addScript(this.relatedScripts);
         cardPool.draw(1, true, castState);
         castState.addCastDelay(this.castDelay);
-        // castState.addSpeedMultiplier(this.speed);
         castState.addLifetime(this.lifetime);
-
-        /*if ( c.speed_multiplier >= 20 ) then
-			c.speed_multiplier = math.min( c.speed_multiplier, 20 )
-		elseif ( c.speed_multiplier < 0 ) then
-			c.speed_multiplier = 0
-		end*/
+        castState.multiplySpeed(this.speed, 0.0, 20.0);
+        // c.child_speed_multiplier	= c.child_speed_multiplier * 0.33
     }
 }
 

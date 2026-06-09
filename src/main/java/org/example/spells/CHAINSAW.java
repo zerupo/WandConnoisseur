@@ -21,13 +21,14 @@ public class CHAINSAW extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
         this.price = 80;
         this.manaCost = 1;
+        this.setCastDelay = true;
+        this.castDelay = 0;
         this.rechargeTime = -10;
         this.spread = 6.0;
     }
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        castState.setCastDelay(0);
         castState.addProjectile(this.relatedProjectile.clone());
     }
 }

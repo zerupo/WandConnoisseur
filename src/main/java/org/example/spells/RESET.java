@@ -29,8 +29,8 @@ public class RESET extends Spell{
         cardPool.discardAllDeck();
 
         if(!cardPool.getForceStopDraws()){
-            cardPool.wrap();
             cardPool.setForceStopDraws(true);
+            cardPool.refreshWrap();
         }
     }
 }

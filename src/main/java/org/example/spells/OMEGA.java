@@ -37,7 +37,7 @@ public class OMEGA extends Spell{
         }
         for(int i=0; i < cardPool.getHandSize(); i++){
             currentSpell = cardPool.getHandSpell(i);
-            if(!currentSpell.recursive && currentSpell.getClass() != RESET.class){
+            if(!currentSpell.recursive){
                 cardPool.disableDraw();
                 copy(cardPool, castState, currentSpell, recursionLevel);
                 cardPool.enableDraw();

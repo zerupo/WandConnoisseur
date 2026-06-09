@@ -534,22 +534,28 @@ public class Global{
         }
     }
 
-    public static FileUpload JPanelToUpload(JPanel panel, String name){
+    public static FileUpload byteToUpload(byte[] data, String name) {
         try{
-            byte[] data = JPanelToBytes(panel);
             return data != null ? FileUpload.fromData(data, name) : null;
         }catch(Exception e){
             return null;
         }
     }
 
+    public static FileUpload JPanelToUpload(JPanel panel, String name){
+        return byteToUpload(JPanelToBytes(panel), name);
+    }
+
     public static FileUpload bufferedImageToUpload(BufferedImage bufferedImage, String name){
-        try{
-            byte[] data = bufferedImageToBytes(bufferedImage);
-            return data != null ? FileUpload.fromData(data, name) : null;
-        }catch(Exception e){
-            return null;
-        }
+        return byteToUpload(bufferedImageToBytes(bufferedImage), name);
+    }
+
+    public static FileUpload ImageBuilderToSVGUpload(ImageBuilder image, String name, boolean embed){
+        return byteToUpload(image.toBytes(embed), name);
+    }
+
+    public static FileUpload ImageBuilderToPNGUpload(ImageBuilder image, String name){
+        return bufferedImageToUpload(image.toPNG(), name);
     }
 
     public static int longToInt(Long nb){

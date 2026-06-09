@@ -23,11 +23,12 @@ public class NUKE extends Spell{
         this.manaCost = 200;
         this.hasCharges = true;
         this.maxCharges = 1;
+        this.setCastDelay = true;
         this.castDelay = 20;
         this.rechargeTime = 600;
         this.recoil = 300.0;
         this.screenshake = 10.5;
-        //c.speed_multiplier = c.speed_multiplier * 0.75
+        this.speed = 0.75;
     }
 
     // TODO

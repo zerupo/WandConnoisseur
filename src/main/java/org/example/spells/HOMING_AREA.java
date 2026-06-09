@@ -24,19 +24,13 @@ public class HOMING_AREA extends Spell{
         this.manaCost = 60;
         this.castDelay = 8;
         this.spread = 6.0;
+        this.speed = 0.75;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        /* c.extra_entities = c.extra_entities .. "data/entities/particles/tinyspark_white.xml,"
-        c.speed_multiplier	= c.speed_multiplier * 0.75
-
-        if ( c.speed_multiplier >= 20 ) then
-            c.speed_multiplier = math.min( c.speed_multiplier, 20 )
-        elseif ( c.speed_multiplier < 0 ) then
-            c.speed_multiplier = 0
-        end*/
+        // c.extra_entities = c.extra_entities .. "data/entities/particles/tinyspark_white.xml,"
         cardPool.draw(1, true, castState);
     }
 }

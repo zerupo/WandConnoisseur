@@ -4,6 +4,7 @@ import org.example.main.Global;
 import org.example.main.Wand;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 public class ImageFlowchartCommand implements Command{
@@ -19,6 +20,21 @@ public class ImageFlowchartCommand implements Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
+        OptionMapping typeOption = event.getOption("type");
+        int type = 0;
+
+        if(typeOption != null){
+            switch(typeOption.getAsString()){
+                case "png" -> {}
+                case "svg" -> type = 1;
+                case "svg_light" -> type = 2;
+                default -> {
+                    event.reply("\"" + typeOption.getAsString() + "\" n'est pas un type valide.").setEphemeral(true).queue();
+                    return;
+                }
+            }
+        }
+
         Wand wand = Global.slashInteractionToWand(event);
         FileUpload wandStatImage = null;
         FileUpload wandImage;
@@ -43,7 +59,12 @@ public class ImageFlowchartCommand implements Command{
             wandStatImage = Global.JPanelToUpload(wand.getStatJPanel(), "wandstats.png");
         }
         wandImage = Global.JPanelToUpload(wand.getWandJPanel(), "wand.png");
-        flowchartImage = Global.bufferedImageToUpload(wand.getFlowchartImage(true), "flowchart.png");
+        flowchartImage = switch(type){
+            case 0 -> Global.bufferedImageToUpload(wand.getFlowchartImage(true), "flowchart.png");
+            case 1 -> Global.byteToUpload(wand.getFlowchartImageSVG(true, true), "flowchart.svg");
+            case 2 -> Global.byteToUpload(wand.getFlowchartImageSVG(true, false), "flowchart.svg");
+            default -> null;
+        };
 
         if(wandStatImage != null){
             event.getHook().editOriginal("").setFiles(wandStatImage).queue();

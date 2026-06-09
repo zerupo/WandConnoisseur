@@ -26,45 +26,25 @@ public class AutoCompleteListener extends ListenerAdapter{
     }
 
     public static String[] getSpellAutocomplete(String[] spellAlias, String input, int maxOutput){
-        int min = 0;
-        int max = spellAlias.length - 1;
-        int middle;
-        int comparaisonResult;
-        boolean stop = false;
-        String[] result;
-
-        while(min < max && !stop){
-            middle = min + (max - min)/2;
-            comparaisonResult = input.compareTo(spellAlias[middle]);
-            if(comparaisonResult == 0){
-                max = middle;
-                stop = true;
-            }
-            if(comparaisonResult > 0){
-                min = middle;
-            }else{
-                max = middle;
-            }
-            if(min + 1 == max){
-                if(spellAlias[min].startsWith(input)){
-                    max = min;
-                }else{
-                    min = max;
-                }
-            }
-        }
-        min = Math.max(Math.min(min, max), 0);
-        max = min;
-
-        while(max < spellAlias.length && spellAlias[max].startsWith(input)){
-            max++;
-        }
-        result = new String[Math.min(max - min, maxOutput)];
-        for(int i=0; i < result.length && i < maxOutput; i++){
-            result[i] = spellAlias[i + min];
+        if(spellAlias == null || input == null || maxOutput <= 0){
+            return new String[0];
         }
 
-        return result;
+        int start = Arrays.binarySearch(spellAlias, input);
+        if(start < 0){
+            start = -(start + 1);
+        }
+
+        if(start >= spellAlias.length || !spellAlias[start].startsWith(input)){
+            return new String[0];
+        }
+
+        int end = start;
+        while(end < spellAlias.length && spellAlias[end].startsWith(input) && end - start < maxOutput){
+            end++;
+        }
+
+        return Arrays.copyOfRange(spellAlias, start, end);
     }
 
     private List<String> getAutoCompleteValues(@NotNull CommandAutoCompleteInteractionEvent event){
@@ -92,123 +72,126 @@ public class AutoCompleteListener extends ListenerAdapter{
             currentInput = currentInput.substring(currentInput.lastIndexOf(',') + 1).strip();
         }
 
-        switch(event.getName()){
-            case "wisp":
-                if(event.getFocusedOption().getName().equals("sort")){
+        switch(event.getFocusedOption().getName()){
+            case "propriete" -> {
+                if(currentInput.equals("")){
+                    values.addAll(Arrays.asList(Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length))));
+                }else{
+                    values.addAll(Arrays.asList(getSpellAutocomplete(Global.getSpellStringProperties(), currentInput, maxOutput)));
+                }
+            }
+            case "condition" -> {
+                int charId = Math.max(Math.max(currentInput.lastIndexOf(' '), currentInput.lastIndexOf('(')), currentInput.lastIndexOf(')'));
+                preInput = currentInput.substring(0, charId + 1);
+                currentInput = currentInput.substring(charId + 1).strip();
+
+                if(currentInput.equals("")){
+                    validOptions = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
+                }else{
+                    validOptions = getSpellAutocomplete(Global.getSpellProperties(), currentInput, maxOutput);
+                }
+
+                for(String validOption : validOptions){
+                    values.add(preInput + validOption);
+                }
+            }
+            case "tri" -> {
+                if(currentInput.equals("")){
+                    validOptions = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
+                }else{
+                    m = Pattern.compile("^ *(?i)([a-z0-9_]+) *(|ASC|DESC) *$").matcher(currentInput);
+                    if(m.find()){
+                        currentInput = m.group(1);
+                        postInput += m.group(2).equalsIgnoreCase("DESC") ? " DESC" : "";
+                    }
+                    if(currentInput.equals("")){
+                        validOptions = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
+                    }else{
+                        validOptions = getSpellAutocomplete(Global.getSpellProperties(), currentInput, maxOutput);
+                    }
+                }
+
+                for(String validOption : validOptions){
+                    values.add(preInput + validOption + postInput);
+                }
+            }
+            case "sorts", "sort" -> {
+                if(event.getName().equals("wisp")){
                     currentInput = currentInput.strip();
                     if(currentInput.equals("")){
                         values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasListRelatedProjectile(), Math.min(maxOutput, Global.getAliasListRelatedProjectile().length))));
                     }else{
                         values.addAll(Arrays.asList(getSpellAutocomplete(Global.getAliasListRelatedProjectile(), currentInput, maxOutput)));
                     }
-                    break;
-                }
-                break;
-            default:
-                switch(event.getFocusedOption().getName()){
-                    case "propriete" -> {
-                        if(currentInput.equals("")){
-                            values.addAll(Arrays.asList(Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length))));
-                        }else{
-                            values.addAll(Arrays.asList(getSpellAutocomplete(Global.getSpellStringProperties(), currentInput, maxOutput)));
-                        }
-                    }
-                    case "condition" -> {
-                        int charId = Math.max(Math.max(currentInput.lastIndexOf(' '), currentInput.lastIndexOf('(')), currentInput.lastIndexOf(')'));
-                        preInput = currentInput.substring(0, charId + 1);
-                        currentInput = currentInput.substring(charId + 1).strip();
-
-                        if(currentInput.equals("")){
-                            validOptions = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
-                        }else{
-                            validOptions = getSpellAutocomplete(Global.getSpellProperties(), currentInput, maxOutput);
-                        }
-
-                        for(String validOption : validOptions){
-                            values.add(preInput + validOption);
-                        }
-                    }
-                    case "tri" -> {
-                        if(currentInput.equals("")){
-                            validOptions = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
-                        }else{
-                            m = Pattern.compile("^ *(?i)([a-z0-9_]+) *(|ASC|DESC) *$").matcher(currentInput);
-                            if(m.find()){
-                                currentInput = m.group(1);
-                                postInput += m.group(2).equalsIgnoreCase("DESC") ? " DESC" : "";
+                }else{
+                    if(currentInput.equals("")){
+                        validOptions = Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length));
+                    }else{
+                        m = Global.getSpellPattern().matcher(currentInput);
+                        if(m.find()){
+                            currentInput = m.group(2);
+                            if(m.group(1) != null){
+                                preInput += m.group(1) + ":";
                             }
-                            if(currentInput.equals("")){
-                                validOptions = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
-                            }else{
-                                validOptions = getSpellAutocomplete(Global.getSpellProperties(), currentInput, maxOutput);
+                            if(m.group(3) != null){
+                                postInput += ":" + m.group(3);
                             }
                         }
-
-                        for(String validOption : validOptions){
-                            values.add(preInput + validOption + postInput);
-                        }
-                    }
-                    case "sorts" -> {
                         if(currentInput.equals("")){
                             validOptions = Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length));
                         }else{
-                            m = Global.getSpellPattern().matcher(currentInput);
-                            if(m.find()){
-                                currentInput = m.group(2);
-                                if(m.group(1) != null){
-                                    preInput += m.group(1) + ":";
-                                }
-                                if(m.group(3) != null){
-                                    postInput += ":" + m.group(3);
-                                }
-                            }
-                            if(currentInput.equals("")){
-                                validOptions = Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length));
-                            }else{
-                                validOptions = getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput);
-                            }
-                        }
-
-                        for(String validOption : validOptions){
-                            values.add(preInput + validOption + postInput);
+                            validOptions = getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput);
                         }
                     }
-                    case "nom" -> {
-                        currentInput = currentInput.strip();
-                        if(currentInput.equals("")){
-                            values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length))));
-                        }else{
-                            values.addAll(Arrays.asList(getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput)));
-                        }
-                    }
-                    case "cast_delay", "recharge_time" -> {
-                        int intDelay = 0;
 
-                        try{
-                            intDelay = Global.stringToDelay(currentInput);
-                        }catch(Exception e){
-                            break;
-                        }
-
-                        values.add(String.format("%1$d f", intDelay).replace(',', '.'));
-                        values.add(String.format("%1$3.2f s", intDelay/60.0).replace(',', '.'));
-                    }
-                    case "font" -> {
-                        values.add("pixel");
-                        values.add("title");
-                        values.add("glyph");
-                    }
-                    case "commande" -> {
-                        currentInput = currentInput.strip();
-                        Command[] commandList = currentInput.equals("") ? Global.getCommandList() : Global.getCommandList(currentInput);
-
-                        for(Command command : commandList){
-                            values.add(command.getName());
-                        }
-
-                        return values;
+                    for(String validOption : validOptions){
+                        values.add(preInput + validOption + postInput);
                     }
                 }
+            }
+            case "nom" -> {
+                currentInput = currentInput.strip();
+                if(currentInput.equals("")){
+                    values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length))));
+                }else{
+                    values.addAll(Arrays.asList(getSpellAutocomplete(Global.getAliasList(), currentInput, maxOutput)));
+                }
+            }
+            case "cast_delay", "recharge_time" -> {
+                int intDelay = 0;
+
+                try{
+                    intDelay = Global.stringToDelay(currentInput);
+                }catch(Exception e){
+                    break;
+                }
+
+                values.add(String.format("%1$d f", intDelay).replace(',', '.'));
+                values.add(String.format("%1$3.2f s", intDelay/60.0).replace(',', '.'));
+            }
+            case "font" -> {
+                values.add("pixel");
+                values.add("title");
+                values.add("glyph");
+            }
+            case "type" -> {
+                values.add("png");
+                values.add("svg");
+                values.add("svg_light");
+                if(event.getName().equals("cast_state")){
+                    values.add("menu");
+                }
+            }
+            case "commande" -> {
+                currentInput = currentInput.strip();
+                Command[] commandList = currentInput.equals("") ? Global.getCommandList() : Global.getCommandList(currentInput);
+
+                for(Command command : commandList){
+                    values.add(command.getName());
+                }
+
+                return values;
+            }
         }
 
         return values;

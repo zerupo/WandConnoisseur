@@ -24,21 +24,14 @@ public class PIPE_BOMB extends Spell{
         this.hasCharges = true;
         this.maxCharges = 20;
         this.castDelay = 30;
+        this.speed = 0.75;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addProjectile(this.relatedProjectile.clone());
-
-        /*c.child_speed_multiplier = c.child_speed_multiplier * 0.75
-		c.speed_multiplier = c.speed_multiplier * 0.75
-
-		if ( c.speed_multiplier >= 20 ) then
-			c.speed_multiplier = math.min( c.speed_multiplier, 20 )
-		elseif ( c.speed_multiplier < 0 ) then
-			c.speed_multiplier = 0
-		end*/
+        // c.child_speed_multiplier = c.child_speed_multiplier * 0.75
     }
 }
 

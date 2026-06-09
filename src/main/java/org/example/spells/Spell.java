@@ -45,6 +45,7 @@ public abstract class Spell{
     protected int chargesLeft = 0;
     protected boolean neverUnlimited = false;
     protected boolean autoStat = true;
+    protected boolean setCastDelay = false;
     protected int castDelay = 0;
     protected int rechargeTime = 0;
     protected DamageComponent damageComponent = new DamageComponent();
@@ -55,6 +56,11 @@ public abstract class Spell{
     protected boolean setRecoil = false;
     protected double recoil = 0.0;
     protected double screenshake = 0.0;
+    protected double gravity = 0.0;
+    protected boolean setFriendlyFire = false;
+    protected boolean friendlyFire = false;
+    protected boolean multiplySpeed = true;
+    protected double speed = 1.0;
 
     public Spell(){
         this.initialization();
@@ -120,6 +126,11 @@ public abstract class Spell{
         newSpell.setRecoil = this.setRecoil;
         newSpell.recoil = this.recoil;
         newSpell.screenshake = this.screenshake;
+        newSpell.gravity = this.gravity;
+        newSpell.setFriendlyFire = this.setFriendlyFire;
+        newSpell.friendlyFire = this.friendlyFire;
+        newSpell.multiplySpeed = this.multiplySpeed;
+        newSpell.speed = this.speed;
         if(this.imageLabel != null){
             newSpell.imageInJLabel();
         }
@@ -288,6 +299,10 @@ public abstract class Spell{
         return this.manaCost;
     }
 
+    public boolean getSetCastDelay(){
+        return this.setCastDelay;
+    }
+
     public int getCastDelay(){
         return this.castDelay;
     }
@@ -336,6 +351,26 @@ public abstract class Spell{
         return this.screenshake;
     }
 
+    public double getGravity(){
+        return this.gravity;
+    }
+
+    public boolean getSetFriendlyFire(){
+        return this.setFriendlyFire;
+    }
+
+    public boolean getFriendlyFire(){
+        return this.friendlyFire;
+    }
+
+    public boolean getMultiplySpeed(){
+        return this.multiplySpeed;
+    }
+
+    public double getSpeed(){
+        return this.speed;
+    }
+
     public int getLastIteration(){
         return 0;
     }
@@ -358,7 +393,7 @@ public abstract class Spell{
         }
 
         // cast state
-        if(this.castDelay != 0){innerString.append(String.format("\nCast delay: %1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
+        if(this.setCastDelay || this.castDelay != 0){innerString.append("\nCast delay: ").append(this.setCastDelay ? "=" : "").append(String.format("%1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
         if(this.rechargeTime != 0){innerString.append(String.format("\nRecharge time: %1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
         if(this.damageComponent.getProjectile() != 0){innerString.append("\nProjectile damage: ").append(this.damageComponent.getProjectile());}
         if(this.damageComponent.getMelee() != 0){innerString.append("\nMelee damage: ").append(this.damageComponent.getMelee());}
@@ -381,6 +416,9 @@ public abstract class Spell{
         if(this.spread != 0){innerString.append("\nSpread: ").append(this.spread).append("°");}
         if(this.recoil != 0){innerString.append("\nRecoil: ").append(this.setRecoil ? "=" : "").append(this.recoil);}
         if(this.screenshake != 0){innerString.append("\nScreen shake: ").append(this.screenshake);}
+        if(this.gravity != 0){innerString.append("\nGravity: ").append(this.gravity);}
+        if(this.setFriendlyFire){innerString.append("\nFriendly fire: ").append(this.friendlyFire ? "true" : "false");}
+        if(this.multiplySpeed ? this.speed != 1.0 : this.speed != 0.0){innerString.append("\nSpeed: ").append(this.multiplySpeed ? "x" : "").append(this.speed);}
 
         if(!innerString.isEmpty()){
             result.append("\n\n# Cast state").append(innerString);
@@ -668,7 +706,9 @@ public abstract class Spell{
         }
 
         // castState
-        if(this.castDelay != 0){
+        if(this.setCastDelay){
+            castState.setCastDelay(this.castDelay);
+        }else if(this.castDelay != 0){
             castState.addCastDelay(this.castDelay);
         }
         if(!this.damageComponent.zero()){
@@ -685,6 +725,19 @@ public abstract class Spell{
         }
         if(this.spread != 0){
             castState.addSpread(this.spread);
+        }
+        if(this.gravity != 0){
+            castState.addGravity(this.gravity);
+        }
+        if(this.setFriendlyFire){
+            castState.setFriendlyFire(this.friendlyFire);
+        }
+        if(this.multiplySpeed){
+            if(this.speed != 1.0){
+                castState.multiplySpeed(this.speed, 0.0, 20.0);
+            }
+        }else if(this.speed != 0.0){
+            castState.addSpeed(this.speed, 0.0, 20.0);
         }
         for(Script script : this.relatedScripts){
             castState.addScript(script);

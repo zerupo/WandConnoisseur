@@ -392,17 +392,19 @@ public class CardPool{
         draw(nbDraw, castState, wrapAllowed, this.getCallStack());
     }
 
-    public void wrap(){
+    public void refreshWrap(){
+        this.discardToDeck();
+        if(this.sortDeck() && this.autoCardHistory){
+            this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+        }
+    }
+
+    private void wrap(){
         if(this.forceStopDraws){
             return;
         }
 
-        while(!this.discard.isEmpty()){
-            this.deck.add(this.discard.remove(0));
-            if(this.autoCardHistory){
-                this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
-            }
-        }
+        this.discardToDeck();
         if(this.sortDeck() && this.autoCardHistory){
             this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
         }
@@ -525,6 +527,15 @@ public class CardPool{
         }
     }
 
+    public void discardToDeck(){
+        while(!this.discard.isEmpty()){
+            this.deck.add(this.discard.remove(0));
+            if(this.autoCardHistory){
+                this.cardHistory.addStep(this.discard.toArray(new Spell[0]), this.hand.toArray(new Spell[0]), this.deck.toArray(new Spell[0]));
+            }
+        }
+    }
+
     public void enableDraw(){
         this.drawEnabled = true;
     }
@@ -600,7 +611,7 @@ public class CardPool{
 
         this.toImageNode(imageBuilder, 0, 0);
 
-        return imageBuilder.saveToFile(fileName);
+        return imageBuilder.saveAsPNG(fileName);
     }
 
     public BufferedImage toImage(){
@@ -609,7 +620,7 @@ public class CardPool{
 
         this.toImageNode(imageBuilder, 0, 0);
 
-        return imageBuilder.toImage();
+        return imageBuilder.toPNG();
     }
 
     public Point addToImage(ImageBuilder image, int x, int y){

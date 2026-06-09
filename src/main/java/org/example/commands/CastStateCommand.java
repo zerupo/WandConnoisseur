@@ -23,8 +23,22 @@ public class CastStateCommand implements Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
-        OptionMapping menuOption = event.getOption("menu");
-        boolean menuFormat = false;
+        OptionMapping typeOption = event.getOption("type");
+        int type = 0;
+
+        if(typeOption != null){
+            switch(typeOption.getAsString()){
+                case "png" -> {}
+                case "svg" -> type = 1;
+                case "svg_light" -> type = 2;
+                case "menu" -> type = 3;
+                default -> {
+                    event.reply("\"" + typeOption.getAsString() + "\" n'est pas un type valide.").setEphemeral(true).queue();
+                    return;
+                }
+            }
+        }
+
         String fileName = event.getId() + ".png";
         String[] statOptions = new String[]{"draw", "cast_delay", "recharge_time", "mana_max", "mana_regen", "spread", "speed"};
         Wand wand = Global.slashInteractionToWand(event);
@@ -35,13 +49,9 @@ public class CastStateCommand implements Command{
             return;
         }
 
-        if(menuOption != null){
-            menuFormat = menuOption.getAsBoolean();
-        }
-
         event.deferReply(false).queue();
 
-        if(menuFormat){
+        if(type == 3){
             CastState[] castStates = wand.getCastState(true);
             Spell[] spells = wand.getSpells();
             String spellsEmote = "";
@@ -60,6 +70,7 @@ public class CastStateCommand implements Command{
             menu.replyHookEvent(event);
         }else{
             FileUpload wandStatImage = null;
+            FileUpload castStateImage;
 
             for(int i=0; i < statOptions.length; i++){
                 if(event.getOption(statOptions[i]) != null){
@@ -72,7 +83,12 @@ public class CastStateCommand implements Command{
                 wandStatImage = Global.JPanelToUpload(wand.getStatJPanel(), "wandstats.png");
             }
             FileUpload wandImage = Global.JPanelToUpload(wand.getWandJPanel(), "wand.png");
-            FileUpload castStateImage = Global.bufferedImageToUpload(wand.getCastStateImage(true), "caststate.png");
+            castStateImage = switch(type){
+                case 0 -> Global.bufferedImageToUpload(wand.getCastStateImage(true), "caststate.png");
+                case 1 -> Global.byteToUpload(wand.getCastStateImageSVG(true, true), "caststate.svg");
+                case 2 -> Global.byteToUpload(wand.getCastStateImageSVG(true, false), "caststate.svg");
+                default -> null;
+            };
 
             if(wandStatImage != null){
                 event.getHook().editOriginal("").setFiles(wandStatImage).queue();
