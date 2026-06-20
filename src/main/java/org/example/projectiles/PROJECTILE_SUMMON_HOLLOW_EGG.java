@@ -10,7 +10,7 @@ public class PROJECTILE_SUMMON_HOLLOW_EGG extends Projectile{
     @Override
     protected void initialization(){
         this.name = "Summon hollow egg";
-        this.imageFile = "summon_hollow_egg.png";
+        this.imageFile = "projectile_hollow_egg.png";
         this.emote = staticEmote;
     }
 }
