@@ -4,7 +4,6 @@ import org.example.config.EmoteConfig;
 import org.example.main.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Random;
 
 public class RANDOM_MODIFIER extends Spell{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
@@ -25,14 +24,16 @@ public class RANDOM_MODIFIER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        int frame = Global.longToInt(Global.getCurrentFrame());
         Spell[] spells = recursionLevel < recursionLimit ? Global.getSpellListModifier().getSpells(false) : Global.getSpellListModifierNonRecursive().getSpells(false);
 
         if(spells.length == 0){
             return;
         }
 
-        copy(cardPool, castState, spells[new Random(Global.intToLong(frame + cardPool.getDeckSize(), frame + 133)).nextInt(0, spells.length)], recursionLevel);
+        long frame = Global.getCurrentFrame();
+        RandomGenerator random = Global.getRandomGenerator();
+        random.setSeed(frame + cardPool.getDeckSize(), frame + 133);
+        copy(cardPool, castState, spells[random.random(0, spells.length - 1)], recursionLevel);
     }
 }
 

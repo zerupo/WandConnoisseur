@@ -8,7 +8,6 @@ import org.example.projectiles.PROJECTILE_FIREWORK_ORANGE;
 import org.example.projectiles.PROJECTILE_FIREWORK_PINK;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Random;
 
 public class FIREWORK extends Spell{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
@@ -32,10 +31,14 @@ public class FIREWORK extends Spell{
         this.recoil = 120.0;
     }
 
+    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Random random = new Random(Global.getCurrentFrame());
-        switch(random.nextInt(4)){
+        long frame = Global.getCurrentFrame();
+        RandomGenerator random = Global.getRandomGenerator();
+        random.setSeed(frame, frame);
+
+        switch(random.random(0, 3)){
             case 0 -> castState.addProjectile(new PROJECTILE_FIREWORK_PINK());
             case 1 -> castState.addProjectile(new PROJECTILE_FIREWORK_GREEN());
             case 2 -> castState.addProjectile(new PROJECTILE_FIREWORK_BLUE());

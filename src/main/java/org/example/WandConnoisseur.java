@@ -11,6 +11,7 @@ import org.example.main.Global;
 import org.example.main.WandList;
 import org.example.projectiles.Projectile;
 import org.example.script.Script;
+import org.example.spells.RANDOM_SPELL;
 import org.example.spells.Spell;
 
 import java.util.EnumSet;
@@ -38,7 +39,6 @@ public class WandConnoisseur{
         if(newOnly){
             emojis = jda.retrieveApplicationEmojis().complete().stream().map(ApplicationEmoji::getName).collect(Collectors.toSet());
         }
-
 
         for(Spell spell : spells){
             if(!newOnly || !emojis.contains(Global.truncate(spell.getClass().getSimpleName().toLowerCase(), 32))){

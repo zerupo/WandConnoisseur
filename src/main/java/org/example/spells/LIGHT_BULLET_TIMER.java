@@ -31,7 +31,7 @@ public class LIGHT_BULLET_TIMER extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
     }
 }
 

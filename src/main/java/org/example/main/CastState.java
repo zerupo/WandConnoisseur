@@ -293,6 +293,21 @@ public class CastState{
         this.castStateProjectiles.add(new CastStateProjectile(projectile));
     }
 
+    public void addProjectile(Projectile projectile, int count){
+        if(count <= 0){
+            return;
+        }
+        if(projectile.getTriggerType() == Projectile.TriggerType.none){
+            for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
+                if(castStateProjectile.getProjectile().getClass() == projectile.getClass()){
+                    castStateProjectile.addCount(count);
+                    return;
+                }
+            }
+        }
+        this.castStateProjectiles.add(new CastStateProjectile(projectile, count));
+    }
+
     public void addScript(Script script){
         for(CastStateScript castStateScript : this.castStateScripts){
             if(castStateScript.getScript().getClass() == script.getClass()){
@@ -301,6 +316,19 @@ public class CastState{
             }
         }
         this.castStateScripts.add(new CastStateScript(script));
+    }
+
+    public void addScript(Script script, int count){
+        if(count <= 0){
+            return;
+        }
+        for(CastStateScript castStateScript : this.castStateScripts){
+            if(castStateScript.getScript().getClass() == script.getClass()){
+                castStateScript.addCount(count);
+                return;
+            }
+        }
+        this.castStateScripts.add(new CastStateScript(script, count));
     }
 
     public void addScript(Script[] scripts){

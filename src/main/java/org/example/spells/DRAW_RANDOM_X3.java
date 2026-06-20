@@ -4,7 +4,6 @@ import org.example.config.EmoteConfig;
 import org.example.main.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Random;
 
 public class DRAW_RANDOM_X3 extends Spell{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
@@ -25,15 +24,18 @@ public class DRAW_RANDOM_X3 extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Spell currentSpell;
-        int frame = Global.longToInt(Global.getCurrentFrame());
-        Random random = new Random(Global.intToLong(frame + cardPool.getDeckSize(), frame - 325 + cardPool.getDiscardSize()));
         int dataSize = cardPool.getDeckSize() + cardPool.getDiscardSize();
-        int checks = 0;
+
         if(dataSize == 0){
             return;
         }
-        int id = random.nextInt(0, dataSize);
+
+        Spell currentSpell;
+        long frame = Global.getCurrentFrame();
+        RandomGenerator random = Global.getRandomGenerator();
+        random.setSeed(frame + cardPool.getDeckSize(), frame - 325 + cardPool.getDiscardSize());
+        int id = random.random(0, dataSize - 1);
+        int checks = 0;
 
         while(checks < dataSize){
             currentSpell = id < cardPool.getDeckSize() ? cardPool.getDeckSpell(id) : cardPool.getDiscardSpell(id - cardPool.getDeckSize());

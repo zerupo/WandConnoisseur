@@ -19,7 +19,11 @@ public class NUKE_GIGA extends Spell{
         this.type = SpellType.projectile;
         this.relatedProjectile = new PROJECTILE_NUKE_GIGA();
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+        this.recursive = true;
         this.price = 800;
+        this.hasCharges = true;
+        this.maxCharges = 1;
+        this.neverUnlimited = true;
         this.manaCost = 500;
         this.setCastDelay = true;
         this.castDelay = 50;

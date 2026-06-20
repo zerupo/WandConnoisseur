@@ -142,9 +142,10 @@ class Expression{
                 }
             }
             case INT -> {
-                int actual = (Integer)typedProperty.value();
+                int actual;
                 int expected;
                 try{
+                    actual = (Integer)typedProperty.value();
                     expected = Integer.parseInt(this.value2);
                 }catch(NumberFormatException e){
                     result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un entier valide");
@@ -152,20 +153,21 @@ class Expression{
                 }
 
                 result.setState(
-                        switch(this.operator){
-                            case GREATER -> actual > expected ? State.TRUE : State.FALSE;
-                            case GREATER_OR_EQUAL -> actual >= expected ? State.TRUE : State.FALSE;
-                            case LOWER -> actual < expected ? State.TRUE : State.FALSE;
-                            case LOWER_OR_EQUAL -> actual <= expected ? State.TRUE : State.FALSE;
-                            case EQUALS -> actual == expected ? State.TRUE : State.FALSE;
-                            case DIFFERENT -> actual != expected ? State.TRUE : State.FALSE;
-                        }
+                    switch(this.operator){
+                        case GREATER -> actual > expected ? State.TRUE : State.FALSE;
+                        case GREATER_OR_EQUAL -> actual >= expected ? State.TRUE : State.FALSE;
+                        case LOWER -> actual < expected ? State.TRUE : State.FALSE;
+                        case LOWER_OR_EQUAL -> actual <= expected ? State.TRUE : State.FALSE;
+                        case EQUALS -> actual == expected ? State.TRUE : State.FALSE;
+                        case DIFFERENT -> actual != expected ? State.TRUE : State.FALSE;
+                    }
                 );
             }
             case DOUBLE -> {
-                double actual = (Double)typedProperty.value();
+                double actual;
                 double expected;
                 try{
+                    actual = (Double)typedProperty.value();
                     expected = Double.parseDouble(this.value2);
                 }catch(NumberFormatException e){
                     result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un nombre valide");
@@ -173,14 +175,14 @@ class Expression{
                 }
 
                 result.setState(
-                        switch(this.operator){
-                            case GREATER -> actual > expected ? State.TRUE : State.FALSE;
-                            case GREATER_OR_EQUAL -> actual >= expected ? State.TRUE : State.FALSE;
-                            case LOWER -> actual < expected ? State.TRUE : State.FALSE;
-                            case LOWER_OR_EQUAL -> actual <= expected ? State.TRUE : State.FALSE;
-                            case EQUALS -> actual == expected ? State.TRUE : State.FALSE;
-                            case DIFFERENT -> actual != expected ? State.TRUE : State.FALSE;
-                        }
+                    switch(this.operator){
+                        case GREATER -> actual > expected ? State.TRUE : State.FALSE;
+                        case GREATER_OR_EQUAL -> actual >= expected ? State.TRUE : State.FALSE;
+                        case LOWER -> actual < expected ? State.TRUE : State.FALSE;
+                        case LOWER_OR_EQUAL -> actual <= expected ? State.TRUE : State.FALSE;
+                        case EQUALS -> actual == expected ? State.TRUE : State.FALSE;
+                        case DIFFERENT -> actual != expected ? State.TRUE : State.FALSE;
+                    }
                 );
             }
         }

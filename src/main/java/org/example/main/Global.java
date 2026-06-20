@@ -34,13 +34,14 @@ public class Global{
     private final static ProjectileList projectileList = new ProjectileList();
     private final static ScriptList scriptList = new ScriptList();
     private final static SpellList spellList = new SpellList();
-    private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
-    private final static SpellList spellListModifier = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier);
-    private final static SpellList spellListStaticProjectile = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile);
-    private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
     private final static SpellList spellListNonRecursive = new SpellList(spell -> !spell.getRecursive());
+    private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
+    private final static SpellList spellListRelatedProjectileNonRecursive = new SpellList(spell -> spell.getRelatedProjectile() != null && !spell.getRecursive());
+    private final static SpellList spellListModifier = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier);
     private final static SpellList spellListModifierNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier && !spell.getRecursive());
+    private final static SpellList spellListStaticProjectile = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile);
     private final static SpellList spellListStaticProjectileNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile && !spell.getRecursive());
+    private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
     private final static String[] aliasList = spellList.getAllAlias();
     private final static String[] aliasListRelatedProjectile = spellListRelatedProjectile.getAllAlias();
     private final static String[] aliasListLifetimeModifier = spellListLifetimeModifier.getAllAlias();
@@ -57,6 +58,7 @@ public class Global{
     private final static Pattern spellPattern = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
     public final static MenuManager menuManager = new MenuManager();
     private static long currentFrame = 0;
+    private static RandomGenerator randomGenerator = new RandomGenerator();
     private static boolean reqOEState = false;
 
     // getters
@@ -98,6 +100,10 @@ public class Global{
 
     public static SpellList getSpellListRelatedProjectile(){
         return spellListRelatedProjectile;
+    }
+
+    public static SpellList getSpellListRelatedProjectileNonRecursive(){
+        return spellListRelatedProjectileNonRecursive;
     }
 
     public static SpellList getSpellListModifier(){
@@ -223,6 +229,10 @@ public class Global{
         }else{
             currentFrame += nb;
         }
+    }
+
+    public static RandomGenerator getRandomGenerator(){
+        return randomGenerator;
     }
 
     public static boolean getReqOEState(){

@@ -29,9 +29,7 @@ public class BALL_LIGHTNING extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        for(int i=0; i < this.relatedProjectileCount; i++){
-            castState.addProjectile(this.relatedProjectile.clone());
-        }
+        castState.addProjectile(this.relatedProjectile.clone(), this.relatedProjectileCount);
     }
 }
 
