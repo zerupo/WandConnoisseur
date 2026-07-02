@@ -4,6 +4,8 @@ import org.example.config.EmoteConfig;
 import org.example.main.CastState;
 import org.example.main.DamageComponent;
 import org.example.main.Global;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,40 +23,8 @@ public abstract class Projectile{
     protected static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
     protected String emote = staticEmote;
     protected BufferedImage image = null;
-
-    // velocity component
-    protected double gravityX = 0.0;
-    protected double gravityY = 400.0;
-    protected double mass = 0.05;
-    protected double airFriction = 0.55;
-    protected double terminalVelocity = 1000;
-    protected boolean applyTerminalVelocity = true;
-    protected boolean updateVelocity = true;
-    protected boolean displaceLiquid = true;
-    protected boolean affectPhysicsBodies = false;
-    protected boolean limitToMaxVelocity = true;
-    protected int liquidDeathThreshold = 0;
-    protected double liquidDrag = 1.0;
-
-    // projectile component
-    protected int lifetime = -1;
-    protected int lifetimeRandomness = 0;
-    protected double initialSpeed = 0;
-    protected double speedMin = 60;
-    protected double speedMax = 60;
-    protected double spreadRad = 0;
-    protected double friction = 0;
-    protected DamageComponent damageComponent = new DamageComponent();
-    protected boolean explodeOnDeath = false;
-    protected boolean collideWithWorld = true;
-    protected boolean onLifetimeOutExplode = false;
-    protected boolean explosionSelfDamage = true;
-    protected boolean onCollisionDie = true;
-    protected double knockbackForce = 0.0;
-
-    public Projectile(){
-        this.initialization();
-    }
+    protected VelocityComponent velocityComponent = null;
+    protected ProjectileComponent projectileComponent = null;
 
     public Projectile clone(){
         Class<? extends Projectile> projectileClass = this.getClass();
@@ -75,63 +45,13 @@ public abstract class Projectile{
         newProjectile.name = this.name;
         newProjectile.emote = this.emote;
         newProjectile.image = Global.cloneBufferedImage(this.image); // clone
-
-        // velocity component
-        newProjectile.gravityX = this.gravityX;
-        newProjectile.gravityY = this.gravityY;
-        newProjectile.mass = this.mass;
-        newProjectile.airFriction = this.airFriction;
-        newProjectile.terminalVelocity = this.terminalVelocity;
-        newProjectile.applyTerminalVelocity = this.applyTerminalVelocity;
-        newProjectile.updateVelocity = this.updateVelocity;
-        newProjectile.displaceLiquid = this.displaceLiquid;
-        newProjectile.affectPhysicsBodies = this.affectPhysicsBodies;
-        newProjectile.limitToMaxVelocity = this.limitToMaxVelocity;
-        newProjectile.liquidDeathThreshold = this.liquidDeathThreshold;
-        newProjectile.liquidDrag = this.liquidDrag;
-
-        // projectile component
-        newProjectile.lifetime = this.lifetime;
-        newProjectile.lifetimeRandomness = this.lifetimeRandomness;
-        newProjectile.initialSpeed = this.initialSpeed;
-        newProjectile.speedMin = this.speedMin;
-        newProjectile.speedMax = this.speedMax;
-        newProjectile.spreadRad = this.spreadRad;
-        newProjectile.friction = this.friction;
-        newProjectile.damageComponent = this.damageComponent.clone(); // clone
-        newProjectile.explodeOnDeath = this.explodeOnDeath;
-        newProjectile.collideWithWorld = this.collideWithWorld;
-        newProjectile.onLifetimeOutExplode = this.onLifetimeOutExplode;
-        newProjectile.explosionSelfDamage = this.explosionSelfDamage;
-        newProjectile.onCollisionDie = this.onCollisionDie;
-        newProjectile.knockbackForce = this.knockbackForce;
+        newProjectile.velocityComponent = this.velocityComponent == null ? null : this.velocityComponent.clone();
+        newProjectile.projectileComponent = this.projectileComponent == null ? null : this.projectileComponent.clone();
 
         return newProjectile;
     }
 
-    public boolean addTrigger(TriggerType triggerType, int timer, CastState castState){
-        if(triggerType == TriggerType.none){
-            this.triggerCastState = null;
-        }else{
-            if(castState == null){
-                return false;
-            }
-            this.triggerCastState = castState;
-        }
-        this.triggerType = triggerType;
-        if(triggerType == TriggerType.timer){
-            this.timer = timer;
-        }else{
-            this.timer = 0;
-        }
-
-        return true;
-    }
-
-    public boolean addTrigger(TriggerType triggerType, CastState castState){
-        return addTrigger(triggerType, 0, castState);
-    }
-
+    // getters
     public TriggerType getTriggerType(){
         return this.triggerType;
     }
@@ -163,35 +83,35 @@ public abstract class Projectile{
         return this.image;
     }
 
-    public int getLifetimeMin(){
-        return this.lifetime - this.lifetimeRandomness;
+    public VelocityComponent getVelocityComponent(){
+        return this.velocityComponent;
     }
 
-    public int getLifetimeMax(){
-        return this.lifetime + this.lifetimeRandomness;
+    public ProjectileComponent getProjectileComponent(){
+        return this.projectileComponent;
     }
 
-    public int getLifetimeRandomness(){
-        return this.lifetimeRandomness;
+    public boolean addTrigger(TriggerType triggerType, int timer, CastState castState){
+        if(triggerType == TriggerType.none){
+            this.triggerCastState = null;
+        }else{
+            if(castState == null){
+                return false;
+            }
+            this.triggerCastState = castState;
+        }
+        this.triggerType = triggerType;
+        if(triggerType == TriggerType.timer){
+            this.timer = timer;
+        }else{
+            this.timer = 0;
+        }
+
+        return true;
     }
 
-    public String getLifetimeString(){
-        int lifetimeMin = this.lifetime - this.lifetimeRandomness;
-        int lifetimeMax = this.lifetime + this.lifetimeRandomness;
-
-        return lifetimeMin == lifetimeMax ? "" + lifetimeMin : "[" + lifetimeMin + "; " + lifetimeMax + "]";
-    }
-
-    public double getSpeedMin(){
-        return this.speedMin;
-    }
-
-    public double getSpeedMax(){
-        return this.speedMax;
-    }
-
-    public String getSpeedString(){
-        return this.speedMin == this.speedMax ? "" + this.speedMin : "[" + this.speedMin + "; " + this.speedMax + "]";
+    public boolean addTrigger(TriggerType triggerType, CastState castState){
+        return addTrigger(triggerType, 0, castState);
     }
 
     public void createEmote(){
@@ -207,5 +127,18 @@ public abstract class Projectile{
         }
     }
 
-    protected abstract void initialization();
+    public String toString(boolean importantOnly){
+        StringBuilder result = new StringBuilder();
+
+        if(this.triggerType != TriggerType.none){result.append(result.isEmpty() ? "" : "\n").append("Trigger type: ").append(this.triggerType);}
+        if(this.triggerType == TriggerType.timer){result.append(result.isEmpty() ? "" : "\n").append("Timer length: ").append(this.timer);}
+        if(!importantOnly && this.velocityComponent != null){
+            result.append(result.isEmpty() ? "" : "\n").append(this.velocityComponent.toString());
+        }
+        if(this.projectileComponent != null){
+            result.append(result.isEmpty() ? "" : "\n").append(this.projectileComponent.toString(importantOnly));
+        }
+
+        return result.toString();
+    }
 }

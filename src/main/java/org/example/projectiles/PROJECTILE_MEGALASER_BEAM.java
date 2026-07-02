@@ -1,25 +1,47 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_MEGALASER_BEAM extends Projectile{
+public class PROJECTILE_MEGALASER_BEAM extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_MEGALASER_BEAM(){
         this.name = "Intense concentrated light beam";
         this.imageFile = "megalaser.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = -50.0;
-        this.mass = 0.04;
-
-        this.speedMin = 40;
-        this.speedMax = 40;
-        this.lifetime = 100;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-50.0)
+            .setGravityY(0.0)
+            .setMass(0.04);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(40)
+            .setSpeedMax(40)
+            // die_on_liquid_collision="1"
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            // shoot_light_flash_radius="15"
+            // shoot_light_flash_r="250"
+            // shoot_light_flash_g="80"
+            // shoot_light_flash_b="255"
+            // velocity_sets_scale="1"
+            .setLifetime(180)
+            // penetrate_entities="0"
+            // hit_particle_force_multiplier="0.25"
+            .setKnockback(1.5);
+            // bounces_left="10"
+            // ragdoll_force_multiplier="0.01"
+            // ragdoll_fx_on_collision="BLOOD_SPRAY"
+            // physics_impulse_coeff="5000"
+        this.projectileComponent.getDamageComponent().setProjectile(25.0);
     }
 }
 

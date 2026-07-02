@@ -1,24 +1,45 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_DELAYED_SPELL extends Projectile{
+public class PROJECTILE_DELAYED_SPELL extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_DELAYED_SPELL(){
         this.name = "Delayed spellcast";
         this.imageFile = "delayed_spell.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.mass = 0.04;
-
-        this.speedMin = 26;
-        this.speedMax = 26;
-        this.lifetime = 100;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setMass(0.04);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(26)
+            .setSpeedMax(26)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(false)
+            // die_on_liquid_collision="0"
+            .setLifetime(100)
+            // ragdoll_force_multiplier="0.0"
+            // hit_particle_force_multiplier="0.0"
+            // camera_shake_when_shot="5.0"
+            // bounces_left="0"
+            // muzzle_flash_file=""
+            // shoot_light_flash_radius="1"
+            .setKnockback(0.0);
+            // physics_impulse_coeff="0"
+            // penetrate_entities="1"
+            // damage_every_x_frames="25"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

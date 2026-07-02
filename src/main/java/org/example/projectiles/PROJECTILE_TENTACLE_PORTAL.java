@@ -1,22 +1,21 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_TENTACLE_PORTAL extends Projectile{
+public class PROJECTILE_TENTACLE_PORTAL extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_TENTACLE_PORTAL(){
         this.name = "Eldritch Portal";
         this.imageFile = "tentacle_portal.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
-        this.mass = 0.08;
-
-        this.lifetime = 800;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(0.0)
+            .setMass(0.08);
     }
 }
 

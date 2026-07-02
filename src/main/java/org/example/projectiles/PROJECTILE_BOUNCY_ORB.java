@@ -1,25 +1,57 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_BOUNCY_ORB extends Projectile{
+public class PROJECTILE_BOUNCY_ORB extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BOUNCY_ORB(){
         this.name = "Energy sphere";
         this.imageFile = "bouncy_orb.png";
         this.emote = staticEmote;
-        this.gravityY = 250;
-        this.airFriction = 0.6;
-        this.mass = 0.05;
-
-        this.speedMin = 400;
-        this.speedMax = 500;
-        this.lifetime = 750;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(250.0)
+            .setAirFriction(0.6)
+            .setMass(0.05);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.5"
+            // lob_max="0.7"
+            .setSpeedMin(400)
+            .setSpeedMax(500)
+            .setFriction(1.0)
+            .setSpreadRad(0.01)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            // on_collision_remove_projectile="0"
+            .setLifetime(750)
+            .setDamageScaledBySpeed(true)
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0"
+            // hit_particle_force_multiplier="0.3"
+            // create_shell_casing="0"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_laser.xml"
+            // shoot_light_flash_r="0"
+            // shoot_light_flash_g="120"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="64"
+            .setDieOnLowVelocity(true)
+            .setDieOnLowVelocityLimit(20)
+            // bounce_fx_file="data/entities/particles/bounce_effects/bouncy_orb.xml"
+            // bounces_left="5"
+            // velocity_sets_rotation="1"
+            // velocity_updates_animation="1"
+            // velocity_sets_scale="0"
+            .setKnockback(1.6);
+            // physics_impulse_coeff="2000"
+        this.projectileComponent.getDamageComponent().setProjectile(5.0);
+        this.projectileComponent.getDamageComponent().setSlice(5.0);
     }
 }
 

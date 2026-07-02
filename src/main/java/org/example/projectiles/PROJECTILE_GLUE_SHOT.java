@@ -1,25 +1,47 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_GLUE_SHOT extends Projectile{
+public class PROJECTILE_GLUE_SHOT extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_GLUE_SHOT(){
         this.name = "Glue Ball";
         this.imageFile = "glue_shot.png";
         this.emote = staticEmote;
-        this.gravityY = 200;
-        this.airFriction = 1.0;
-        this.mass = 0.06;
-
-        this.speedMin = 300;
-        this.speedMax = 350;
-        this.lifetime = 40;
-        this.lifetimeRandomness = 20;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(1.0)
+            .setMass(0.06);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.3"
+            .setSpeedMin(300)
+            .setSpeedMax(350)
+            .setSpreadRad(0.15)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            .setLifetime(40)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.0025"
+            // hit_particle_force_multiplier="0.25 "
+            // camera_shake_when_shot="8.0"
+            // create_shell_casing="1"
+            // bounces_left="2"
+            // bounce_at_any_angle="1"
+            // shoot_light_flash_radius="100"
+            // ragdoll_fx_on_collision="BLOOD_EXPLOSION"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_medium.xml"
+            .setKnockback(1.0);
+            // physics_impulse_coeff="2000"
+        this.projectileComponent.getDamageComponent().setProjectile(2.5);
     }
 }
 

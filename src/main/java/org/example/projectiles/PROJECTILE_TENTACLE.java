@@ -1,24 +1,40 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_TENTACLE extends Projectile{
+public class PROJECTILE_TENTACLE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_TENTACLE(){
         this.name = "Summon Tentacle";
         this.imageFile = "tentacle.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.mass = 0.08;
-
-        this.speedMin = 8;
-        this.speedMax = 8;
-        this.lifetime = 60;
-        this.lifetimeRandomness = 8;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setMass(0.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // projectile_type="VERLET"
+            .setSpeedMin(8)
+            .setSpeedMax(8)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setOnCollisionDie(false)
+            // penetrate_entities="1"
+            // attach_to_parent_trigger="1"
+            .setLifetime(60)
+            // shoot_light_flash_radius="80"
+            // shoot_light_flash_r="50"
+            // shoot_light_flash_g="0"
+            // shoot_light_flash_b="90"
+            .setKnockback(2.0);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setMelee(20.0);
     }
 }
 

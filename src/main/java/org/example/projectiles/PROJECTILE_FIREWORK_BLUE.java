@@ -1,25 +1,46 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_FIREWORK_BLUE extends Projectile{
+public class PROJECTILE_FIREWORK_BLUE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_FIREWORK_BLUE(){
         this.name = "Blue Firework";
         this.imageFile = "fireworks_blue.png";
         this.emote = staticEmote;
-        this.gravityY = 50;
-        this.airFriction = -5.0;
-        this.mass = 0.05;
-
-        this.speedMin = 70;
-        this.speedMax = 80;
-        this.lifetime = 30;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(50.0)
+            .setAirFriction(-5.0)
+            .setMass(0.05);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(70)
+            .setSpeedMax(80)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(true)
+            .setLifetime(30)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.04"
+            // hit_particle_force_multiplier="5.5 "
+            // camera_shake_when_shot="15.0"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher.xml"
+            // shoot_light_flash_r="25"
+            // shoot_light_flash_g="210"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="90"
+            .setKnockback(3.0);
+        this.projectileComponent.getDamageComponent().setProjectile(25.0);
     }
 }
 

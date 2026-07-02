@@ -1,19 +1,35 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_LIGHTNING extends Projectile{
+public class PROJECTILE_LIGHTNING extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_LIGHTNING(){
         this.name = "Lightning Bolt";
         this.imageFile = "lightning.png";
         this.emote = staticEmote;
-        this.lifetime = 2;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setApplyTerminalVelocity(false);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setOnCollisionDie(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(false)
+            .setLifetime(2);
+            // projectile_type="LIGHTNING"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_laser.xml"
+            // shoot_light_flash_r="190"
+            // shoot_light_flash_g="248"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="208"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setElectricity(25.0);
     }
 }
 

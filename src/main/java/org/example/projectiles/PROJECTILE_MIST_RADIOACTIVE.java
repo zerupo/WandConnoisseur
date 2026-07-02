@@ -1,25 +1,37 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
 public class PROJECTILE_MIST_RADIOACTIVE extends Projectile{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_MIST_RADIOACTIVE(){
         this.name = "Toxic Mist";
         this.imageFile = "mist_radioactive.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
-        this.mass = 0.0;
-
-        this.speedMin = 0;
-        this.speedMax = 0;
-        this.lifetime = 500;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(0.0)
+            .setMass(0.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.1"
+            // lob_max="1.0"
+            .setSpeedMin(0)
+            .setSpeedMax(0)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(false)
+            .setLifetime(500)
+            .setKnockback(0.0);
+            // damage_every_x_frames="25"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

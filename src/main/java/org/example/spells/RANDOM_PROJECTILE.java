@@ -24,7 +24,7 @@ public class RANDOM_PROJECTILE extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        Spell[] spells = recursionLevel < recursionLimit ? Global.getSpellListRelatedProjectile().getSpells(false) : Global.getSpellListRelatedProjectileNonRecursive().getSpells(false);
+        Spell[] spells = recursionLevel < recursionLimit ? Global.getSpellListProjectileType().getSpells(false) : Global.getSpellListProjectileTypeNonRecursive().getSpells(false);
 
         if(spells.length == 0){
             return;

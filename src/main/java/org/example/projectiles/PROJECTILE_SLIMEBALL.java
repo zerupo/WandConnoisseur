@@ -1,25 +1,37 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_SLIMEBALL extends Projectile{
+public class PROJECTILE_SLIMEBALL extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SLIMEBALL(){
         this.name = "Slimeball";
         this.imageFile = "slimeball.png";
         this.emote = staticEmote;
-        this.gravityY = 10;
-        this.airFriction = 0.0;
-        this.mass = 0.055;
-
-        this.speedMin = 90;
-        this.speedMax = 115;
-        this.lifetime = 330;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(10.0)
+            .setAirFriction(0.0)
+            .setMass(0.055);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setSpeedMin(90)
+            .setSpeedMax(115)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setOnCollisionDie(true)
+            .setLifetime(330)
+            // shoot_light_flash_r="40"
+            // shoot_light_flash_g="120"
+            // shoot_light_flash_b="20"
+            // shoot_light_flash_radius="72"
+            .setKnockback(1.5);
+            // physics_impulse_coeff="8000"
+        this.projectileComponent.getDamageComponent().setProjectile(6.25);
     }
 }
 

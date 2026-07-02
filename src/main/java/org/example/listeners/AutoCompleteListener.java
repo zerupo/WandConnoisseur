@@ -75,9 +75,13 @@ public class AutoCompleteListener extends ListenerAdapter{
         switch(event.getFocusedOption().getName()){
             case "propriete" -> {
                 if(currentInput.equals("")){
-                    values.addAll(Arrays.asList(Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length))));
+                    validOptions = Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length));
                 }else{
-                    values.addAll(Arrays.asList(getSpellAutocomplete(Global.getSpellStringProperties(), currentInput, maxOutput)));
+                    validOptions = getSpellAutocomplete(Global.getSpellStringProperties(), currentInput, maxOutput);
+                }
+
+                for(String validOption : validOptions){
+                    values.add(preInput + validOption);
                 }
             }
             case "condition" -> {
@@ -119,9 +123,9 @@ public class AutoCompleteListener extends ListenerAdapter{
                 if(event.getName().equals("wisp")){
                     currentInput = currentInput.strip();
                     if(currentInput.equals("")){
-                        values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasListRelatedProjectile(), Math.min(maxOutput, Global.getAliasListRelatedProjectile().length))));
+                        values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasListProjectileComponent(), Math.min(maxOutput, Global.getAliasListProjectileComponent().length))));
                     }else{
-                        values.addAll(Arrays.asList(getSpellAutocomplete(Global.getAliasListRelatedProjectile(), currentInput, maxOutput)));
+                        values.addAll(Arrays.asList(getSpellAutocomplete(Global.getAliasListProjectileComponent(), currentInput, maxOutput)));
                     }
                 }else{
                     if(currentInput.equals("")){
@@ -175,11 +179,22 @@ public class AutoCompleteListener extends ListenerAdapter{
                 values.add("glyph");
             }
             case "type" -> {
-                values.add("png");
-                values.add("svg");
-                values.add("svg_light");
-                if(event.getName().equals("cast_state")){
-                    values.add("menu");
+                switch(event.getName()){
+                    case "cast_state" -> {
+                        values.add("png");
+                        values.add("svg");
+                        values.add("svg_light");
+                        values.add("menu");
+                    }
+                    case "flowchart_image" -> {
+                        values.add("png");
+                        values.add("svg");
+                        values.add("svg_light");
+                    }
+                    case "liste_sorts" -> {
+                        values.add("message");
+                        values.add("csv");
+                    }
                 }
             }
             case "commande" -> {

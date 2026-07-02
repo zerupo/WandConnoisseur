@@ -1,25 +1,51 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_CURSED_ORB extends Projectile{
+public class PROJECTILE_CURSED_ORB extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_CURSED_ORB(){
         this.name = "Cursed Sphere";
         this.imageFile = "cursed_orb.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = -6;
-        this.mass = 0.04;
-
-        this.speedMin = 1;
-        this.speedMax = 2;
-        this.lifetime = 120;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-6.0)
+            .setGravityY(0.0)
+            .setMass(0.04)
+            .setTerminalVelocity(400.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(1)
+            .setSpeedMax(2)
+            .setSpreadRad(0.15)
+            // die_on_liquid_collision="0"
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setFriendlyFire(true)
+            // shoot_light_flash_radius="100"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="30"
+            // shoot_light_flash_b="30"
+            // velocity_sets_scale="1"
+            .setLifetime(120)
+            // penetrate_entities="0"
+            // hit_particle_force_multiplier="0.25"
+            .setKnockback(1.5);
+            // bounces_left="2"
+            // bounce_energy="0.25"
+            // bounce_always="1"
+            // bounce_at_any_angle="1"
+            // ragdoll_force_multiplier="0.01"
+            // ragdoll_fx_on_collision="BLOOD_SPRAY"
+            // damage_game_effect_entities="data/entities/misc/effect_curse_cloud_01_temporary.xml,"
+        this.projectileComponent.getDamageComponent().setProjectile(15.0);
     }
 }
 

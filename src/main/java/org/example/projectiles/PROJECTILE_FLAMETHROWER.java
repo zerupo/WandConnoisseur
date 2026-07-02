@@ -1,24 +1,37 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_FLAMETHROWER extends Projectile{
+public class PROJECTILE_FLAMETHROWER extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_FLAMETHROWER(){
         this.name = "Flamethrower";
         this.imageFile = "flamethrower.png";
         this.emote = staticEmote;
-        this.gravityY = 100;
-        this.mass = 0.067;
-
-        this.speedMin = 160;
-        this.speedMax = 170;
-        this.lifetime = 80;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(100.0)
+            .setMass(0.067);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(160)
+            .setSpeedMax(170)
+            .setDieOnLowVelocity(true)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            // die_on_liquid_collision="1"
+            .setOnCollisionDie(true)
+            .setLifetime(80)
+            .setKnockback(0.2);
+            // physics_impulse_coeff="1000"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

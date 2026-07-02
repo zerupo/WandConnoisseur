@@ -1,25 +1,49 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_FIREBOMB extends Projectile{
+public class PROJECTILE_FIREBOMB extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_FIREBOMB(){
         this.name = "Firebomb";
         this.imageFile = "firebomb.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = -0.1;
-        this.mass = 0.03;
-
-        this.speedMin = 120;
-        this.speedMax = 140;
-        this.lifetime = 70;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-0.1)
+            .setGravityY(0.0)
+            .setMass(0.03);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.9"
+            // lob_max="1.0"
+            .setSpeedMin(120)
+            .setSpeedMax(140)
+            .setFriction(0.6)
+            .setSpreadRad(0.05)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(true)
+            // die_on_liquid_collision="1"
+            .setLifetime(70)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.04"
+            // hit_particle_force_multiplier="5.5 "
+            // camera_shake_when_shot="1.0"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="140"
+            // shoot_light_flash_b="10"
+            // shoot_light_flash_radius="60"
+            .setKnockback(0.6);
+            // physics_impulse_coeff="10000"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setFire(10.0);
     }
 }
 

@@ -1,25 +1,48 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_HEAL_BULLET extends Projectile{
+public class PROJECTILE_HEAL_BULLET extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_HEAL_BULLET(){
         this.name = "Healing Bolt";
         this.imageFile = "heal_bullet.png";
         this.emote = staticEmote;
-        this.gravityY = 200;
-        this.airFriction = 1.2;
-        this.mass = 0.05;
-
-        this.speedMin = 600;
-        this.speedMax = 650;
-        this.lifetime = 60;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(200.0)
+            .setAirFriction(1.2)
+            .setMass(0.05);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.5"
+            // lob_max="0.7"
+            .setSpeedMin(600)
+            .setSpeedMax(650)
+            .setFriction(1.0)
+            .setSpreadRad(0.01)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            .setLifetime(60)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.04"
+            // hit_particle_force_multiplier="0.1"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_laser_green.xml"
+            // shoot_light_flash_radius="84"
+            // shoot_light_flash_r="110"
+            // shoot_light_flash_g="205"
+            // shoot_light_flash_b="40"
+            // collide_with_shooter_frames="4"
+            .setFriendlyFire(true);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setHealing(-8.75);
     }
 }
 

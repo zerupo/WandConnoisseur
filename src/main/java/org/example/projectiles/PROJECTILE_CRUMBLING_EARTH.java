@@ -1,24 +1,38 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_CRUMBLING_EARTH extends Projectile{
+public class PROJECTILE_CRUMBLING_EARTH extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_CRUMBLING_EARTH(){
         this.name = "Earthquake";
         this.imageFile = "crumbling_earth.png";
         this.emote = staticEmote;
-        this.gravityY = 10;
-        this.mass = 0.07;
-
-        this.speedMin = 110;
-        this.speedMax = 110;
-        this.lifetime = 30;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(10.0)
+            .setMass(0.07);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setLifetime(30)
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_magic_launcher_trailer.xml"
+            // shoot_light_flash_radius="120"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="240"
+            // shoot_light_flash_b="30"
+            .setSpeedMin(110)
+            .setSpeedMax(110)
+            .setFriction(1.0)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

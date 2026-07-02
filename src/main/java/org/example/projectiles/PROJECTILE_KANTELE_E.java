@@ -1,25 +1,41 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_KANTELE_E extends Projectile{
+public class PROJECTILE_KANTELE_E extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_KANTELE_E(){
         this.name = "Kantele - Note E";
         this.imageFile = "kantele_e.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 8;
-        this.mass = 0.01;
-
-        this.speedMin = 250;
-        this.speedMax = 450;
-        this.lifetime = 2;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(8.0)
+            .setMass(0.01);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.5"
+            // lob_max="0.7"
+            .setSpeedMin(250)
+            .setSpeedMax(450)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(false)
+            .setLifetime(2)
+            // velocity_sets_scale="0"
+            .setLifetimeRandomness(0)
+            // ragdoll_force_multiplier="0.001"
+            // hit_particle_force_multiplier="0.001"
+            .setKnockback(0.0);
+            // physics_impulse_coeff="0"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

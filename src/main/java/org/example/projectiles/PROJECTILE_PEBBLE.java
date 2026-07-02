@@ -1,22 +1,41 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_PEBBLE extends Projectile{
+public class PROJECTILE_PEBBLE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_PEBBLE(){
         this.name = "Summon rock spirit";
         this.imageFile = "pebble.png";
         this.emote = staticEmote;
-
-        this.speedMin = 220;
-        this.speedMax = 240;
-        this.lifetime = 60;
-        this.lifetimeRandomness = 0;
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.5"
+            // lob_max="1.0"
+            .setSpeedMin(220)
+            .setSpeedMax(240)
+            // angular_velocity="0"
+            .setFriction(1.0)
+            .setSpreadRad(0.02)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            // ragdoll_force_multiplier="0.005"
+            .setLifetime(60)
+            // camera_shake_when_shot="0"
+            // hit_particle_force_multiplier="0.1"
+            // velocity_sets_rotation="0"
+            // velocity_sets_scale="0"
+            .setOnCollisionDie(true);
+            // shoot_light_flash_r="190"
+            // shoot_light_flash_g="255"
+            // shoot_light_flash_b="170"
+            // shoot_light_flash_radius="32"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

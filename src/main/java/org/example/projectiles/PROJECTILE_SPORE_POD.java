@@ -1,24 +1,44 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_SPORE_POD extends Projectile{
+public class PROJECTILE_SPORE_POD extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SPORE_POD(){
         this.name = "Prickly Spore Pod";
         this.imageFile = "spore_pod.png";
         this.emote = staticEmote;
-        this.airFriction = 0.0;
-        this.mass = 0.06;
-
-        this.speedMin = 210;
-        this.speedMax = 240;
-        this.lifetime = 100;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(0.0)
+            .setMass(0.06);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.95"
+            // lob_max="1.0"
+            .setSpeedMin(210)
+            .setSpeedMax(240)
+            .setFriction(0.6)
+            .setSpreadRad(0.05)
+            // on_death_gfx_leave_sprite="0"
+            .setLifetime(100)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.04"
+            // hit_particle_force_multiplier="5.5 "
+            // camera_shake_when_shot="1.0"
+            // shoot_light_flash_radius="80"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher.xml"
+            .setKnockback(1.7)
+            // on_collision_spawn_entity="1"
+            // spawn_entity="data/entities/projectiles/deck/spore_pod_growing.xml"
+            .setOnCollisionDie(true)
+            // on_collision_remove_projectile="0"
+            .setOnLifetimeOutExplode(false);
+        this.projectileComponent.getDamageComponent().setProjectile(2.5);
     }
 }
 

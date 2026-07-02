@@ -1,22 +1,46 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_MINE extends Projectile{
+public class PROJECTILE_MINE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_MINE(){
         this.name = "Unstable crystal";
         this.imageFile = "mine.png";
         this.emote = staticEmote;
-
-        this.speedMin = 250;
-        this.speedMax = 280;
-        this.lifetime = -1;
-        this.lifetimeRandomness = 0;
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.9"
+            // lob_max="1.0"
+            .setSpeedMin(250)
+            .setSpeedMax(280)
+            .setFriction(0.6)
+            .setSpreadRad(0.05)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(false)
+            .setLifetime(-1)
+            // velocity_sets_scale="1"
+            // velocity_updates_animation="0.5"
+            // velocity_sets_rotation="0"
+            .setLifetimeRandomness(0);
+            // ragdoll_force_multiplier="0.04"
+            // hit_particle_force_multiplier="5.5 "
+            // camera_shake_when_shot="5.0"
+            // bounces_left="4"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_medium.xml"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="210"
+            // shoot_light_flash_b="40"
+            // shoot_light_flash_radius="64"
+            // damage_every_x_frames="15"
+            // physics_impulse_coeff="8000"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

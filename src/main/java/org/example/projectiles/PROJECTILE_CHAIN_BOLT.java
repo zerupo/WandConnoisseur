@@ -1,23 +1,37 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_CHAIN_BOLT extends Projectile{
+public class PROJECTILE_CHAIN_BOLT extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_CHAIN_BOLT(){
         this.name = "Chain Bolt";
         this.imageFile = "chain_bolt.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-
-        this.speedMin = 40;
-        this.speedMax = 40;
-        this.lifetime = 44;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(40)
+            .setSpeedMax(40)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setOnCollisionDie(true)
+            // shoot_light_flash_radius="15"
+            // shoot_light_flash_r="250"
+            // shoot_light_flash_g="80"
+            // shoot_light_flash_b="255"
+            .setLifetime(44);
+            // penetrate_entities="1"
+        this.projectileComponent.getDamageComponent().setProjectile(25.0);
     }
 }
 

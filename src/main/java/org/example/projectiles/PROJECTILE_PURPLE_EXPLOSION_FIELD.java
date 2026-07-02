@@ -1,23 +1,32 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_PURPLE_EXPLOSION_FIELD extends Projectile{
+public class PROJECTILE_PURPLE_EXPLOSION_FIELD extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_PURPLE_EXPLOSION_FIELD(){
         this.name = "Glittering field";
         this.imageFile = "purple_explosion_field.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-
-        this.speedMin = 0;
-        this.speedMax = 0;
-        this.lifetime = 600;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(0)
+            .setSpeedMax(0)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(false)
+            .setLifetime(600);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

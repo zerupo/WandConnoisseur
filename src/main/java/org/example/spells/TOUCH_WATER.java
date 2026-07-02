@@ -1,0 +1,50 @@
+package org.example.spells;
+
+import org.example.config.EmoteConfig;
+import org.example.main.*;
+import org.example.projectiles.PROJECTILE_TOUCH_WATER;
+
+import java.lang.invoke.MethodHandles;
+
+public class TOUCH_WATER extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
+    @Override
+    protected void initialization(){
+        this.name = "Touch of Water";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "touch_water.png";
+        this.emote = staticEmote;
+        this.description = "Transmutes everything in a short radius into water, including walls, creatures... and you";
+        this.type = SpellType.material;
+        this.relatedProjectile = new PROJECTILE_TOUCH_WATER();
+        this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0, 0, 0.4);
+        this.price = 420;
+        this.manaCost = 280;
+        this.hasCharges = true;
+        this.maxCharges = 5;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        castState.addProjectile(this.relatedProjectile.clone());
+    }
+}
+
+/*{
+	id          = "TOUCH_WATER",
+	name 		= "$action_touch_water",
+	description = "$actiondesc_touch_water",
+	sprite 		= "data/ui_gfx/gun_actions/touch_water.png",
+	sprite_unidentified = "data/ui_gfx/gun_actions/rocket_unidentified.png",
+	related_projectiles	= {"data/entities/projectiles/deck/touch_water.xml"},
+	type 		= ACTION_TYPE_MATERIAL,
+	spawn_level                       = "1,2,3,4,5,6,7,10", -- TOUCH_WATER
+	spawn_probability                 = "0,0,0,0,0.1,0.1,0.1,0.4", -- TOUCH_WATER
+	price = 420,
+	mana = 280,
+	max_uses    = 5,
+	action 		= function()
+		add_projectile("data/entities/projectiles/deck/touch_water.xml")
+	end,
+}*/

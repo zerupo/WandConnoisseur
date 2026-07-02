@@ -35,8 +35,12 @@ public class Global{
     private final static ScriptList scriptList = new ScriptList();
     private final static SpellList spellList = new SpellList();
     private final static SpellList spellListNonRecursive = new SpellList(spell -> !spell.getRecursive());
+    private final static SpellList spellListProjectileType = new SpellList(spell -> spell.getType() == Spell.SpellType.projectile);
+    private final static SpellList spellListProjectileTypeNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.projectile && !spell.getRecursive());
     private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
     private final static SpellList spellListRelatedProjectileNonRecursive = new SpellList(spell -> spell.getRelatedProjectile() != null && !spell.getRecursive());
+    private final static SpellList spellListProjectileComponent = new SpellList(spell -> spell.getRelatedProjectile() != null && spell.getRelatedProjectile().getProjectileComponent() != null);
+    private final static SpellList spellListProjectileComponentNonRecursive = new SpellList(spell -> spell.getRelatedProjectile() != null && spell.getRelatedProjectile().getProjectileComponent() != null && !spell.getRecursive());
     private final static SpellList spellListModifier = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier);
     private final static SpellList spellListModifierNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier && !spell.getRecursive());
     private final static SpellList spellListStaticProjectile = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile);
@@ -44,6 +48,7 @@ public class Global{
     private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
     private final static String[] aliasList = spellList.getAllAlias();
     private final static String[] aliasListRelatedProjectile = spellListRelatedProjectile.getAllAlias();
+    private final static String[] aliasListProjectileComponent = spellListProjectileComponent.getAllAlias();
     private final static String[] aliasListLifetimeModifier = spellListLifetimeModifier.getAllAlias();
     private static Command[] commandList = null;
     private final static WandList wandList = new WandList();
@@ -58,7 +63,7 @@ public class Global{
     private final static Pattern spellPattern = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
     public final static MenuManager menuManager = new MenuManager();
     private static long currentFrame = 0;
-    private static RandomGenerator randomGenerator = new RandomGenerator();
+    private final static RandomGenerator randomGenerator = new RandomGenerator();
     private static boolean reqOEState = false;
 
     // getters
@@ -98,12 +103,28 @@ public class Global{
         return spellList;
     }
 
+    public static SpellList getSpellListProjectileType(){
+        return spellListProjectileType;
+    }
+
+    public static SpellList getSpellListProjectileTypeNonRecursive(){
+        return spellListProjectileTypeNonRecursive;
+    }
+
     public static SpellList getSpellListRelatedProjectile(){
         return spellListRelatedProjectile;
     }
 
     public static SpellList getSpellListRelatedProjectileNonRecursive(){
         return spellListRelatedProjectileNonRecursive;
+    }
+
+    public static SpellList getSpellListProjectileComponent(){
+        return spellListProjectileComponent;
+    }
+
+    public static SpellList getSpellListProjectileComponentNonRecursive(){
+        return spellListProjectileComponentNonRecursive;
     }
 
     public static SpellList getSpellListModifier(){
@@ -136,6 +157,10 @@ public class Global{
 
     public static String[] getAliasListRelatedProjectile(){
         return aliasListRelatedProjectile;
+    }
+
+    public static String[] getAliasListProjectileComponent(){
+        return aliasListProjectileComponent;
     }
 
     public static String[] getAliasListLifetimeModifier(){

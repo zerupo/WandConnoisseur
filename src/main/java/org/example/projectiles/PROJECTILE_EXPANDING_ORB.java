@@ -1,25 +1,45 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_EXPANDING_ORB extends Projectile{
+public class PROJECTILE_EXPANDING_ORB extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_EXPANDING_ORB(){
         this.name = "Expanding Sphere";
         this.imageFile = "expanding_orb.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
-        this.mass = 0.04;
-
-        this.speedMin = 45;
-        this.speedMax = 55;
-        this.lifetime = 180;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(0.0)
+            .setTerminalVelocity(200.0)
+            .setGravityY(0.0)
+            .setMass(0.04);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(45)
+            .setSpeedMax(55)
+            .setSpreadRad(0.15)
+            // die_on_liquid_collision="0"
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setFriendlyFire(true)
+            // collide_with_entities="0"
+            // shoot_light_flash_radius="100"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="30"
+            // shoot_light_flash_b="30"
+            .setLifetime(180)
+            // hit_particle_force_multiplier="0.25"
+            .setKnockback(1.5);
+            // ragdoll_force_multiplier="0.05"
+            // damage_every_x_frames="15"
+        this.projectileComponent.getDamageComponent().setProjectile(75.0);
     }
 }
 

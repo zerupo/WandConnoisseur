@@ -1,25 +1,44 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_SPIRAL_SHOT extends Projectile{
+public class PROJECTILE_SPIRAL_SHOT extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SPIRAL_SHOT(){
         this.name = "Spiral shot";
         this.imageFile = "spiral_shot.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
-        this.mass = 0.01;
-
-        this.speedMin = 100;
-        this.speedMax = 120;
-        this.lifetime = 100;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(0.0)
+            .setMass(0.01);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(100)
+            .setSpeedMax(120)
+            // collide_with_entities="0"
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(false)
+            .setSpreadRad(0.0)
+            .setLifetime(100);
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_magic_large.xml"
+            // shoot_light_flash_r="160"
+            // shoot_light_flash_g="245"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="180"
+            // damage_every_x_frames="5"
+            // physics_impulse_coeff="5000"
+        this.projectileComponent.getDamageComponent().setProjectile(5.0);
     }
 }
 

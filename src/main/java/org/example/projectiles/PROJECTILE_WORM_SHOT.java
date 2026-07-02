@@ -1,25 +1,49 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_WORM_SHOT extends Projectile{
+public class PROJECTILE_WORM_SHOT extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_WORM_SHOT(){
         this.name = "Worm Launcher";
         this.imageFile = "worm.png";
         this.emote = staticEmote;
-        this.gravityY = 200;
-        this.airFriction = -0.2;
-        this.mass = 0.3;
-
-        this.speedMin = 600;
-        this.speedMax = 650;
-        this.lifetime = 40;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-0.2)
+            .setGravityY(200.0)
+            .setMass(0.3);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(200)
+            .setSpeedMax(300)
+            .setCollideWithWorld(false)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(false)
+            .setLifetime(100)
+            .setKnockback(0.1)
+            // velocity_sets_scale="0"
+            // penetrate_entities="1"
+            .setLifetimeRandomness(7)
+            // velocity_sets_rotation="1"
+            // ragdoll_force_multiplier="0.0025"
+            // hit_particle_force_multiplier="0.25"
+            // camera_shake_when_shot="0.4"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_small_pink.xml"
+            // collide_with_shooter_frames="4"
+            // bounces_left="10"
+            // bounce_always="1"
+            .setFriendlyFire(true);
+        this.projectileComponent.getDamageComponent().setProjectile(2.5);
     }
 }
 

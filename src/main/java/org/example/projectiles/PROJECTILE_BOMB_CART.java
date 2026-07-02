@@ -1,21 +1,34 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
 public class PROJECTILE_BOMB_CART extends Projectile{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BOMB_CART(){
         this.name = "Bomb Cart";
         this.imageFile = "bomb_cart.png";
         this.emote = staticEmote;
-        this.speedMin = 0;
-        this.speedMax = 0;
-        this.lifetime = 420;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setUpdateVelocity(true);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setLifetime(420)
+            .setSpeedMin(0)
+            .setSpeedMax(0)
+            .setOnLifetimeOutExplode(true)
+            .setOnDeathExplode(true)
+            .setCollideWithWorld(false)
+            .setOnCollisionDie(false);
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher_large.xml"
+            // shoot_light_flash_radius="120"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="240"
+            // shoot_light_flash_b="30"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

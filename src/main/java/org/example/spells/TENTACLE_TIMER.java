@@ -13,7 +13,7 @@ public class TENTACLE_TIMER extends Spell{
     @Override
     protected void initialization(){
         this.name = "Summon Tentacle with timer";
-        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "tentacle timer"};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "tentacule timer", "tentacle timer"};
         this.imageFile = "tentacle_timer.png";
         this.emote = staticEmote;
         this.description = "Calls a terrifying appendage from another dimension! Comes with a timer";

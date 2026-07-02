@@ -1,25 +1,36 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_LASER_EMITTER extends Projectile{
+public class PROJECTILE_LASER_EMITTER extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_LASER_EMITTER(){
         this.name = "Plasma Beam";
         this.imageFile = "laser_emitter.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 7;
-        this.mass = 0.05;
-
-        this.speedMin = 40;
-        this.speedMax = 40;
-        this.lifetime = 100;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(7.0)
+            .setMass(0.05);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(40)
+            .setSpeedMax(40)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(false)
+            .setLifetime(100)
+            .setKnockback(1.3);
+        this.projectileComponent.getDamageComponent().setProjectile(20.0);
     }
 }
 

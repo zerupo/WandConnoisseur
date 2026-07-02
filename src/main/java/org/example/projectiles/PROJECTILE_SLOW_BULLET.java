@@ -1,25 +1,49 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_SLOW_BULLET extends Projectile{
+public class PROJECTILE_SLOW_BULLET extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SLOW_BULLET(){
         this.name = "Energy Orb";
         this.imageFile = "slow_bullet.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 1.0;
-        this.mass = 0.09;
-
-        this.speedMin = 180;
-        this.speedMax = 240;
-        this.lifetime = 50;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(1.0)
+            .setGravityY(0.0)
+            .setMass(0.09);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(180)
+            .setSpeedMax(240)
+            .setFriction(1.0)
+            .setSpreadRad(0.03)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            .setLifetime(50)
+            .setKnockback(0.1)
+            // velocity_sets_scale="0"
+            .setLifetimeRandomness(7);
+            // velocity_sets_rotation="0"
+            // ragdoll_force_multiplier="0.0025"
+            // hit_particle_force_multiplier="0.25 "
+            // camera_shake_when_shot="0.4"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_magic_launcher_blue.xml"
+            // shoot_light_flash_r="100"
+            // shoot_light_flash_g="190"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="100"
+            // physics_impulse_coeff="4000"
+        this.projectileComponent.getDamageComponent().setProjectile(11.25);
     }
 }
 

@@ -1,24 +1,36 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_BIG_MAGIC_SHIELD extends Projectile{
+public class PROJECTILE_BIG_MAGIC_SHIELD extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BIG_MAGIC_SHIELD(){
         this.name = "Big Magic Guard";
         this.imageFile = "big_magic_shield.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(0.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(0)
+            .setSpeedMax(0)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            // penetrate_entities="1"
+            .setOnCollisionDie(false)
+            .setLifetime(5);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
 
-        this.speedMin = 0;
-        this.speedMax = 0;
-        this.lifetime = 5;
-        this.lifetimeRandomness = 0;
     }
 }
 

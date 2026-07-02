@@ -1,6 +1,7 @@
 package org.example.main;
 
 public class DamageComponent{
+    public enum Type{PROJECTILE, MELEE, EXPLOSION, ELECTRICITY, FIRE, DRILL, SLICE, ICE, HEALING, PHYSICS_HIT, RADIOACTIVE, POISON, OVEREATING, CURSE, HOLY}
     private double projectile = 0.0;
     private double melee = 0.0;
     private double explosion = 0.0;
@@ -147,6 +148,26 @@ public class DamageComponent{
         return this.projectile + this.melee + this.explosion + this.electricity + this.fire + this.drill + this.slice + this.ice + this.healing + this.physics_hit + this.radioactive + this.poison + this.overeating + this.curse + this.holy;
     }
 
+    public double getDamage(Type damageType){
+        return switch(damageType){
+            case PROJECTILE -> this.projectile;
+            case MELEE -> this.melee;
+            case EXPLOSION -> this.explosion;
+            case ELECTRICITY -> this.electricity;
+            case FIRE -> this.fire;
+            case DRILL -> this.drill;
+            case SLICE -> this.slice;
+            case ICE -> this.ice;
+            case HEALING -> this.healing;
+            case PHYSICS_HIT -> this.physics_hit;
+            case RADIOACTIVE -> this.radioactive;
+            case POISON -> this.poison;
+            case OVEREATING -> this.overeating;
+            case CURSE -> this.curse;
+            case HOLY -> this.holy;
+        };
+    }
+
     // setters
     public void setProjectile(double projectile){
         this.projectile = projectile;
@@ -208,6 +229,26 @@ public class DamageComponent{
         this.holy = holy;
     }
 
+    public void setDamage(double damage, Type damageType){
+        switch(damageType){
+            case PROJECTILE -> this.projectile = damage;
+            case MELEE -> this.melee = damage;
+            case EXPLOSION -> this.explosion = damage;
+            case ELECTRICITY -> this.electricity = damage;
+            case FIRE -> this.fire = damage;
+            case DRILL -> this.drill = damage;
+            case SLICE -> this.slice = damage;
+            case ICE -> this.ice = damage;
+            case HEALING -> this.healing = damage;
+            case PHYSICS_HIT -> this.physics_hit = damage;
+            case RADIOACTIVE -> this.radioactive = damage;
+            case POISON -> this.poison = damage;
+            case OVEREATING -> this.overeating = damage;
+            case CURSE -> this.curse = damage;
+            case HOLY -> this.holy = damage;
+        }
+    }
+
     public void setDamage(DamageComponent damageComponent){
         this.projectile = damageComponent.projectile;
         this.melee = damageComponent.melee;
@@ -224,6 +265,26 @@ public class DamageComponent{
         this.overeating = damageComponent.overeating;
         this.curse = damageComponent.curse;
         this.holy = damageComponent.holy;
+    }
+
+    public void add(double damage, Type damageType){
+        switch(damageType){
+            case PROJECTILE -> this.projectile += damage;
+            case MELEE -> this.melee += damage;
+            case EXPLOSION -> this.explosion += damage;
+            case ELECTRICITY -> this.electricity += damage;
+            case FIRE -> this.fire += damage;
+            case DRILL -> this.drill += damage;
+            case SLICE -> this.slice += damage;
+            case ICE -> this.ice += damage;
+            case HEALING -> this.healing += damage;
+            case PHYSICS_HIT -> this.physics_hit += damage;
+            case RADIOACTIVE -> this.radioactive += damage;
+            case POISON -> this.poison += damage;
+            case OVEREATING -> this.overeating += damage;
+            case CURSE -> this.curse += damage;
+            case HOLY -> this.holy += damage;
+        }
     }
 
     public void add(DamageComponent damageComponent){
@@ -292,5 +353,161 @@ public class DamageComponent{
         }
 
         return true;
+    }
+
+    public int nbType(){
+        int result = 0;
+
+        if(this.projectile != 0){
+            result++;
+        }
+        if(this.melee != 0){
+            result++;
+        }
+        if(this.explosion != 0){
+            result++;
+        }
+        if(this.electricity != 0){
+            result++;
+        }
+        if(this.fire != 0){
+            result++;
+        }
+        if(this.drill != 0){
+            result++;
+        }
+        if(this.slice != 0){
+            result++;
+        }
+        if(this.ice != 0){
+            result++;
+        }
+        if(this.healing != 0){
+            result++;
+        }
+        if(this.physics_hit != 0){
+            result++;
+        }
+        if(this.radioactive != 0){
+            result++;
+        }
+        if(this.poison != 0){
+            result++;
+        }
+        if(this.overeating != 0){
+            result++;
+        }
+        if(this.curse != 0){
+            result++;
+        }
+        if(this.holy != 0){
+            result++;
+        }
+
+        return result;
+    }
+
+    public String toString(){
+        switch(this.nbType()){
+            case 0 ->{
+                return "0";
+            }
+            case 1 -> {
+                if(this.projectile != 0){
+                    return "projectile " + this.projectile;
+                }
+                if(this.melee != 0){
+                    return "melee " + this.melee;
+                }
+                if(this.explosion != 0){
+                    return "explosion " + this.explosion;
+                }
+                if(this.electricity != 0){
+                    return "electricity " + this.electricity;
+                }
+                if(this.fire != 0){
+                    return "fire " + this.fire;
+                }
+                if(this.drill != 0){
+                    return "drill " + this.drill;
+                }
+                if(this.slice != 0){
+                    return "slice " + this.slice;
+                }
+                if(this.ice != 0){
+                    return "ice " + this.ice;
+                }
+                if(this.healing != 0){
+                    return "healing " + this.healing;
+                }
+                if(this.physics_hit != 0){
+                    return "physics_hit " + this.physics_hit;
+                }
+                if(this.radioactive != 0){
+                    return "radioactive " + this.radioactive;
+                }
+                if(this.poison != 0){
+                    return "poison " + this.poison;
+                }
+                if(this.overeating != 0){
+                    return "overeating " + this.overeating;
+                }
+                if(this.curse != 0){
+                    return "curse " + this.curse;
+                }
+                return "holy " + this.holy;
+            }
+            default -> {
+                StringBuilder result = new StringBuilder();
+
+                if(this.projectile != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("projectile: ").append(this.projectile);
+                }
+                if(this.melee != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("melee: ").append(this.melee);
+                }
+                if(this.explosion != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("explosion: ").append(this.explosion);
+                }
+                if(this.electricity != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("electricity: ").append(this.electricity);
+                }
+                if(this.fire != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("fire: ").append(this.fire);
+                }
+                if(this.drill != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("drill: ").append(this.drill);
+                }
+                if(this.slice != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("slice: ").append(this.slice);
+                }
+                if(this.ice != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("ice: ").append(this.ice);
+                }
+                if(this.healing != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("healing: ").append(this.healing);
+                }
+                if(this.physics_hit != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("physics_hit: ").append(this.physics_hit);
+                }
+                if(this.radioactive != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("radioactive: ").append(this.radioactive);
+                }
+                if(this.poison != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("poison: ").append(this.poison);
+                }
+                if(this.overeating != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("overeating: ").append(this.overeating);
+                }
+                if(this.curse != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("curse: ").append(this.curse);
+                }
+                if(this.holy != 0){
+                    result.append(result.isEmpty() ? "" : ", ").append("holy: ").append(this.holy);
+                }
+
+                return "[" + result.toString() + "]";
+            }
+        }
     }
 }

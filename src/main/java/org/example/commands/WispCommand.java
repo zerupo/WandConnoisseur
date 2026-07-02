@@ -1,19 +1,21 @@
 package org.example.commands;
 
 import org.example.main.Global;
+import org.example.main.ProjectileComponent;
 import org.example.main.SpellList;
 import org.example.projectiles.Projectile;
 import org.example.spells.*;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.utils.FileUpload;
 
 class Modifier{
     public String name;
@@ -77,9 +79,7 @@ public class WispCommand implements Command{
                 for(int i = 0; i <= nbMaxModifier; i++){
                     coefficients[depth] = i;
                     int[][] subPossibilities = getValues(depth + 1, coefficients, lifetime, minLifetime, maxLifetime, nbMaxModifier);
-                    for(int[] subPossibility : subPossibilities){
-                        possibilities.add(subPossibility);
-                    }
+                    possibilities.addAll(Arrays.asList(subPossibilities));
                 }
             }
             return possibilities.toArray(new int[0][]);
@@ -105,11 +105,8 @@ public class WispCommand implements Command{
             }
         }
         sumNew = getTotal(testCoeff, lifetime);
-        if(minLifetime + sum > -1 && minLifetime + sumNew < 0 || maxLifetime + sum < -1 && maxLifetime + sumNew >= -1){
-            return true;
-        }else{
-            return false;
-        }
+
+        return minLifetime + sum > -1 && minLifetime + sumNew < 0 || maxLifetime + sum < -1 && maxLifetime + sumNew >= -1;
     }
 
     private static int getTotal(int[] coefficients, int[] lifetime){
@@ -122,7 +119,7 @@ public class WispCommand implements Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
-        SpellList spellListRelatedProjectile = Global.getSpellListRelatedProjectile();
+        SpellList spellListProjectileComponent = Global.getSpellListProjectileComponent();
         OptionMapping spellOption = event.getOption("sort");
         OptionMapping lifetimeMinOption = event.getOption("lifetime_min");
         OptionMapping lifetimeMaxOption = event.getOption("lifetime_max");
@@ -138,14 +135,17 @@ public class WispCommand implements Command{
 
         if(spellOption != null){
             spellsInput = spellOption.getAsString();
-            spell = spellListRelatedProjectile.getSpell(spellsInput);
+            spell = spellListProjectileComponent.getSpell(spellsInput);
             if(spell != null){
                 // get spell lifetime
                 Projectile relatedProjectile = spell.getRelatedProjectile();
                 if(relatedProjectile != null){
-                    lifetimeMin = relatedProjectile.getLifetimeMin();
-                    lifetimeMax = relatedProjectile.getLifetimeMax();
-                    validSpellFound = true;
+                    ProjectileComponent projectileComponent = relatedProjectile.getProjectileComponent();
+                    if(projectileComponent != null){
+                        lifetimeMin = projectileComponent.getLifetimeMin();
+                        lifetimeMax = projectileComponent.getLifetimeMax();
+                        validSpellFound = true;
+                    }
                 }
             }
         }
@@ -156,6 +156,11 @@ public class WispCommand implements Command{
         if(lifetimeMaxOption != null){
             lifetimeMax = lifetimeMaxOption.getAsInt();
         }
+        if(lifetimeMin > lifetimeMax){
+            int temp = lifetimeMin;
+            lifetimeMin = lifetimeMax;
+            lifetimeMax = temp;
+        }
         if(nbModifierOption != null){
             nbModifier = Math.min(Math.max(nbModifierOption.getAsInt(), 0), 21);
         }
@@ -165,10 +170,11 @@ public class WispCommand implements Command{
             return;
         }
 
+        DecimalFormat df = new DecimalFormat("0.##");
         if(validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
-            stringResult.append("Recherche de wisps pour le sort ").append(spell.getName()).append(", lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("], max modifier: ").append(nbModifier);
+            stringResult.append("Recherche de wisps pour le sort ").append(spell.getName()).append(", lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(df.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%), max modifier: ").append(nbModifier);
         }else{
-            stringResult.append("Recherche de wisps pour le lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("], max modifier: ").append(nbModifier);
+            stringResult.append("Recherche de wisps pour le lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(df.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%) , max modifier: ").append(nbModifier);
         }
         event.reply(stringResult.toString()).queue();
 
@@ -199,36 +205,27 @@ public class WispCommand implements Command{
         });
 
         try{
-            FileWriter FW = new FileWriter(outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv");
-            FW.write("lifetime:;" + lifetimeMin + "; -> ;" + lifetimeMax + "\n");
-            for(int i=0; i < modifiers.length; i++){
-                FW.write(modifiers[i].name + ";");
-            }
-            FW.write("total modifiers;types of modifiers\n");
-            for(int i=0; i < modifiers.length; i++){
-                if(i != 0){
-                    FW.write(";");
-                }
-                FW.write(String.valueOf(modifiers[i].lifetime));
-            }
-            FW.write("\n\n");
-            for(int i=0; i < result.length; i++){
-                for(int j=0; j < result[i].length; j++){
-                    if(j != 0){
-                        FW.write(";");
-                    }
-                    FW.write(String.valueOf(result[i][j]));
-                }
-                FW.write("\n");
-            }
-            FW.close();
-            System.out.println("\"wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv\" successfully written");
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
 
-            File csv = new File(outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv");
-            event.getHook().editOriginal(stringResult.toString()).setFiles(FileUpload.fromData(csv, "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv")).queue();
-            if(!csv.delete()){
-                System.out.println("\"" + outputPath + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv\" not deleted");
+            writer.write("lifetime:;" + lifetimeMin + "; -> ;" + lifetimeMax + ";\n\n");
+            for(Modifier modifier : modifiers){
+                writer.write(modifier.name + ";");
             }
+            writer.write("total modifiers;types of modifiers;\n");
+            for(Modifier modifier : modifiers){
+                writer.write(modifier.lifetime + ";");
+            }
+            writer.write("\n");
+            for(int[] entry : result){
+                for(int count : entry){
+                    writer.write(count + ";");
+                }
+                writer.write("\n");
+            }
+
+            writer.close();
+            event.getHook().editOriginal(stringResult.toString()).setFiles(Global.byteToUpload(out.toByteArray(), "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv")).queue();
         }catch(IOException e){
             stringResult.append("\nErreur lors de l'écriture du fichier");
             event.getHook().editOriginal(stringResult.toString()).queue();

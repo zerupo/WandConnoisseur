@@ -1,19 +1,52 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_BLACK_HOLE extends Projectile{
+public class PROJECTILE_BLACK_HOLE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BLACK_HOLE(){
         this.name = "Black Hole";
         this.imageFile = "black_hole.png";
         this.emote = staticEmote;
-        this.lifetime = 120;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-0.2)
+            .setGravityY(0.0)
+            .setMass(0.3);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(40)
+            .setSpeedMax(40)
+            .setCollideWithWorld(false)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(false)
+            .setLifetime(120)
+            .setKnockback(0.1)
+            // velocity_sets_scale="0"
+            // penetrate_entities="1"
+            .setLifetimeRandomness(7)
+            // velocity_sets_rotation="0"
+            // ragdoll_force_multiplier="0.0025"
+            // hit_particle_force_multiplier="0.25 "
+            // camera_shake_when_shot="0.4"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_small_pink.xml"
+            // collide_with_shooter_frames="10"
+            // collide_with_entities="0"
+            .setFriendlyFire(true);
+            // shoot_light_flash_radius="100"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="180"
+            // shoot_light_flash_b="230"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

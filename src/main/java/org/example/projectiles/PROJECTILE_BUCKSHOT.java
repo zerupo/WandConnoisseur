@@ -1,19 +1,46 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_BUCKSHOT extends Projectile{
+public class PROJECTILE_BUCKSHOT extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BUCKSHOT(){
         this.name = "Triplicate Bolt";
         this.imageFile = "buckshot_solo.png";
         this.emote = staticEmote;
-        this.lifetime = 120;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(1.0)
+            .setMass(0.06);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.3"
+            .setSpeedMin(500)
+            .setSpeedMax(600)
+            .setSpreadRad(0.04)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            .setLifetime(120)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.0025"
+            // hit_particle_force_multiplier="0.25 "
+            // camera_shake_when_shot="8.0"
+            // create_shell_casing="0"
+            // bounces_left="1"
+            // shoot_light_flash_radius="100"
+            // ragdoll_fx_on_collision="BLOOD_EXPLOSION"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_laser_green.xml"
+            .setKnockback(1.0);
+            // physics_impulse_coeff="2000"
+        this.projectileComponent.getDamageComponent().setProjectile(4.625);
     }
 }
 

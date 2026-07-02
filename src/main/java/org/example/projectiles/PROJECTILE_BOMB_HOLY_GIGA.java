@@ -1,26 +1,25 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_BOMB_HOLY_GIGA extends Projectile{
+public class PROJECTILE_BOMB_HOLY_GIGA extends ProjectileBasePhysics{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    // TODO custom xml, wtf is this ?
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BOMB_HOLY_GIGA(){
         this.name = "Giga Holy Bomb";
         this.imageFile = "bomb_holy_giga.png";
         this.emote = staticEmote;
-        this.gravityY = 200;
-        this.airFriction = 1.2;
-        this.mass = 0.07;
-
-        this.speedMin = 600;
-        this.speedMax = 650;
-        this.lifetime = 40;
-        this.lifetimeRandomness = 7;
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setLifetime(260);
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_magic_launcher_holy.xml"
+            // shoot_light_flash_radius="120"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="240"
+            // shoot_light_flash_b="30"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

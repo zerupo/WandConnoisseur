@@ -1,25 +1,49 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_POLLEN extends Projectile{
+public class PROJECTILE_POLLEN extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_POLLEN(){
         this.name = "Pollen";
         this.imageFile = "pollen.png";
         this.emote = staticEmote;
-        this.gravityY = 10;
-        this.airFriction = 2.8;
-        this.mass = 0.35;
-
-        this.speedMin = 150;
-        this.speedMax = 250;
-        this.lifetime = 750;
-        this.lifetimeRandomness = 100;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(10.0)
+            .setAirFriction(2.8)
+            .setMass(0.35);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.5"
+            // lob_max="0.7"
+            .setSpeedMin(150)
+            .setSpeedMax(250)
+            .setFriction(1.0)
+            .setSpreadRad(0.01)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            .setLifetime(750)
+            .setLifetimeRandomness(100)
+            // ragdoll_force_multiplier="0"
+            // hit_particle_force_multiplier="0.1"
+            // create_shell_casing="0"
+            // muzzle_flash_file=""
+            // shoot_light_flash_radius="0"
+            // collide_with_shooter_frames="6"
+            // bounces_left="1"
+            .setFriendlyFire(true)
+            // velocity_sets_scale="0"
+            // velocity_sets_rotation="0"
+            .setKnockback(1.0);
+            // physics_impulse_coeff="500"
+        this.projectileComponent.getDamageComponent().setProjectile(5.0);
     }
 }
 

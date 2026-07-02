@@ -1,0 +1,52 @@
+package org.example.spells;
+
+import org.example.config.EmoteConfig;
+import org.example.main.*;
+import org.example.projectiles.PROJECTILE_TOUCH_GOLD;
+
+import java.lang.invoke.MethodHandles;
+
+public class TOUCH_GOLD extends Spell{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
+    @Override
+    protected void initialization(){
+        this.name = "Touch of Gold";
+        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.imageFile = "touch_gold.png";
+        this.emote = staticEmote;
+        this.description = "Transmutes everything in a short radius into gold, including walls, creatures... and you";
+        this.type = SpellType.material;
+        this.relatedProjectile = new PROJECTILE_TOUCH_GOLD();
+        this.spawnProbabilities = new SpawnProbabilities(0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0, 0, 0.5);
+        this.price = 480;
+        this.manaCost = 300;
+        this.hasCharges = true;
+        this.maxCharges = 1;
+        this.neverUnlimited = true;
+    }
+
+    @Override
+    public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
+        castState.addProjectile(this.relatedProjectile.clone());
+    }
+}
+
+/*{
+	id          = "TOUCH_GOLD",
+	name 		= "$action_touch_gold",
+	description = "$actiondesc_touch_gold",
+	sprite 		= "data/ui_gfx/gun_actions/touch_gold.png",
+	sprite_unidentified = "data/ui_gfx/gun_actions/rocket_unidentified.png",
+	related_projectiles	= {"data/entities/projectiles/deck/touch_gold.xml"},
+	type 		= ACTION_TYPE_MATERIAL,
+	spawn_level                       = "1,2,3,4,5,6,7,10", -- TOUCH_GOLD
+	spawn_probability                 = "0,0,0,0,0.1,0.1,0.1,0.5", -- TOUCH_GOLD
+	price = 480,
+	mana = 300,
+	max_uses    = 1,
+	never_unlimited = true,
+	action 		= function()
+		add_projectile("data/entities/projectiles/deck/touch_gold.xml")
+	end,
+}*/

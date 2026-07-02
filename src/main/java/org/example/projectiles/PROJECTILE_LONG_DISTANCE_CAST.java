@@ -1,24 +1,40 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_LONG_DISTANCE_CAST extends Projectile{
+public class PROJECTILE_LONG_DISTANCE_CAST extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_LONG_DISTANCE_CAST(){
         this.name = "Long-distance cast";
         this.imageFile = "long_distance_cast.png";
         this.emote = staticEmote;
-        this.airFriction = 0.0;
-        this.mass = 0.1;
-
-        this.speedMin = 1800;
-        this.speedMax = 1800;
-        this.lifetime = 4;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setMass(0.1);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(1800)
+            .setSpeedMax(1800)
+            .setFriction(0.0)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            // ground_collision_fx="1"
+            .setOnCollisionDie(false)
+            .setLifetime(4)
+            // velocity_sets_scale="0"
+            .setLifetimeRandomness(0);
+            // ragdoll_force_multiplier="0.01"
+            // hit_particle_force_multiplier="0.01"
+            // penetrate_entities="1"
+            // penetrate_world="1"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

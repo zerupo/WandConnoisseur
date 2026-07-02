@@ -1,24 +1,43 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_FIREBALL extends Projectile{
+public class PROJECTILE_FIREBALL extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_FIREBALL(){
         this.name = "Fireball";
         this.imageFile = "fireball.png";
         this.emote = staticEmote;
-        this.gravityY = 100;
-        this.mass = 0.09;
-
-        this.speedMin = 160;
-        this.speedMax = 170;
-        this.lifetime = 60;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(100.0)
+            .setMass(0.09);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(160)
+            .setSpeedMax(170)
+            .setDieOnLowVelocity(true)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(false)
+            // die_on_liquid_collision="1"
+            .setOnCollisionDie(true)
+            .setLifetime(60)
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher_large.xml"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="140"
+            // shoot_light_flash_b="10"
+            // shoot_light_flash_radius="150"
+            .setKnockback(1.5);
+            // physics_impulse_coeff="2800"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setFire(7.25);
     }
 }
 

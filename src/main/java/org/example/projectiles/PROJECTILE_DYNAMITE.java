@@ -1,21 +1,22 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_DYNAMITE extends Projectile{
+public class PROJECTILE_DYNAMITE extends ProjectileBasePhysics{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_DYNAMITE(){
         this.name = "Dynamite";
         this.imageFile = "dynamite.png";
         this.emote = staticEmote;
-        this.speedMin = 800;
-        this.speedMax = 800;
-        this.lifetime = 50;
-        this.lifetimeRandomness = 0;
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setSpeedMin(800)
+            .setSpeedMax(800)
+            .setLifetime(50);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

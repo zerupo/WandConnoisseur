@@ -2,6 +2,7 @@ package org.example.main;
 
 import org.example.projectiles.Projectile;
 
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.function.Predicate;
 import org.reflections.Reflections;
@@ -16,6 +17,9 @@ public class ProjectileList{
 
         for(Class<? extends Projectile> clazz : subclasses){
             try{
+                if(Modifier.isAbstract(clazz.getModifiers())){
+                    continue;
+                }
                 Projectile projectile = clazz.getDeclaredConstructor().newInstance();
                 if(filter.test(projectile)){
                     ProjectileList.add(projectile);

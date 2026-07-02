@@ -1,24 +1,42 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_BALL_LIGHTNING extends Projectile{
+public class PROJECTILE_BALL_LIGHTNING extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BALL_LIGHTNING(){
         this.name = "Ball Lightning";
         this.imageFile = "ball_lightning_solo.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 10.0;
-
-        this.speedMin = 600;
-        this.speedMax = 1000;
-        this.lifetime = 30;
-        this.lifetimeRandomness = 20;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(10.0)
+            .setGravityY(0.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setSpeedMin(600)
+            .setSpeedMax(1000)
+            .setOnCollisionDie(false)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(false)
+            .setLifetime(30)
+            .setLifetimeRandomness(20)
+            .setSpreadRad(0.8);
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_laser.xml"
+            // bounces_left="0"
+            // bounce_always="0"
+            // bounce_energy="0.2"
+            // shoot_light_flash_r="190"
+            // shoot_light_flash_g="248"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="208"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setElectricity(12.5);
     }
 }
 

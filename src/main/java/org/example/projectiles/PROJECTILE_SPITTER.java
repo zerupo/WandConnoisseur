@@ -1,25 +1,52 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_SPITTER extends Projectile{
+public class PROJECTILE_SPITTER extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SPITTER(){
         this.name = "Spitter Bolt";
         this.imageFile = "spitter.png";
         this.emote = staticEmote;
-        this.gravityY = 200;
-        this.airFriction = 2.7;
-        this.mass = 0.02;
-
-        this.speedMin = 400;
-        this.speedMax = 600;
-        this.lifetime = 25;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(200.0)
+            .setAirFriction(2.7)
+            .setMass(0.02);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.5"
+            // lob_max="0.7"
+            .setSpeedMin(400)
+            .setSpeedMax(600)
+            .setFriction(1.0)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            .setLifetime(25)
+            // bounce_always="1"
+            // bounces_left="10"
+            // bounce_energy="0.5"
+            // bounce_fx_file="data/entities/particles/bounce_effects/spitter.xml"
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.01"
+            // hit_particle_force_multiplier="0.1"
+            // velocity_sets_rotation="1"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_small_pink.xml"
+            // shoot_light_flash_radius="80"
+            // shoot_light_flash_r="245"
+            // shoot_light_flash_g="120"
+            // shoot_light_flash_b="220"
+            .setKnockback(1.0);
+            // physics_impulse_coeff="3500"
+        this.projectileComponent.getDamageComponent().setProjectile(7.5);
     }
 }
 

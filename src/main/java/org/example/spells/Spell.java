@@ -375,7 +375,7 @@ public abstract class Spell{
         return 0;
     }
 
-    public String getInfoString(){
+    public String getInfoString(boolean importantOnly){
         StringBuilder result = new StringBuilder();
         StringBuilder innerString = new StringBuilder();
 
@@ -427,11 +427,7 @@ public abstract class Spell{
 
         // related projectile
         if(this.relatedProjectile != null){
-            result.append("\n\n# Related Projectile");
-            if(this.triggerType != Projectile.TriggerType.none){result.append("\nTrigger type: ").append(this.triggerType);}
-            if(this.triggerType == Projectile.TriggerType.timer){result.append(String.format("\nTimer lifetime: %1$df (%2$3.2fs)", this.timerLength, this.timerLength/60.0));}
-            result.append("\nLifetime: ").append(this.relatedProjectile.getLifetimeString());
-            result.append("\nSpeed: ").append(this.relatedProjectile.getSpeedString());
+            result.append("\n\n# Related Projectile\n").append(this.relatedProjectile.toString(importantOnly));
         }
 
         return result.toString();
@@ -701,9 +697,6 @@ public abstract class Spell{
                 cardPool.addRecoil(this.recoil);
             }
         }
-        if(this.screenshake != 0){
-            cardPool.addScreenshake(this.screenshake);
-        }
 
         // castState
         if(this.setCastDelay){
@@ -725,6 +718,9 @@ public abstract class Spell{
         }
         if(this.spread != 0){
             castState.addSpread(this.spread);
+        }
+        if(this.screenshake != 0){
+            castState.addScreenshake(this.screenshake);
         }
         if(this.gravity != 0){
             castState.addGravity(this.gravity);

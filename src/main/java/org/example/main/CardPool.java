@@ -24,7 +24,6 @@ public class CardPool{
     private int manaUsage = 0;
     private int rechargeTime = 0;
     private double recoil = 0.0;
-    private double screenshake = 0.0;
     private boolean forceStopDraws = false;
 
     public CardPool(){
@@ -136,13 +135,6 @@ public class CardPool{
 
     public void setRecoil(double recoil){
         this.recoil = recoil;
-    }
-
-    public void addScreenshake(double screenshake){
-        this.screenshake += screenshake;
-        if(this.screenshake < 0.0){
-            this.screenshake = 0.0;
-        }
     }
 
     // getters
@@ -590,7 +582,6 @@ public class CardPool{
         result.append("Mana cost: ").append(this.manaUsage);
         if(this.rechargeTime != 0){result.append("\n").append(String.format("Recharge time: %1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
         if(this.recoil != 0){result.append("\n").append("Recoil: ").append(this.recoil);}
-        if(this.screenshake != 0){result.append("\n").append("Screenshake: ").append(this.screenshake);}
 
         return result.toString();
     }
@@ -600,7 +591,6 @@ public class CardPool{
 
         result.append("Mana cost: ").append(this.manaUsage);
         if(this.recoil != 0){result.append("\n").append("Recoil: ").append(this.recoil);}
-        if(this.screenshake != 0){result.append("\n").append("Screenshake: ").append(this.screenshake);}
 
         return result.toString();
     }

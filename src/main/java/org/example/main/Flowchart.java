@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Flowchart{
-    private static final BufferedImage copyFailedImage = Global.loadImage("./src/main/java/org/example/image/other/failed.png");
+    private static final BufferedImage copyFailedImage = Global.loadImage("./src/main/java/org/example/image/other/failed_20.png");
     private static final String copyColor = "\u001b[0;33m"; // yellow
     //private static String copyColor = "\033[0;32m"; // green
     private static final String failedColor = "\u001b[0;31m"; // red
@@ -319,7 +319,7 @@ public class Flowchart{
                 }
             }
             if(copyFailedImage != null && (currentFlowchart.copyFailed || currentFlowchart.myself == null)){
-                image.addImage(copyFailedImage, x + arrowSizeX + (imageSize - copyFailedImage.getWidth())/2, nextY + (imageSize - copyFailedImage.getHeight())/2, "COPY_FAILED");
+                image.addImage(copyFailedImage, x + arrowSizeX + (imageSize - copyFailedImage.getWidth())/2, nextY + (imageSize - copyFailedImage.getHeight())/2, "FAILED_20");
                 maxX = Math.max(maxX, x + arrowSizeX + imageSize - copyFailedImage.getWidth()/2);
             }
             if(currentFlowchart.myself == null){

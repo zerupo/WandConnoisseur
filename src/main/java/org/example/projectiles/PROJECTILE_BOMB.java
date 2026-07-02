@@ -1,19 +1,25 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_BOMB extends Projectile{
+public class PROJECTILE_BOMB extends ProjectileBasePhysics{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_BOMB(){
         this.name = "Bomb";
         this.imageFile = "bomb.png";
         this.emote = staticEmote;
-        this.lifetime = 180;
-        this.lifetimeRandomness = 0;
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setLifetime(180);
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher_large.xml"
+            // shoot_light_flash_radius="120"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="240"
+            // shoot_light_flash_b="30"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

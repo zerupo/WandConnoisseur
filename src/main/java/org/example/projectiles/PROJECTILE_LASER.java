@@ -1,25 +1,51 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_LASER extends Projectile{
+public class PROJECTILE_LASER extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_LASER(){
         this.name = "Concentrated Light";
         this.imageFile = "laser.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = -9.0;
-        this.mass = 0.04;
-
-        this.speedMin = 130;
-        this.speedMax = 150;
-        this.lifetime = 30;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-9.0)
+            .setGravityY(0.0)
+            .setMass(0.04);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(130)
+            .setSpeedMax(150)
+            .setFriction(-12.0)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            // die_on_liquid_collision="1"
+            .setLifetime(30)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.01"
+            // ragdoll_fx_on_collision="BLOOD_SPRAY"
+            // hit_particle_force_multiplier="0.25"
+            // camera_shake_when_shot="5.0"
+            // bounces_left="10"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_laser_green.xml"
+            // shoot_light_flash_radius="180"
+            // shoot_light_flash_r="120"
+            // shoot_light_flash_g="210"
+            // shoot_light_flash_b="70"
+            .setKnockback(2.0);
+            // physics_impulse_coeff="2000"
+        this.projectileComponent.getDamageComponent().setProjectile(9.75);
     }
 }
 

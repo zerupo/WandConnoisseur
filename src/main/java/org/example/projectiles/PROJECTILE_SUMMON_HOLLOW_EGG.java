@@ -1,17 +1,19 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_SUMMON_HOLLOW_EGG extends Projectile{
+public class PROJECTILE_SUMMON_HOLLOW_EGG extends ProjectileBaseItem{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SUMMON_HOLLOW_EGG(){
         this.name = "Summon hollow egg";
         this.imageFile = "projectile_hollow_egg.png";
         this.emote = staticEmote;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAffectPhysicsBodies(true);
     }
 }
 

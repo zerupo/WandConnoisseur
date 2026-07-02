@@ -1,20 +1,25 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
 public class PROJECTILE_SUMMON_ROCK extends Projectile{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SUMMON_ROCK(){
         this.name = "Rock";
         this.imageFile = "summon_rock.png";
         this.emote = staticEmote;
-
-        this.lifetime = -1;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAffectPhysicsBodies(true);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setLifetime(-1);
+            // penetrate_entities="1"
+            // do_moveto_update="1"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

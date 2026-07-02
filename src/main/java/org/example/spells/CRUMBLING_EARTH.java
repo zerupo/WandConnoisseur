@@ -23,10 +23,6 @@ public class CRUMBLING_EARTH extends Spell{
         this.manaCost = 240;
         this.hasCharges = true;
         this.maxCharges = 3;
-        this.castDelay = 3;
-        this.spread = -1;
-        this.critRate = 5;
-        this.screenshake = 0.5;
     }
 
     @Override

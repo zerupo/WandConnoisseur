@@ -7,23 +7,24 @@ import org.example.script.Script;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-class CastStateProjectile{
+class ProjectileCount{
     private Projectile projectile;
     private int count;
 
-    public CastStateProjectile(Projectile projectile){
+    public ProjectileCount(Projectile projectile){
         this.projectile = projectile;
         this.count = 1;
     }
 
-    public CastStateProjectile(Projectile projectile, int count){
+    public ProjectileCount(Projectile projectile, int count){
         this.projectile = projectile;
         this.count = count;
     }
 
-    public CastStateProjectile clone(){
-        return new CastStateProjectile(this.projectile.clone(), this.count);
+    public ProjectileCount clone(){
+        return new ProjectileCount(this.projectile.clone(), this.count);
     }
 
     // getters
@@ -53,22 +54,196 @@ class CastStateProjectile{
     }
 }
 
-class CastStateScript{
+class CastStateProjectile{
+    private final ArrayList<ProjectileCount> projectileCounts = new ArrayList<>();
+    private final ArrayList<ProjectileCount> brokenProjectileCounts = new ArrayList<>();
+    private boolean isBroken = false;
+
+    public CastStateProjectile(){
+        // empty
+    }
+
+    public CastStateProjectile clone(){
+        CastStateProjectile newCastStateProjectile = new CastStateProjectile();
+
+        for(ProjectileCount projectileCount : this.projectileCounts){
+            newCastStateProjectile.projectileCounts.add(projectileCount.clone());
+        }
+        for(ProjectileCount projectileCount : this.brokenProjectileCounts){
+            newCastStateProjectile.brokenProjectileCounts.add(projectileCount.clone());
+        }
+        newCastStateProjectile.isBroken = this.isBroken;
+
+        return newCastStateProjectile;
+    }
+
+    public boolean isBroken(){
+        return this.isBroken;
+    }
+
+    public void breakTree(){
+        this.isBroken = true;
+    }
+
+    public void addProjectile(Projectile projectile){
+        ArrayList<ProjectileCount> currentProjectileCounts = this.isBroken ? this.brokenProjectileCounts : this.projectileCounts;
+
+        if(projectile.getProjectileComponent() == null){
+            this.isBroken = true;
+        }
+
+        if(projectile.getTriggerType() == Projectile.TriggerType.none){
+            for(ProjectileCount projectileCount : currentProjectileCounts){
+                if(projectileCount.getProjectile().getClass() == projectile.getClass()){
+                    projectileCount.addCount();
+                    return;
+                }
+            }
+        }
+
+        currentProjectileCounts.add(new ProjectileCount(projectile));
+    }
+
+    public void addProjectile(Projectile projectile, int count){
+        if(count <= 0){
+            return;
+        }
+
+        ArrayList<ProjectileCount> currentProjectileCounts = this.isBroken ? this.brokenProjectileCounts : this.projectileCounts;
+
+        if(projectile.getProjectileComponent() == null){
+            this.isBroken = true;
+        }
+
+        if(projectile.getTriggerType() == Projectile.TriggerType.none){
+            for(ProjectileCount projectileCount : currentProjectileCounts){
+                if(projectileCount.getProjectile().getClass() == projectile.getClass()){
+                    projectileCount.addCount(count);
+                    return;
+                }
+            }
+        }
+
+        currentProjectileCounts.add(new ProjectileCount(projectile, count));
+    }
+
+    public ProjectileCount[] getProjectileCountArray(){
+        return this.projectileCounts.toArray(new ProjectileCount[0]);
+    }
+
+    public ProjectileCount[] getBrokenProjectileCountArray(){
+        return this.brokenProjectileCounts.toArray(new ProjectileCount[0]);
+    }
+
+    public ArrayList<ProjectileCount> getProjectileCount(){
+        return this.projectileCounts;
+    }
+
+    public ArrayList<ProjectileCount> getBrokenProjectileCount(){
+        return this.brokenProjectileCounts;
+    }
+
+    public boolean splitSolo(ArrayList<Projectile> solo, ArrayList<ProjectileCount> multi){
+        if(solo == null || multi == null){
+            return false;
+        }
+
+        boolean skipFlag;
+
+        for(ProjectileCount projectileCount : this.projectileCounts){
+            if(projectileCount.getCount() > 1){
+                multi.add(projectileCount.clone());
+            }else{
+                solo.add(projectileCount.getProjectile());
+            }
+        }
+
+        for(int i=0; i < solo.size(); i++){
+            skipFlag = false;
+            for(ProjectileCount projectileCount : multi){
+                if(solo.get(i).getClass() == projectileCount.getProjectile().getClass()){
+                    solo.remove(i);
+                    projectileCount.addCount();
+                    i--;
+                    skipFlag = true;
+                    break;
+                }
+            }
+            if(skipFlag){
+                continue;
+            }
+            for(int j=i+1; j < solo.size(); j++){
+                if(solo.get(i).getClass() == solo.get(j).getClass()){
+                    solo.remove(j);
+                    multi.add(new ProjectileCount(solo.remove(i), 2));
+                    i--;
+                    break;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean splitSoloBroken(ArrayList<Projectile> solo, ArrayList<ProjectileCount> multi){
+        if(solo == null || multi == null){
+            return false;
+        }
+
+        boolean skipFlag;
+
+        for(ProjectileCount projectileCount : this.brokenProjectileCounts){
+            if(projectileCount.getCount() > 1){
+                multi.add(projectileCount.clone());
+            }else{
+                solo.add(projectileCount.getProjectile());
+            }
+        }
+
+        for(int i=0; i < solo.size(); i++){
+            skipFlag = false;
+            for(ProjectileCount projectileCount : multi){
+                if(solo.get(i).getClass() == projectileCount.getProjectile().getClass()){
+                    solo.remove(i);
+                    projectileCount.addCount();
+                    i--;
+                    skipFlag = true;
+                    break;
+                }
+            }
+            if(skipFlag){
+                continue;
+            }
+            for(int j=i+1; j < solo.size(); j++){
+                if(solo.get(i).getClass() == solo.get(j).getClass()){
+                    solo.remove(j);
+                    multi.add(new ProjectileCount(solo.remove(i), 2));
+                    i--;
+                    break;
+                }
+            }
+        }
+
+        return true;
+    }
+}
+
+class ScriptCount{
     private Script script;
     private int count;
 
-    public CastStateScript(Script script){
+    public ScriptCount(Script script){
         this.script = script;
         this.count = 1;
     }
 
-    public CastStateScript(Script script, int count){
+    public ScriptCount(Script script, int count){
         this.script = script;
         this.count = count;
     }
 
-    public CastStateScript clone(){
-        return new CastStateScript(this.script.clone(), this.count);
+    public ScriptCount clone(){
+        return new ScriptCount(this.script.clone(), this.count);
     }
 
     // getters
@@ -98,18 +273,81 @@ class CastStateScript{
     }
 }
 
+class CastStateScript{
+    private final ArrayList<ScriptCount> scriptCounts = new ArrayList<>();
+
+    public CastStateScript(){
+        // empty
+    }
+
+    public CastStateScript clone(){
+        CastStateScript newCastStateScript = new CastStateScript();
+
+        for(ScriptCount scriptCount : this.scriptCounts){
+            newCastStateScript.scriptCounts.add(scriptCount.clone());
+        }
+
+        return newCastStateScript;
+    }
+
+    public void addScript(Script script){
+        for(ScriptCount scriptCount : this.scriptCounts){
+            if(scriptCount.getScript().getClass() == script.getClass()){
+                scriptCount.addCount();
+                return;
+            }
+        }
+        this.scriptCounts.add(new ScriptCount(script));
+    }
+
+    public void addScript(Script script, int count){
+        if(count <= 0){
+            return;
+        }
+        for(ScriptCount scriptCount : this.scriptCounts){
+            if(scriptCount.getScript().getClass() == script.getClass()){
+                scriptCount.addCount(count);
+                return;
+            }
+        }
+        this.scriptCounts.add(new ScriptCount(script, count));
+    }
+
+    public ScriptCount[] getScriptCount(){
+        return this.scriptCounts.toArray(new ScriptCount[0]);
+    }
+
+    public boolean splitSolo(ArrayList<Script> solo, ArrayList<ScriptCount> multi){
+        if(solo == null || multi == null){
+            return false;
+        }
+
+        for(ScriptCount scriptCount : this.scriptCounts){
+            if(scriptCount.getCount() > 1){
+                multi.add(scriptCount.clone());
+            }else{
+                solo.add(scriptCount.getScript());
+            }
+        }
+
+        return true;
+    }
+}
+
 public class CastState{
+    private static final BufferedImage failedImage = Global.loadImage("./src/main/java/org/example/image/other/failed_16.png");
     private static final BufferedImage triggerImage = Global.loadImage("./src/main/java/org/example/image/other/projectile_trigger.png");
     private static final BufferedImage timerImage = Global.loadImage("./src/main/java/org/example/image/other/projectile_timer.png");
     private static final BufferedImage expirationImage = Global.loadImage("./src/main/java/org/example/image/other/projectile_expiration.png");
-    private final ArrayList<CastStateProjectile> castStateProjectiles = new ArrayList<>();
-    private final ArrayList<CastStateScript> castStateScripts = new ArrayList<>();
+    private CastStateProjectile castStateProjectile = new CastStateProjectile();
+    private CastStateScript castStateScript = new CastStateScript();
     private int castDelay = 0;
     private DamageComponent damageComponent = new DamageComponent();
     private int lifetime = 0;
     private int critRate = 0;
     private int pattern = 0;
     private double spread = 0.0;
+    private double screenshake = 0.0;
     private double gravity = 0.0;
     private boolean friendlyFire = false;
     private double speedMultiplier = 1.0;
@@ -121,18 +359,15 @@ public class CastState{
     public CastState clone(){
         CastState castState = new CastState();
 
-        for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
-            castState.castStateProjectiles.add(castStateProjectile.clone());
-        }
-        for(CastStateScript castStateScript : this.castStateScripts){
-            castState.castStateScripts.add(castStateScript.clone());
-        }
+        castState.castStateProjectile = this.castStateProjectile.clone();
+        castState.castStateScript = this.castStateScript.clone();
         castState.castDelay = this.castDelay;
         castState.damageComponent = this.damageComponent.clone();
         castState.lifetime = this.lifetime;
         castState.critRate = this.critRate;
         castState.pattern = this.pattern;
         castState.spread = this.spread;
+        castState.screenshake = this.screenshake;
         castState.gravity = this.gravity;
         castState.friendlyFire = this.friendlyFire;
         castState.speedMultiplier = this.speedMultiplier;
@@ -141,12 +376,12 @@ public class CastState{
     }
 
     // getters
-    public CastStateProjectile[] getCastStateProjectile(){
-        return this.castStateProjectiles.toArray(new CastStateProjectile[0]);
+    public CastStateProjectile getCastStateProjectile(boolean clone){
+        return clone ? this.castStateProjectile.clone() : this.castStateProjectile;
     }
 
-    public CastStateScript[] getCastStateScript(){
-        return this.castStateScripts.toArray(new CastStateScript[0]);
+    public CastStateScript getCastStateScript(boolean clone){
+        return clone ? this.castStateScript.clone() : this.castStateScript;
     }
 
     public int getCastDelay(){
@@ -171,6 +406,10 @@ public class CastState{
 
     public double getSpread(){
         return this.spread;
+    }
+
+    public double getScreenshake(){
+        return this.screenshake;
     }
 
     public double getGravity(){
@@ -251,6 +490,13 @@ public class CastState{
         this.spread += spread;
     }
 
+    public void addScreenshake(double screenshake){
+        this.screenshake += screenshake;
+        if(this.screenshake < 0.0){
+            this.screenshake = 0.0;
+        }
+    }
+
     public void addGravity(double gravity){
         this.gravity += gravity;
     }
@@ -282,53 +528,19 @@ public class CastState{
     }
 
     public void addProjectile(Projectile projectile){
-        if(projectile.getTriggerType() == Projectile.TriggerType.none){
-            for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
-                if(castStateProjectile.getProjectile().getClass() == projectile.getClass()){
-                    castStateProjectile.addCount();
-                    return;
-                }
-            }
-        }
-        this.castStateProjectiles.add(new CastStateProjectile(projectile));
+        this.castStateProjectile.addProjectile(projectile);
     }
 
     public void addProjectile(Projectile projectile, int count){
-        if(count <= 0){
-            return;
-        }
-        if(projectile.getTriggerType() == Projectile.TriggerType.none){
-            for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
-                if(castStateProjectile.getProjectile().getClass() == projectile.getClass()){
-                    castStateProjectile.addCount(count);
-                    return;
-                }
-            }
-        }
-        this.castStateProjectiles.add(new CastStateProjectile(projectile, count));
+        this.castStateProjectile.addProjectile(projectile, count);
     }
 
     public void addScript(Script script){
-        for(CastStateScript castStateScript : this.castStateScripts){
-            if(castStateScript.getScript().getClass() == script.getClass()){
-                castStateScript.addCount();
-                return;
-            }
-        }
-        this.castStateScripts.add(new CastStateScript(script));
+        this.castStateScript.addScript(script);
     }
 
     public void addScript(Script script, int count){
-        if(count <= 0){
-            return;
-        }
-        for(CastStateScript castStateScript : this.castStateScripts){
-            if(castStateScript.getScript().getClass() == script.getClass()){
-                castStateScript.addCount(count);
-                return;
-            }
-        }
-        this.castStateScripts.add(new CastStateScript(script, count));
+        this.castStateScript.addScript(script, count);
     }
 
     public void addScript(Script[] scripts){
@@ -339,6 +551,10 @@ public class CastState{
 
     public CastState addProjectileTrigger(Projectile projectile, int timer, Projectile.TriggerType triggerType){
         CastState newCastState = new CastState();
+
+        if(projectile.getProjectileComponent() == null || this.castStateProjectile.isBroken()){
+            newCastState.castStateProjectile.breakTree();
+        }
 
         projectile.addTrigger(triggerType, timer, newCastState);
         this.addProjectile(projectile);
@@ -354,65 +570,45 @@ public class CastState{
         StringBuilder result = new StringBuilder();
         StringBuilder innerBuilder = new StringBuilder();
         ArrayList<Projectile> soloProjectiles = null;
-        ArrayList<CastStateProjectile> multiProjectiles = null;
+        ArrayList<Projectile> brokenSoloProjectiles = null;
+        ArrayList<ProjectileCount> multiProjectiles = null;
+        ArrayList<ProjectileCount> brokenMultiProjectiles = null;
         ArrayList<Script> soloScript = null;
-        ArrayList<CastStateScript> multiScript = null;
-        boolean skipFlag;
+        ArrayList<ScriptCount> multiScript = null;
 
         if(discordFormat){
             soloProjectiles = new ArrayList<>();
+            brokenSoloProjectiles = new ArrayList<>();
             multiProjectiles = new ArrayList<>();
+            brokenMultiProjectiles = new ArrayList<>();
             soloScript = new ArrayList<>();
             multiScript = new ArrayList<>();
 
-            for(CastStateProjectile castStateProjectile : castStateProjectiles){
-                if(castStateProjectile.getCount() > 1){
-                    multiProjectiles.add(castStateProjectile.clone());
-                }else{
-                    soloProjectiles.add(castStateProjectile.getProjectile());
-                }
-            }
-
-            for(int i=0; i < soloProjectiles.size(); i++){
-                skipFlag = false;
-                for(CastStateProjectile castStateProjectile : multiProjectiles){
-                    if(soloProjectiles.get(i).getClass() == castStateProjectile.getProjectile().getClass()){
-                        soloProjectiles.remove(i);
-                        castStateProjectile.addCount();
-                        i--;
-                        skipFlag = true;
-                        break;
-                    }
-                }
-                if(skipFlag){
-                    continue;
-                }
-                for(int j=i+1; j < soloProjectiles.size(); j++){
-                    if(soloProjectiles.get(i).getClass() == soloProjectiles.get(j).getClass()){
-                        soloProjectiles.remove(j);
-                        multiProjectiles.add(new CastStateProjectile(soloProjectiles.remove(i), 2));
-                        i--;
-                        break;
-                    }
-                }
-            }
-
-            for(CastStateScript castStateScript : this.castStateScripts){
-                if(castStateScript.getCount() > 1){
-                    multiScript.add(castStateScript.clone());
-                }else{
-                    soloScript.add(castStateScript.getScript());
-                }
-            }
+            this.castStateProjectile.splitSolo(soloProjectiles, multiProjectiles);
+            this.castStateProjectile.splitSoloBroken(brokenSoloProjectiles, brokenMultiProjectiles);
+            this.castStateScript.splitSolo(soloScript, multiScript);
 
             for(Projectile projectile : soloProjectiles){
                 innerBuilder.append(projectile.getEmote());
             }
-            for(CastStateProjectile castStateProjectile : multiProjectiles){
+            if(brokenSoloProjectiles.size() > 0){
+                innerBuilder.append("(");
+                for(Projectile projectile : brokenSoloProjectiles){
+                    innerBuilder.append(projectile.getEmote());
+                }
+                innerBuilder.append(")");
+            }
+            for(ProjectileCount projectileCount : multiProjectiles){
                 if(!innerBuilder.isEmpty()){
                     innerBuilder.append("\n");
                 }
-                innerBuilder.append(castStateProjectile.getProjectile().getEmote()).append(" (x").append(castStateProjectile.getCount()).append(")");
+                innerBuilder.append(projectileCount.getProjectile().getEmote()).append(" x").append(projectileCount.getCount()).append("");
+            }
+            for(ProjectileCount projectileCount : brokenMultiProjectiles){
+                if(!innerBuilder.isEmpty()){
+                    innerBuilder.append("\n");
+                }
+                innerBuilder.append("(").append(projectileCount.getProjectile().getEmote()).append(" x").append(projectileCount.getCount()).append(")");
             }
             if(!innerBuilder.isEmpty()){
                 if(!result.isEmpty()){
@@ -443,6 +639,7 @@ public class CastState{
         if(this.critRate != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Crit rate: ").append(this.critRate).append("%");}
         if(this.pattern != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Pattern: ").append(this.pattern).append(discordFormat ? "°" : " deg");}
         if(this.spread != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Spread: ").append(this.spread).append(discordFormat ? "°" : " deg");}
+        if(this.screenshake != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Screenshake: ").append(this.screenshake);}
         if(this.gravity != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Gravity: ").append(this.gravity);}
         if(this.friendlyFire){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Friendly fire: true");}
         if(this.speedMultiplier != 1.0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Speed multiplier: x").append(this.speedMultiplier);}
@@ -462,11 +659,11 @@ public class CastState{
         for(Script script : soloScript){
             innerBuilder.append(script.getEmote());
         }
-        for(CastStateScript castStateScript : multiScript){
+        for(ScriptCount scriptCount : multiScript){
             if(!innerBuilder.isEmpty()){
                 innerBuilder.append("\n");
             }
-            innerBuilder.append(castStateScript.getScript().getEmote()).append(" (x").append(castStateScript.getCount()).append(")");
+            innerBuilder.append(scriptCount.getScript().getEmote()).append(" (x").append(scriptCount.getCount()).append(")");
         }
         if(!innerBuilder.isEmpty()){
             if(!result.isEmpty()){
@@ -483,12 +680,19 @@ public class CastState{
         MenuTree menu = new MenuTree("", title, this.toString(true), null, "");
         CastState innerCastState;
 
-        for(CastStateProjectile castStateProjectile : this.castStateProjectiles){
-            innerCastState = castStateProjectile.getProjectile().getTriggerCastState();
+        for(ProjectileCount projectileCount : this.castStateProjectile.getProjectileCount()){
+            innerCastState = projectileCount.getProjectile().getTriggerCastState();
             if(innerCastState != null){
-                menu.addChild(innerCastState.toMenuTree(castStateProjectile.getProjectile().getName() + " " + castStateProjectile.getProjectile().getTriggerType()));
+                menu.addChild(innerCastState.toMenuTree(projectileCount.getProjectile().getName() + " " + projectileCount.getProjectile().getTriggerType()));
             }
         }
+        for(ProjectileCount projectileCount : this.castStateProjectile.getBrokenProjectileCount()){
+            innerCastState = projectileCount.getProjectile().getTriggerCastState();
+            if(innerCastState != null){
+                menu.addChild(innerCastState.toMenuTree(projectileCount.getProjectile().getName() + " " + projectileCount.getProjectile().getTriggerType()));
+            }
+        }
+
         return menu;
     }
 
@@ -510,14 +714,14 @@ public class CastState{
     public boolean saveToImage(String filename){
         ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
         image.setFont(Global.getPixelFont().deriveFont((float)15));
-        this.toImageNode(image, 0, 0);
+        this.toImageNode(image, 0, 0, false);
         return image.saveAsPNG(filename);
     }
 
     public BufferedImage toImage(){
         ImageBuilder image = new ImageBuilder(new Color(0, 0, 0));
         image.setFont(Global.getPixelFont().deriveFont((float)15));
-        this.toImageNode(image, 0, 0);
+        this.toImageNode(image, 0, 0, false);
         return image.toPNG();
     }
 
@@ -565,12 +769,11 @@ public class CastState{
             return new Point(x, y);
         }
 
-        return this.toImageNode(image, x, y);
+        return this.toImageNode(image, x, y, false);
     }
 
-    private Point toImageNode(ImageBuilder image, int x, int y){
+    private Point toImageNode(ImageBuilder image, int x, int y, boolean brokenProjectileTree){
         String[] castStateInfo = this.toString(false).split("\\r?\\n");
-        CastStateProjectile[] castStateProjectiles = this.castStateProjectiles.toArray(new CastStateProjectile[0]);
         Projectile currentProjectile;
         BufferedImage currentImage;
         int imageSize = 16;
@@ -582,83 +785,51 @@ public class CastState{
         int triggerY = y;
         Point tempPoint = new Point(x + boxInsideMargin, y + boxInsideMargin);
         ArrayList<Projectile> soloProjectiles = new ArrayList<>();
-        ArrayList<CastStateProjectile> multiProjectiles = new ArrayList<>();
-        ArrayList<Projectile> triggerProjectiles = new ArrayList<>();
+        ArrayList<Projectile> brokenSoloProjectiles = new ArrayList<>();
+        ArrayList<ProjectileCount> multiProjectiles = new ArrayList<>();
+        ArrayList<ProjectileCount> brokenMultiProjectiles = new ArrayList<>();
         ArrayList<Script> soloScript = new ArrayList<>();
-        ArrayList<CastStateScript> multiScript = new ArrayList<>();
-        boolean skipFlag;
+        ArrayList<ScriptCount> multiScript = new ArrayList<>();
         boolean isEmpty = true;
+        boolean drawUnder = false;
 
         if(castStateInfo.length == 1 && castStateInfo[0].equals("")){
             castStateInfo = new String[0];
         }
 
-        for(CastStateProjectile castStateProjectile : castStateProjectiles){
-            currentProjectile = castStateProjectile.getProjectile();
-            if(currentProjectile.getTriggerCastState() != null){
-                triggerProjectiles.add(currentProjectile);
-                soloProjectiles.add(currentProjectile);
-                continue;
-            }
+        this.castStateProjectile.splitSolo(soloProjectiles, multiProjectiles);
+        this.castStateProjectile.splitSoloBroken(brokenSoloProjectiles, brokenMultiProjectiles);
+        this.castStateScript.splitSolo(soloScript, multiScript);
 
-            if(castStateProjectile.getCount() > 1){
-                multiProjectiles.add(castStateProjectile.clone());
-            }else{
-                soloProjectiles.add(currentProjectile);
-            }
-        }
-
-        for(int i=0; i < soloProjectiles.size(); i++){
-            skipFlag = false;
-            for(CastStateProjectile castStateProjectile : multiProjectiles){
-                if(soloProjectiles.get(i).getClass() == castStateProjectile.getProjectile().getClass()){
-                    soloProjectiles.remove(i);
-                    castStateProjectile.addCount();
-                    i--;
-                    skipFlag = true;
-                    break;
+        for(ArrayList<Projectile> projectileList : Arrays.asList(soloProjectiles, brokenSoloProjectiles)){
+            for(Projectile projectile : projectileList){
+                currentImage = projectile.getImage();
+                if(currentImage != null){
+                    image.addImage(currentImage, nextX, y + boxInsideMargin, projectile.getClass().getSimpleName());
+                    if(brokenProjectileTree || projectileList == brokenSoloProjectiles){
+                        image.addImage(failedImage, nextX, y + boxInsideMargin, "FAILED_16");
+                    }
+                    nextX += currentImage.getWidth();
+                    nextY = Math.max(nextY, y + boxInsideMargin + currentImage.getHeight());
                 }
+                isEmpty = false;
             }
-            if(skipFlag){
-                continue;
-            }
-            for(int j=i+1; j < soloProjectiles.size(); j++){
-                if(soloProjectiles.get(i).getClass() == soloProjectiles.get(j).getClass()){
-                    soloProjectiles.remove(j);
-                    multiProjectiles.add(new CastStateProjectile(soloProjectiles.remove(i), 2));
-                    i--;
-                    break;
+        }
+
+        for(ArrayList<ProjectileCount> projectileCountList : Arrays.asList(multiProjectiles, brokenMultiProjectiles)){
+            for(ProjectileCount projectileCount : projectileCountList){
+                currentImage = projectileCount.getProjectile().getImage();
+                if(currentImage != null){
+                    image.addImage(currentImage, x + boxInsideMargin, nextY, projectileCount.getProjectile().getClass().getSimpleName());
+                    if(brokenProjectileTree || projectileCountList == brokenMultiProjectiles){
+                        image.addImage(failedImage, x + boxInsideMargin, nextY, "FAILED_16");
+                    }
+                    tempPoint = image.drawText("x" + projectileCount.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
+                    nextX = Math.max(nextX, tempPoint.x);
+                    nextY += currentImage.getHeight();
                 }
+                isEmpty = false;
             }
-        }
-
-        for(CastStateScript castStateScript : this.castStateScripts){
-            if(castStateScript.getCount() > 1){
-                multiScript.add(castStateScript.clone());
-            }else{
-                soloScript.add(castStateScript.getScript());
-            }
-        }
-
-        for(Projectile projectile : soloProjectiles){
-            currentImage = projectile.getImage();
-            if(currentImage != null){
-                image.addImage(currentImage, nextX, y + boxInsideMargin, projectile.getClass().getSimpleName());
-                nextX += currentImage.getWidth();
-                nextY = Math.max(nextY, y + boxInsideMargin + currentImage.getHeight());
-            }
-            isEmpty = false;
-        }
-
-        for(CastStateProjectile castStateProjectile : multiProjectiles){
-            currentImage = castStateProjectile.getProjectile().getImage();
-            if(currentImage != null){
-                image.addImage(currentImage, x + boxInsideMargin, nextY, castStateProjectile.getProjectile().getClass().getSimpleName());
-                tempPoint = image.drawText("x" + castStateProjectile.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
-                nextX = Math.max(nextX, tempPoint.x);
-                nextY += currentImage.getHeight();
-            }
-            isEmpty = false;
         }
 
         for(String info : castStateInfo){
@@ -680,11 +851,11 @@ public class CastState{
             isEmpty = false;
         }
 
-        for(CastStateScript castStateScript : multiScript){
-            currentImage = castStateScript.getScript().getImage();
+        for(ScriptCount scriptCount : multiScript){
+            currentImage = scriptCount.getScript().getImage();
             if(currentImage != null){
-                image.addImage(currentImage, x + boxInsideMargin, nextY, castStateScript.getScript().getClass().getSimpleName());
-                tempPoint = image.drawText("x" + castStateScript.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
+                image.addImage(currentImage, x + boxInsideMargin, nextY, scriptCount.getScript().getClass().getSimpleName());
+                tempPoint = image.drawText("x" + scriptCount.getCount(), x + boxInsideMargin + currentImage.getWidth(), nextY, Color.WHITE);
                 nextX = Math.max(nextX, tempPoint.x);
                 nextY += currentImage.getHeight();
             }
@@ -701,24 +872,34 @@ public class CastState{
         nextY += boxInsideMargin;
         nextX = Math.max(nextX, x + imageSize);
         nextY = Math.max(nextY, y + imageSize);
-        image.drawRectangle(x, y, nextX, nextY, Color.WHITE, false);
+        image.drawRectangle(x, y, nextX, nextY, brokenProjectileTree ? Color.red : Color.WHITE, false);
 
-        for(Projectile projectile : triggerProjectiles){
-            if(triggerY != y){
-                triggerY += boxOutsideMargin;
-            }
-            image.drawArrow(nextX, y + imageSize/2, nextX + arrowSizeX, triggerY + imageSize/2, Color.WHITE, true, false);
-            currentImage = projectile.getImage();
-            if(currentImage != null){
-                image.addImage(currentImage, nextX + arrowSizeX, triggerY, projectile.getClass().getSimpleName());
-                switch(projectile.getTriggerType()){
-                    case trigger -> {if(triggerImage != null){image.addImage(triggerImage, nextX + arrowSizeX, triggerY, "TRIGGER");}}
-                    case timer -> {if(timerImage != null){image.addImage(timerImage, nextX + arrowSizeX, triggerY, "TIMER");}}
-                    case expiration -> {if(expirationImage != null){image.addImage(expirationImage, nextX + arrowSizeX, triggerY, "EXPIRATION");}}
+        for(ArrayList<ProjectileCount> projectileCountsList : Arrays.asList(this.castStateProjectile.getProjectileCount(), this.castStateProjectile.getBrokenProjectileCount())){
+            for(ProjectileCount projectileCount : projectileCountsList){
+                currentProjectile = projectileCount.getProjectile();
+                if(currentProjectile.getTriggerCastState() != null){
+                    if(triggerY != y){
+                        triggerY += boxOutsideMargin;
+                    }
+                    if(!brokenProjectileTree){
+                        brokenProjectileTree = currentProjectile.getProjectileComponent() == null || projectileCountsList == this.castStateProjectile.getBrokenProjectileCount();
+                        drawUnder = brokenProjectileTree;
+                    }
+
+                    image.drawArrow(nextX, y + imageSize/2, nextX + arrowSizeX, triggerY + imageSize/2, brokenProjectileTree ? Color.RED : Color.WHITE, true, drawUnder);
+                    currentImage = currentProjectile.getImage();
+                    if(currentImage != null){
+                        image.addImage(currentImage, nextX + arrowSizeX, triggerY, currentProjectile.getClass().getSimpleName());
+                        switch(currentProjectile.getTriggerType()){
+                            case trigger -> {if(triggerImage != null){image.addImage(triggerImage, nextX + arrowSizeX, triggerY, "TRIGGER");}}
+                            case timer -> {if(timerImage != null){image.addImage(timerImage, nextX + arrowSizeX, triggerY, "TIMER");}}
+                            case expiration -> {if(expirationImage != null){image.addImage(expirationImage, nextX + arrowSizeX, triggerY, "EXPIRATION");}}
+                        }
+                    }
+                    triggerY = Math.max(triggerY, currentProjectile.getTriggerCastState().toImageNode(image, nextX + arrowSizeX + imageSize, triggerY, brokenProjectileTree).y);
+                    nextY = Math.max(nextY, triggerY);
                 }
             }
-            triggerY = Math.max(triggerY, projectile.getTriggerCastState().toImageNode(image, nextX + arrowSizeX + imageSize, triggerY).y);
-            nextY = Math.max(nextY, triggerY);
         }
 
         return new Point(nextX, nextY);

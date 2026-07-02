@@ -1,20 +1,33 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_TNTBOX_BIG extends Projectile{
+public class PROJECTILE_TNTBOX_BIG extends ProjectileBasePhysics{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_TNTBOX_BIG(){
         this.name = "Summon Large Explosive Box";
         this.imageFile = "tntbox_big.png";
         this.emote = staticEmote;
-
-        this.lifetime = -1;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAffectPhysicsBodies(true);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setLifetime(-1)
+            // penetrate_entities="0"
+            // do_moveto_update="0"
+            .setOnLifetimeOutExplode(true)
+            // damage_every_x_frames="40"
+            .setExplosionDontDamageShooter(false)
+            .setFriendlyFire(true)
+            // collide_with_shooter_frames="6"
+            .setOnCollisionDie(false);
+            // damage_every_x_frames="25"
+            // do_moveto_update="1"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

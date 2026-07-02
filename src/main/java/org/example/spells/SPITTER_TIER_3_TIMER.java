@@ -36,7 +36,7 @@ public class SPITTER_TIER_3_TIMER extends Spell{
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
         castState.addCastDelay(this.castDelay);
-        cardPool.addScreenshake(this.screenshake);
+        castState.addScreenshake(this.screenshake);
         castState.addSpread(this.spread);
     }
 }

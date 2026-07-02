@@ -1,23 +1,46 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_FUNKY_SPELL extends Projectile{
+public class PROJECTILE_FUNKY_SPELL extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_FUNKY_SPELL(){
         this.name = "???";
         this.imageFile = "machinegun_bullet.png";
         this.emote = staticEmote;
-        this.mass = 0.05;
-
-        this.speedMin = 400;
-        this.speedMax = 500;
-        this.lifetime = 50;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setMass(0.05);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="0.9"
+            .setSpeedMin(400)
+            .setSpeedMax(500)
+            .setFriction(1.3)
+            .setSpreadRad(0.1)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            // ragdoll_force_multiplier="0.0025"
+            .setLifetime(50)
+            .setKnockback(0.1);
+            // velocity_sets_scale="1"
+            // camera_shake_when_shot="2.0"
+            // shoot_light_flash_radius="64"
+            // hit_particle_force_multiplier="0.1"
+            // create_shell_casing="1"
+            // shell_casing_offset.x="-10"
+            // shell_casing_offset.y="-4"
+            // bounces_left="0"
+            // go_through_this_material="aluminium_robot"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_medium.xml"
+        this.projectileComponent.getDamageComponent().setProjectile(3.75);
     }
 }
 

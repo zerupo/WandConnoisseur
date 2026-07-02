@@ -1,45 +1,46 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_NUKE extends Projectile{
+public class PROJECTILE_NUKE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_NUKE(){
         this.name = "Nuke";
         this.imageFile = "nuke.png";
         this.emote = staticEmote;
-        this.gravityY = 120;
-        this.airFriction = 0.00001;
-        this.mass = 0.2;
-
-        this.speedMin = 300;
-        this.speedMax = 300;
-        this.lifetime = 360;
-        this.lifetimeRandomness = 7;
-        this.damageComponent.setProjectile(75);
-        this.knockbackForce = 1.5;
-        this.explodeOnDeath = true;
-        this.onLifetimeOutExplode = true;
-        this.explosionSelfDamage = false;
-        this.onCollisionDie = true;
-        // _enabled="1"
-        // lob_min="0.8"
-        // lob_max="1.0"
-        // direction_random_rad="0.01"
-        // on_death_gfx_leave_sprite="0"
-        // velocity_sets_scale="1"
-        // ragdoll_force_multiplier="0.04"
-        // hit_particle_force_multiplier="5.5 "
-        // camera_shake_when_shot="5.0"
-        // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher_large.xml"
-        // shoot_light_flash_r="255"
-        // shoot_light_flash_g="210"
-        // shoot_light_flash_b="40"
-        // shoot_light_flash_radius="130"
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(120.0)
+            .setAirFriction(0.00001)
+            .setMass(0.2);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(300)
+            .setSpeedMax(300)
+            .setSpreadRad(0.01)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(true)
+            .setLifetime(360)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0.04"
+            // hit_particle_force_multiplier="5.5 "
+            // camera_shake_when_shot="5.0"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher_large.xml"
+            // shoot_light_flash_r="255"
+            // shoot_light_flash_g="210"
+            // shoot_light_flash_b="40"
+            // shoot_light_flash_radius="130"
+            .setKnockback(1.5);
+        this.projectileComponent.getDamageComponent().setProjectile(75.0);
     }
 }
 

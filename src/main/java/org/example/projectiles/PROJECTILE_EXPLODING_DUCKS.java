@@ -1,24 +1,51 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_EXPLODING_DUCKS extends Projectile{
+public class PROJECTILE_EXPLODING_DUCKS extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_EXPLODING_DUCKS(){
         this.name = "Flock of Ducks";
         this.imageFile = "duck_2.png";
         this.emote = staticEmote;
-        this.gravityY = 120;
-        this.mass = 0.065;
-
-        this.speedMin = 250;
-        this.speedMax = 280;
-        this.lifetime = 300;
-        this.lifetimeRandomness = 100;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(120.0)
+            .setMass(0.065);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.9"
+            // lob_max="1.0"
+            .setSpeedMin(250)
+            .setSpeedMax(280)
+            .setFriction(0.6)
+            .setSpreadRad(0.05)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(false)
+            .setLifetime(300)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(100)
+            // ragdoll_force_multiplier="0.04"
+            // hit_particle_force_multiplier="5.5 "
+            // camera_shake_when_shot="5.0"
+            // velocity_sets_rotation="0"
+            // bounces_left="5"
+            // bounce_always="1"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_magic_launcher.xml"
+            // shoot_light_flash_radius="120"
+            // shoot_light_flash_r="125"
+            // shoot_light_flash_g="255"
+            // shoot_light_flash_b="40"
+            .setKnockback(1.0);
+            // physics_impulse_coeff="4000"
+        this.projectileComponent.getDamageComponent().setProjectile(40.0);
+        this.projectileComponent.getDamageComponent().setFire(30.0);
     }
 }
 

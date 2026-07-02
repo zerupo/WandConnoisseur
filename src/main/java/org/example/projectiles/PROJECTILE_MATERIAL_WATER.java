@@ -1,23 +1,43 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_MATERIAL_WATER extends Projectile{
+public class PROJECTILE_MATERIAL_WATER extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_MATERIAL_WATER(){
         this.name = "Water";
         this.imageFile = "material_water.png";
         this.emote = staticEmote;
-        this.airFriction = 3.0;
-
-        this.speedMin = 123;
-        this.speedMax = 135;
-        this.lifetime = 360;
-        this.lifetimeRandomness = 7;
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // projectile_type="MATERIAL_PARTICLE"
+            // lob_min="1.0"
+            // lob_max="1.0"
+            .setSpeedMin(123)
+            .setSpeedMax(135)
+            .setFriction(3.0)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            // on_death_emit_particle="1"
+            // on_death_emit_particle_type="water"
+            // on_death_particle_check_concrete="1"
+            .setExplosionDontDamageShooter(true)
+            // die_on_liquid_collision="1"
+            .setOnCollisionDie(true)
+            .setLifetime(360)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(7);
+            // ragdoll_force_multiplier="0.01"
+            // hit_particle_force_multiplier="0.25 "
+            // camera_shake_when_shot="1.0"
+            // ground_collision_fx="0"
+            // ragdoll_fx_on_collision="NORMAL"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

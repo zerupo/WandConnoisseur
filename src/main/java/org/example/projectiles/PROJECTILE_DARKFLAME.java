@@ -1,25 +1,38 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_DARKFLAME extends Projectile{
+public class PROJECTILE_DARKFLAME extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_DARKFLAME(){
         this.name = "Path of dark flame";
         this.imageFile = "darkflame.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
-        this.mass = 0.03;
-
-        this.speedMin = 250;
-        this.speedMax = 250;
-        this.lifetime = 100;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(0.0)
+            .setMass(0.03);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setSpeedMin(250)
+            .setSpeedMax(250)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            // collide_with_entities="0"
+            .setLifetime(100);
+            // shoot_light_flash_r="190"
+            // shoot_light_flash_g="40"
+            // shoot_light_flash_b="245"
+            // shoot_light_flash_radius="140"
+        this.projectileComponent.getDamageComponent().setProjectile(20.0);
     }
 }
 

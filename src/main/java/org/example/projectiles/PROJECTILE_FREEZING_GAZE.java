@@ -1,25 +1,51 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_FREEZING_GAZE extends Projectile{
+public class PROJECTILE_FREEZING_GAZE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_FREEZING_GAZE(){
         this.name = "Freezing gaze";
         this.imageFile = "freezing_gaze_solo.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = -1.0;
-        this.mass = 0.04;
-
-        this.speedMin = 220;
-        this.speedMax = 220;
-        this.lifetime = 25;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-1.0)
+            .setGravityY(0.0)
+            .setMass(0.04);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(220)
+            .setSpeedMax(220)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setOnCollisionDie(true)
+            // die_on_liquid_collision="1"
+            .setLifetime(25)
+            // velocity_sets_scale="1"
+            // ragdoll_force_multiplier="0.01"
+            // ragdoll_fx_on_collision="BLOOD_SPRAY"
+            // hit_particle_force_multiplier="0.25"
+            // camera_shake_when_shot="5.0"
+            // bounces_left="10"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_laser.xml"
+            // shoot_light_flash_radius="180"
+            // shoot_light_flash_r="30"
+            // shoot_light_flash_g="170"
+            // shoot_light_flash_b="210"
+            .setKnockback(1.0);
+            // physics_impulse_coeff="2000"
+            // damage_game_effect_entities="data/entities/misc/effect_frozen_short.xml,"
+            // penetrate_entities="1"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setIce(10.0);
     }
 }
 

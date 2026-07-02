@@ -1,25 +1,42 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_THUNDERBALL extends Projectile{
+public class PROJECTILE_THUNDERBALL extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_THUNDERBALL(){
         this.name = "Thunder Charge";
         this.imageFile = "thunderball.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = -1.0;
-        this.mass = 0.9;
-
-        this.speedMin = 100;
-        this.speedMax = 120;
-        this.lifetime = 100;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(-1.0)
+            .setMass(0.9);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(100)
+            .setSpeedMax(120)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(true)
+            // spawn_entity="data/entities/projectiles/thunderburst_thundermage.xml"
+            .setLifetime(100)
+            // shoot_light_flash_r="65"
+            // shoot_light_flash_g="210"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="160"
+            .setKnockback(3.0);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setElectricity(37.5);
     }
 }
 

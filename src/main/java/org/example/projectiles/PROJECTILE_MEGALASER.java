@@ -1,25 +1,44 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_MEGALASER extends Projectile{
+public class PROJECTILE_MEGALASER extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_MEGALASER(){
         this.name = "Intense concentrated light";
         this.imageFile = "megalaser_wand.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
-        this.mass = 0.0;
-
-        this.speedMin = 1;
-        this.speedMax = 1;
-        this.lifetime = 32;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(0.0)
+            .setMass(0.0)
+            .setGravityY(0.0)
+            .setTerminalVelocity(1.0);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            .setSpeedMin(1)
+            .setSpeedMax(1)
+            .setFriction(0.0)
+            .setSpreadRad(0.05)
+            // on_death_gfx_leave_sprite="0"
+            .setLifetime(32)
+            .setLifetimeRandomness(0)
+            // ragdoll_force_multiplier="0.0"
+            // hit_particle_force_multiplier="5.5 "
+            // camera_shake_when_shot="3.0"
+            // shoot_light_flash_radius="80"
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_launcher.xml"
+            .setKnockback(2.5)
+            .setOnCollisionDie(false)
+            // on_collision_remove_projectile="0"
+            .setOnLifetimeOutExplode(false)
+            .setCollideWithWorld(false);
+            // penetrate_entities="0"
+            // collide_with_tag=""
+        this.projectileComponent.getDamageComponent().setProjectile(125.0);
     }
 }
 

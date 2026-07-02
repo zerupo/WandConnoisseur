@@ -12,7 +12,7 @@ public class TENTACLE extends Spell{
     @Override
     protected void initialization(){
         this.name = "Summon Tentacle";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "tentacule"};
         this.imageFile = "tentacle.png";
         this.emote = staticEmote;
         this.description = "Calls a terrifying appendage from another dimension";

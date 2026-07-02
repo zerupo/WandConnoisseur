@@ -34,7 +34,7 @@ public class SLOW_BULLET_TRIGGER extends Spell{
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addCastDelay(this.castDelay);
         castState.addSpread(this.spread);
-        cardPool.addScreenshake(this.screenshake);
+        castState.addScreenshake(this.screenshake);
 
         cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
 

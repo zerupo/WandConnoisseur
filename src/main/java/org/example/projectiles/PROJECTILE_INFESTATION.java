@@ -1,25 +1,59 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_INFESTATION extends Projectile{
+public class PROJECTILE_INFESTATION extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_INFESTATION(){
         this.name = "Infestation";
         this.imageFile = "infestation_solo.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.6;
-        this.mass = 0.03;
-
-        this.speedMin = 350;
-        this.speedMax = 750;
-        this.lifetime = 600;
-        this.lifetimeRandomness = 7;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(0.6)
+            .setMass(0.03);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.5"
+            // lob_max="0.7"
+            .setSpeedMin(350)
+            .setSpeedMax(750)
+            .setFriction(1.0)
+            .setSpreadRad(6.283185307)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            // on_collision_remove_projectile="0"
+            .setLifetime(600)
+            .setDamageScaledBySpeed(true)
+            .setLifetimeRandomness(7)
+            // ragdoll_force_multiplier="0"
+            // hit_particle_force_multiplier="0.1"
+            // create_shell_casing="0"
+            // muzzle_flash_file=""
+            // shoot_light_flash_radius="20"
+            .setDieOnLowVelocity(true)
+            .setDieOnLowVelocityLimit(5)
+            // bounce_always="1"
+            // bounces_left="20"
+            // bounce_energy="1.0"
+            // velocity_sets_rotation="1"
+            // velocity_updates_animation="1"
+            // velocity_sets_scale="1"
+            // velocity_sets_scale_coeff="0.6"
+            .setKnockback(0.4)
+            // physics_impulse_coeff="1200"
+            // collide_with_shooter_frames="120"
+            .setFriendlyFire(true);
+            // damage_every_x_frames="20"
+        this.projectileComponent.getDamageComponent().setProjectile(1.25);
+        this.projectileComponent.getDamageComponent().setSlice(0.0);
     }
 }
 

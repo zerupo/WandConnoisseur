@@ -36,7 +36,7 @@ public class GRENADE_TRIGGER extends Spell{
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addCastDelay(this.castDelay);
-        cardPool.addScreenshake(this.screenshake);
+        castState.addScreenshake(this.screenshake);
         // c.child_speed_multiplier = c.child_speed_multiplier * 0.75
         cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
 

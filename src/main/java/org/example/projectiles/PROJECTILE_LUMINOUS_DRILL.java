@@ -1,23 +1,40 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_LUMINOUS_DRILL extends Projectile{
+public class PROJECTILE_LUMINOUS_DRILL extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_LUMINOUS_DRILL(){
         this.name = "Luminous Drill";
         this.imageFile = "luminous_drill.png";
         this.emote = staticEmote;
-        this.mass = 1.65;
-
-        this.speedMin = 1400;
-        this.speedMax = 1400;
-        this.lifetime = 2;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setMass(1.65);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(1400)
+            .setSpeedMax(1400)
+            .setFriction(0.0)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(false)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(false)
+            // ground_collision_fx="1"
+            .setOnCollisionDie(true)
+            .setLifetime(2)
+            // velocity_sets_scale="0"
+            .setLifetimeRandomness(0);
+            // ragdoll_force_multiplier="0.01"
+            // hit_particle_force_multiplier="0.25"
+            // ground_penetration_coeff="4"
+            // ground_penetration_max_durability_to_destroy="14"
+        this.projectileComponent.getDamageComponent().setProjectile(10.0);
     }
 }
 

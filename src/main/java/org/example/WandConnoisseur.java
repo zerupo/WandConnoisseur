@@ -11,7 +11,6 @@ import org.example.main.Global;
 import org.example.main.WandList;
 import org.example.projectiles.Projectile;
 import org.example.script.Script;
-import org.example.spells.RANDOM_SPELL;
 import org.example.spells.Spell;
 
 import java.util.EnumSet;
@@ -64,9 +63,7 @@ public class WandConnoisseur{
             }.createEmote();
         }
         if(!newOnly || !emojis.contains("projectile")){
-            new Projectile(){
-                @Override protected void initialization(){}
-            }.createEmote();
+            new Projectile(){}.createEmote();
         }
         if(!newOnly || !emojis.contains("script")){
             new Script(){
@@ -80,7 +77,6 @@ public class WandConnoisseur{
     // mob quizz (audio ?)
     // shuffle
     // always cast
-    // better structure for projectiles
     // code every spell
     // list of 1k wands
     // put on the raspberry
@@ -193,7 +189,8 @@ public class WandConnoisseur{
             Commands.slash("liste_sorts", "Renvoie la liste des sorts disponibles.")
                 .addOption(OptionType.STRING, "propriete", "Liste des propriétés à afficher, spérarées par des \",\"", false, true)
                 .addOption(OptionType.STRING, "condition", "Condition de sélection des sorts.", false, true)
-                .addOption(OptionType.STRING, "tri", "Ordre d'affichage des sorts.", false, true),
+                .addOption(OptionType.STRING, "tri", "Ordre d'affichage des sorts.", false, true)
+                .addOption(OptionType.STRING, "type", "format de la liste (défaut: message).", false, true),
             Commands.slash("ping", "Vérifie la latence du bot."),
             Commands.slash("sort_info", "Renvoie les informations d'un sort.")
                 .addOption(OptionType.STRING, "nom", "Sort à décrire.", true, true)

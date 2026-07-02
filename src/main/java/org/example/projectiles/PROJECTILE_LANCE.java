@@ -1,24 +1,51 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_LANCE extends Projectile{
+public class PROJECTILE_LANCE extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_LANCE(){
         this.name = "Glowing Lance";
         this.imageFile = "lance.png";
         this.emote = staticEmote;
-        this.airFriction = -0.4;
-        this.mass = 0.065;
-
-        this.speedMin = 300;
-        this.speedMax = 400;
-        this.lifetime = 300;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAirFriction(-0.4)
+            .setMass(0.065);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.1"
+            .setSpeedMin(300)
+            .setSpeedMax(400)
+            .setSpreadRad(0.003)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setDieOnLowVelocity(true)
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            // ragdoll_force_multiplier="0.03"
+            .setLifetime(300)
+            // ground_penetration_coeff="6"
+            // velocity_sets_scale="1"
+            // camera_shake_when_shot="0"
+            // shoot_light_flash_radius="64"
+            // hit_particle_force_multiplier="0.1"
+            // create_shell_casing="0"
+            // bounces_left="0"
+            // collide_with_shooter_frames="6"
+            .setFriendlyFire(true)
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_magic_large.xml"
+            // shoot_light_flash_radius="140"
+            // shoot_light_flash_r="155"
+            // shoot_light_flash_g="235"
+            // shoot_light_flash_b="255"
+            .setKnockback(1.5);
+        this.projectileComponent.getDamageComponent().setProjectile(35.0);
     }
 }
 

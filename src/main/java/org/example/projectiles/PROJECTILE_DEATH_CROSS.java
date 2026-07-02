@@ -1,25 +1,42 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_DEATH_CROSS extends Projectile{
+public class PROJECTILE_DEATH_CROSS extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_DEATH_CROSS(){
         this.name = "Death Cross";
         this.imageFile = "death_cross.png";
         this.emote = staticEmote;
-        this.gravityY = 0;
-        this.airFriction = 0.0;
-        this.mass = 0.08;
-
-        this.speedMin = 0;
-        this.speedMax = 0;
-        this.lifetime = 68;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(0.0)
+            .setAirFriction(0.0)
+            .setMass(0.08);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(0)
+            .setSpeedMax(0)
+            .setDieOnLowVelocity(false)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(false)
+            // bounces_left="20"
+            .setLifetime(68)
+            // shoot_light_flash_r="35"
+            // shoot_light_flash_g="210"
+            // shoot_light_flash_b="255"
+            // shoot_light_flash_radius="90"
+            .setKnockback(1.6);
+            // damage_every_x_frames="15"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
     }
 }
 

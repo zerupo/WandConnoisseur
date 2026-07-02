@@ -1,20 +1,19 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_SUMMON_EGG_FIRE extends Projectile{
+public class PROJECTILE_SUMMON_EGG_FIRE extends ProjectileBaseItem{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_SUMMON_EGG_FIRE(){
         this.name = "Summon egg fire";
         this.imageFile = "egg_red.png";
         this.emote = staticEmote;
-
-        this.lifetime = -1;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setAffectPhysicsBodies(true);
     }
 }
 

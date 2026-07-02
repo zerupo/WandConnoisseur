@@ -1,21 +1,46 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_POWERDIGGER extends Projectile{
+public class PROJECTILE_POWERDIGGER extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_POWERDIGGER(){
         this.name = "Digging Blast";
         this.imageFile = "powerdigger.png";
         this.emote = staticEmote;
-        this.speedMin = 0;
-        this.speedMax = 0;
-        this.lifetime = 2;
-        this.lifetimeRandomness = 0;
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.0"
+            .setSpeedMin(0)
+            .setSpeedMax(0)
+            .setFriction(3.0)
+            .setSpreadRad(0.0)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            // ground_collision_fx="1"
+            .setExplosionDontDamageShooter(true)
+            .setOnCollisionDie(true)
+            .setLifetime(2)
+            // velocity_sets_scale="1"
+            .setLifetimeRandomness(0);
+            // ragdoll_force_multiplier="0.01"
+            // hit_particle_force_multiplier="0.25 "
+            // camera_shake_when_shot="1.0"
+            // ragdoll_fx_on_collision="NORMAL"
+            // collect_materials_to_shooter="1"
+            // collide_with_tag="drillable"
+            // on_death_item_pickable_radius="10"
+            // shoot_light_flash_r="15"
+            // shoot_light_flash_g="110"
+            // shoot_light_flash_b="145"
+            // shoot_light_flash_radius="90"
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDrill(2.5);
     }
 }
 

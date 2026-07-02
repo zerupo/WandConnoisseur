@@ -1,25 +1,54 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.ProjectileComponent;
+import org.example.main.VelocityComponent;
 
 import java.lang.invoke.MethodHandles;
 
-public class PROJECTILE_LANCE_HOLY extends Projectile{
+public class PROJECTILE_LANCE_HOLY extends ProjectileBase{
     static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
 
-    @Override
-    protected void initialization(){
+    public PROJECTILE_LANCE_HOLY(){
         this.name = "Holy Lance";
         this.imageFile = "lance_holy.png";
         this.emote = staticEmote;
-        this.gravityY = 100;
-        this.airFriction = -0.6;
-        this.mass = 0.15;
-
-        this.speedMin = 100;
-        this.speedMax = 200;
-        this.lifetime = 300;
-        this.lifetimeRandomness = 0;
+        this.velocityComponent = (this.velocityComponent == null ? new VelocityComponent() : this.velocityComponent)
+            .setGravityY(100.0)
+            .setAirFriction(-0.6)
+            .setMass(0.15);
+        this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent)
+            // lob_min="0.8"
+            // lob_max="1.1"
+            .setSpeedMin(100)
+            .setSpeedMax(200)
+            .setSpreadRad(0.003)
+            .setOnDeathExplode(true)
+            // on_death_gfx_leave_sprite="0"
+            .setOnLifetimeOutExplode(true)
+            .setDieOnLowVelocity(false)
+            .setExplosionDontDamageShooter(false)
+            .setOnCollisionDie(true)
+            // ragdoll_force_multiplier="0.03"
+            .setLifetime(300)
+            // ground_penetration_coeff="6"
+            // velocity_sets_scale="1"
+            // camera_shake_when_shot="0"
+            // shoot_light_flash_radius="64"
+            // hit_particle_force_multiplier="0.1"
+            // create_shell_casing="0"
+            // bounces_left="3"
+            // collide_with_shooter_frames="4"
+            // penetrate_entities="1"
+            .setFriendlyFire(true)
+            // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_large.xml"
+            // shoot_light_flash_radius="140"
+            // shoot_light_flash_r="155"
+            // shoot_light_flash_g="235"
+            // shoot_light_flash_b="255"
+            .setKnockback(1.5);
+        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setHoly(43.75);
     }
 }
 

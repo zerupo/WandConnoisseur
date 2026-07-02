@@ -50,7 +50,7 @@ public class SpellInfoCommand implements Command{
             event.reply("").addFiles(FileUpload.fromData(textFile, spell.getClass().getSimpleName() + ".java")).queue();
         }else{
             event.reply(spell.getEmote()).queue();
-            event.getChannel().sendMessage(spell.getInfoString()).queue();
+            event.getChannel().sendMessage(spell.getInfoString(true)).queue();
         }
     }
 }
