@@ -427,7 +427,11 @@ public abstract class Spell{
 
         // related projectile
         if(this.relatedProjectile != null){
-            result.append("\n\n# Related Projectile\n").append(this.relatedProjectile.toString(importantOnly));
+            innerString.append(this.relatedProjectile.toString(importantOnly));
+            if(!innerString.isEmpty()){
+                result.append("\n\n# Related Projectile\n").append(innerString.toString());
+                innerString.setLength(0);
+            }
         }
 
         return result.toString();

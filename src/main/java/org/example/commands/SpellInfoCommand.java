@@ -49,7 +49,7 @@ public class SpellInfoCommand implements Command{
             textFile = new File(spellPath + spell.getClass().getSimpleName() + ".java");
             event.reply("").addFiles(FileUpload.fromData(textFile, spell.getClass().getSimpleName() + ".java")).queue();
         }else{
-            event.reply(spell.getEmote()).queue();
+            event.reply(spell.getEmote()).complete();
             event.getChannel().sendMessage(spell.getInfoString(true)).queue();
         }
     }

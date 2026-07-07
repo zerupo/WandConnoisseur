@@ -22,6 +22,7 @@ public class LUMINOUS_DRILL extends Spell{
         this.price = 150;
         this.manaCost = 10;
         this.castDelay = -35;
+        this.rechargeTime = -10;
     }
 
     @Override

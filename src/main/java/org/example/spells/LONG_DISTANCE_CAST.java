@@ -2,8 +2,8 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
-import org.example.projectiles.PROJECTILE_LONG_DISTANCE_CAST;
 import org.example.projectiles.Projectile;
+import org.example.projectiles.PROJECTILE_LONG_DISTANCE_CAST;
 
 import java.lang.invoke.MethodHandles;
 
@@ -29,7 +29,7 @@ public class LONG_DISTANCE_CAST extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        cardPool.draw(3, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
+        cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.triggerType));
         castState.addCastDelay(this.castDelay);
     }
 }

@@ -192,11 +192,13 @@ public class WispCommand implements Command{
         Modifier[] modifiers = modifiersList.toArray(new Modifier[0]);
 
         int[][] result = getValues(modifiers, lifetimeMin, lifetimeMax, nbModifier);
-        stringResult.append("\n\n").append(result.length).append(" solutions trouvées");
-
         if(result.length == 0){
+            stringResult.append("\n\nAucune solution solution trouvée");
+            event.getHook().editOriginal(stringResult.toString()).queue();
             return;
         }
+
+        stringResult.append("\n\n").append(result.length).append(" solutions trouvées");
 
         final int N = result[0].length - 1;
         Arrays.sort(result, (a, b) -> {
