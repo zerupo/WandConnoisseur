@@ -24,6 +24,7 @@ public class LASER_LUMINOUS_DRILL extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(1, 0, 1, 0, 0, 0, 0.2, 0, 0, 0, 0.1);
         this.price = 220;
         this.manaCost = 30;
+        this.autoStat = false;
         this.castDelay = -35;
         this.rechargeTime = -10;
     }
@@ -31,6 +32,8 @@ public class LASER_LUMINOUS_DRILL extends Spell{
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         cardPool.draw(1, true, castState.addProjectileTrigger(this.relatedProjectile.clone(), this.timerLength, this.triggerType));
+        castState.addCastDelay(this.castDelay);
+        cardPool.addRechargeTime(this.rechargeTime);
     }
 }
 

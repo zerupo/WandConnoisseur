@@ -25,14 +25,16 @@ public class ZERO_DAMAGE extends Spell{
         this.castDelay = -5;
         this.lifetime = 280;
         this.recoil = -10.0;
+        this.setGoreParticles = true;
+        this.goreParticles = 0;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.setDamage(this.damageComponent);
+        // c.damage_explosion_add = 0
         // c.damage_null_all = 1
-        // c.gore_particles    = 0
         // c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_white_small.xml"
         cardPool.draw(1, true, castState);
     }

@@ -254,8 +254,8 @@ public class ProjectileComponent{
         return this;
     }
 
-    public ProjectileComponent setSpreadRad(double friction){
-        this.friction = friction;
+    public ProjectileComponent setSpreadRad(double spreadRad){
+        this.spreadRad = spreadRad;
         return this;
     }
 

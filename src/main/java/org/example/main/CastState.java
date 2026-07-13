@@ -351,6 +351,12 @@ public class CastState{
     private double gravity = 0.0;
     private boolean friendlyFire = false;
     private double speedMultiplier = 1.0;
+    private int goreParticles = 0;
+    private int bounce = 0;
+    private String material = "";
+    private int materialAmount = 0;
+    private StringList trailMaterial = new StringList();
+    private int trailMaterialAmount = 0;
 
     public CastState(){
         // nothing
@@ -371,6 +377,12 @@ public class CastState{
         castState.gravity = this.gravity;
         castState.friendlyFire = this.friendlyFire;
         castState.speedMultiplier = this.speedMultiplier;
+        castState.goreParticles = this.goreParticles;
+        castState.bounce = this.bounce;
+        castState.material = this.material;
+        castState.trailMaterialAmount = this.materialAmount;
+        castState.trailMaterial = this.trailMaterial.clone();
+        castState.trailMaterialAmount = this.trailMaterialAmount;
 
         return castState;
     }
@@ -424,6 +436,30 @@ public class CastState{
         return this.speedMultiplier;
     }
 
+    public int getGoreParticles(){
+        return this.goreParticles;
+    }
+
+    public int getBounce(){
+        return this.bounce;
+    }
+
+    public String getMaterial(){
+        return this.material;
+    }
+
+    public int getMaterialAmount(){
+        return this.materialAmount;
+    }
+
+    public String[] getTrailMaterial(){
+        return this.trailMaterial.getArray();
+    }
+
+    public int getTrailMaterialAmount(){
+        return this.trailMaterialAmount;
+    }
+
     // setters
     public void setCastDelay(int castDelay){
         this.castDelay = castDelay;
@@ -463,6 +499,26 @@ public class CastState{
 
     public void setSpeedMultiplier(double speedMultiplier){
         this.speedMultiplier = speedMultiplier;
+    }
+
+    public void setGoreParticles(int goreParticles){
+        this.goreParticles = goreParticles;
+    }
+
+    public void setBounce(int bounce){
+        this.bounce = bounce;
+    }
+
+    public void setMaterial(String material){
+        this.material = material;
+    }
+
+    public void setMaterialAmount(int materialAmount){
+        this.materialAmount = materialAmount;
+    }
+
+    public void setTrailMaterialAmount(int trailMaterialAmount){
+        this.trailMaterialAmount = trailMaterialAmount;
     }
 
     // adders
@@ -525,6 +581,26 @@ public class CastState{
 
     public void addSpeed(double speed){
         this.speedMultiplier += speed;
+    }
+
+    public void addGoreParticles(int goreParticles){
+        this.goreParticles += goreParticles;
+    }
+
+    public void addBounce(int bounce){
+        this.bounce += bounce;
+    }
+
+    public void addMaterialAmount(int materialAmount){
+        this.materialAmount += materialAmount;
+    }
+
+    public void addTrailMaterial(String trailMaterial){
+        this.trailMaterial.add(trailMaterial);
+    }
+
+    public void addTrailMaterialAmount(int trailMaterialAmount){
+        this.trailMaterialAmount += trailMaterialAmount;
     }
 
     public void addProjectile(Projectile projectile){
@@ -643,6 +719,12 @@ public class CastState{
         if(this.gravity != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Gravity: ").append(this.gravity);}
         if(this.friendlyFire){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Friendly fire: true");}
         if(this.speedMultiplier != 1.0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Speed multiplier: x").append(this.speedMultiplier);}
+        if(this.goreParticles != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Gore particles: ").append(this.goreParticles);}
+        if(this.bounce != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Bounce: ").append(this.bounce);}
+        if(!this.material.equals("")){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Material: \"").append(this.material).append("\"");}
+        if(this.materialAmount != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Material amount: ").append(this.materialAmount);}
+        if(this.trailMaterial.size() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Trail material: ").append(this.trailMaterial.toString());}
+        if(this.trailMaterialAmount != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Trail material amount: ").append(this.trailMaterialAmount);}
 
         if(!discordFormat){
             return innerBuilder.toString();

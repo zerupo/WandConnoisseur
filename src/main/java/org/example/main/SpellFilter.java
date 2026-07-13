@@ -394,15 +394,21 @@ public class SpellFilter{
         entry("projectile_on_lifetime_out_explode", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return new TypedProperty(PropertyType.BOOLEAN, projectileComponent == null ? null : projectileComponent.getOnLifetimeOutExplode());}),
         entry("projectile_update_velocity", spell -> {Projectile projectile = spell.getRelatedProjectile(); VelocityComponent velocityComponent = projectile == null ? null : projectile.getVelocityComponent(); return new TypedProperty(PropertyType.BOOLEAN, velocityComponent == null ? null : velocityComponent.getUpdateVelocity());}),
         entry("recursive", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getRecursive())),
+        entry("set_bounce", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetBounce())),
         entry("set_cast_delay", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetCastDelay())),
         entry("set_friendly_fire", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetFriendlyFire())),
+        entry("set_gore_particles", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetGoreParticles())),
+        entry("set_recharge_time", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetRechargeTime())),
         entry("set_recoil", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getSetRecoil())),
 
         // int
+        entry("bounce", spell -> new TypedProperty(PropertyType.INT, spell.getBounce())),
         entry("cast_delay", spell -> new TypedProperty(PropertyType.INT, spell.getCastDelay())),
         entry("crit_rate", spell -> new TypedProperty(PropertyType.INT, spell.getCritRate())),
+        entry("gore_particles", spell -> new TypedProperty(PropertyType.INT, spell.getGoreParticles())),
         entry("lifetime", spell -> new TypedProperty(PropertyType.INT, spell.getLifetime())),
         entry("mana", spell -> new TypedProperty(PropertyType.INT, spell.getManaCost())),
+        entry("material_amount", spell -> new TypedProperty(PropertyType.INT, spell.getMaterialAmount())),
         entry("max_charges", spell -> new TypedProperty(PropertyType.INT, spell.getMaxCharges())),
         entry("pattern", spell -> new TypedProperty(PropertyType.INT, spell.getPattern())),
         entry("price", spell -> new TypedProperty(PropertyType.INT, spell.getPrice())),
@@ -413,6 +419,7 @@ public class SpellFilter{
         entry("projectile_liquid_death_threshold", spell -> {Projectile projectile = spell.getRelatedProjectile(); VelocityComponent velocityComponent = projectile == null ? null : projectile.getVelocityComponent(); return new TypedProperty(PropertyType.INT, velocityComponent == null ? null : velocityComponent.getLiquidDeathThreshold());}),
         entry("recharge_time", spell -> new TypedProperty(PropertyType.INT, spell.getRechargeTime())),
         entry("timer_length", spell -> new TypedProperty(PropertyType.INT, spell.getTimerLength())),
+        entry("trail_material_amount", spell -> new TypedProperty(PropertyType.INT, spell.getTrailMaterialAmount())),
 
         // double
         entry("damage_curse", spell -> new TypedProperty(PropertyType.DOUBLE, spell.getDamageComponent().getCurse())),
@@ -486,10 +493,12 @@ public class SpellFilter{
         entry("alias", Spell::getAliasString),
         entry("charge", Spell::getChargeString),
         entry("damage", spell -> spell.getDamageComponent().toString()),
+        entry("material", spell -> spell.getMaterial()),
         entry("projectile_damage", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getDamageComponent().toString()) : "<null>";}),
         entry("projectile_lifetime", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getLifetimeString()) : "<null>";}),
         entry("projectile_speed", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getSpeedString()) : "<null>";}),
         entry("tier", Spell::getTierString),
+        entry("trail_material", spell -> spell.getTrailMaterial()),
         entry("trigger_type", spell -> spell.getTriggerType().toString()),
         entry("type", spell -> spell.getType().toString()),
 
@@ -517,13 +526,17 @@ public class SpellFilter{
         entry("recursive", spell -> String.valueOf(spell.getRecursive())),
         entry("set_cast_delay", spell -> String.valueOf(spell.getSetCastDelay())),
         entry("set_friendly_fire", spell -> String.valueOf(spell.getSetFriendlyFire())),
+        entry("set_gore_paticles", spell -> String.valueOf(spell.getSetGoreParticles())),
         entry("set_recoil", spell -> String.valueOf(spell.getSetRecoil())),
 
         // int
+        entry("bounce", spell -> (spell.getSetBounce() ? "=" : "") + spell.getBounce()),
         entry("cast_delay", spell -> (spell.getSetCastDelay() ? "=" : "") + String.format("%1$df (%2$3.2fs)", spell.getCastDelay(), spell.getCastDelay()/60.0)),
         entry("crit_rate", spell -> String.valueOf(spell.getCritRate()) + "%"),
+        entry("gore_particles", spell -> (spell.getSetGoreParticles() ? "=" : "") + spell.getGoreParticles()),
         entry("lifetime", spell -> String.format("%1$df (%2$3.2fs)", spell.getLifetime(), spell.getLifetime()/60.0)),
         entry("mana", spell -> String.valueOf(spell.getManaCost())),
+        entry("material_amount", spell -> String.valueOf(spell.getMaterialAmount())),
         entry("max_charges", spell -> String.valueOf(spell.getMaxCharges())),
         entry("pattern", spell -> spell.getPattern() + "°"),
         entry("price", spell -> String.valueOf(spell.getPrice())),
@@ -532,8 +545,9 @@ public class SpellFilter{
         entry("projectile_lifetime_min", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getLifetimeMin()) : "<null>";}),
         entry("projectile_lifetime_randomness", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getLifetimeRandomness()) : "<null>";}),
         entry("projectile_liquid_death_threshold", spell -> {Projectile projectile = spell.getRelatedProjectile(); VelocityComponent velocityComponent = projectile == null ? null : projectile.getVelocityComponent(); return velocityComponent != null ? String.valueOf(velocityComponent.getLiquidDeathThreshold()) : "<null>";}),
-        entry("recharge_time", spell -> String.format("%1$df (%2$3.2fs)", spell.getRechargeTime(), spell.getRechargeTime()/60.0)),
+        entry("recharge_time", spell -> (spell.getSetRechargeTime() ? "=" : "") + String.format("%1$df (%2$3.2fs)", spell.getRechargeTime(), spell.getRechargeTime()/60.0)),
         entry("timer_length", spell -> String.format("%1$df (%2$3.2fs)", spell.getTimerLength(), spell.getTimerLength()/60.0)),
+        entry("trail_material_amount", spell -> String.valueOf(spell.getTrailMaterialAmount())),
 
         // double
         entry("damage_curse", spell -> String.valueOf(spell.getDamageComponent().getCurse())),

@@ -29,16 +29,16 @@ public class NUKE extends Spell{
         this.recoil = 300.0;
         this.screenshake = 10.5;
         this.speed = 0.75;
+        this.goreParticles = 10;
+        this.material = "fire";
+        this.materialAmount = 60;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addProjectile(this.relatedProjectile.clone());
-        /*c.material = "fire"
-		c.material_amount = c.material_amount + 60
-		c.ragdoll_fx = 2
-		c.gore_particles = c.gore_particles + 10*/
+		// c.ragdoll_fx = 2
     }
 }
 

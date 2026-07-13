@@ -29,7 +29,7 @@ public class REGENERATION_FIELD extends Spell{
 
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // TODO: Implement action logic
+        castState.addProjectile(this.relatedProjectile.clone());
     }
 }
 

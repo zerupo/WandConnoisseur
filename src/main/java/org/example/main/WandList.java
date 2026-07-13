@@ -4,12 +4,11 @@ import static org.example.main.Global.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.IllegalFormatException;
 import java.util.Random;
+import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -37,16 +36,11 @@ class IntRange{
     }
 
     public boolean contains(double value){
-        switch(type){
-            case BETWEEN:
-                return value >= this.min && value <= this.max;
-            case GREATER_OR_EQUAL:
-                return value >= this.min;
-            case LESS_OR_EQUAL:
-                return value <= this.min;
-            default:
-                return false;
-        }
+        return switch(type){
+            case BETWEEN -> value >= this.min && value <= this.max;
+            case GREATER_OR_EQUAL -> value >= this.min;
+            case LESS_OR_EQUAL -> value <= this.min;
+        };
     }
 
     public int getMin(){
@@ -79,13 +73,13 @@ class IntRange{
         }
 
         if(ensembleFormat){
-            return switch (this.type){
+            return switch(this.type){
                 case GREATER_OR_EQUAL -> start + "[" + stringMin + "; \u221e[" + end;
                 case LESS_OR_EQUAL -> start + "]\u221e; " + stringMin + "]" + end;
                 default -> stringMin.equals(stringMax) ? start + stringMin + end : start + "[" + stringMin + "; " + stringMax + "]" + end;
             };
         }else{
-            return switch (this.type){
+            return switch(this.type){
                 case GREATER_OR_EQUAL -> start + ">" + stringMin + end;
                 case LESS_OR_EQUAL -> start + "<" + stringMin + end;
                 default -> stringMin.equals(stringMax) ? start + stringMin + end : start + stringMin + " - " + stringMax + end;
@@ -109,7 +103,9 @@ class WandStat{
     private IntRange spread;
 
     public WandStat(String filePath, String fileName, boolean shuffle, IntRange nbDraw, IntRange castDelay, IntRange rechargeTime, IntRange nbSlot, IntRange spread){
-        this.filePath = filePath;
+        if(!filePath.equals("")){
+            this.filePath = filePath;
+        }
         this.fileName = fileName;
         this.shuffle = shuffle;
         this.nbDraw = nbDraw;
@@ -291,92 +287,107 @@ class WandStat{
 
         // nbDraw <
         switch(wandStat.nbDraw.getType()){
-            case GREATER_OR_EQUAL:
+            case GREATER_OR_EQUAL -> {
                 if(wand.getNbDraw() < wandStat.nbDraw.getMin()){
                     return 5;
                 }
-            case LESS_OR_EQUAL:
+            }
+            case LESS_OR_EQUAL -> {
                 if(wand.getNbDraw() > wandStat.nbDraw.getMin()){
                     return -5;
                 }
-            default:
+            }
+            default -> {
                 if(wand.getNbDraw() < wandStat.nbDraw.getMin()){
                     return 5;
                 }else if(wand.getNbDraw() > wandStat.nbDraw.getMax()){
                     return -5;
                 }
+            }
         }
 
         // nbSlot >
         switch(wandStat.nbSlot.getType()){
-            case LESS_OR_EQUAL:
+            case LESS_OR_EQUAL -> {
                 if(wand.getNbSlot() > wandStat.nbSlot.getMin()){
                     return 4;
                 }
-            case GREATER_OR_EQUAL:
+            }
+            case GREATER_OR_EQUAL -> {
                 if(wand.getNbSlot() < wandStat.nbSlot.getMin()){
                     return -4;
                 }
-            default:
+            }
+            default -> {
                 if(wand.getNbSlot() > wandStat.nbSlot.getMin()){
                     return 4;
                 }else if(wand.getNbSlot() < wandStat.nbSlot.getMax()){
                     return -4;
                 }
+            }
         }
 
         // rechargeTime <
         switch(wandStat.rechargeTime.getType()){
-            case GREATER_OR_EQUAL:
+            case GREATER_OR_EQUAL -> {
                 if(wand.getRechargeTime() < wandStat.rechargeTime.getMin()){
                     return 3;
                 }
-            case LESS_OR_EQUAL:
+            }
+            case LESS_OR_EQUAL -> {
                 if(wand.getRechargeTime() > wandStat.rechargeTime.getMin()){
                     return -3;
                 }
-            default:
+            }
+            default -> {
                 if(wand.getRechargeTime() < wandStat.rechargeTime.getMin()){
                     return 3;
                 }else if(wand.getRechargeTime() > wandStat.rechargeTime.getMax()){
                     return -3;
                 }
+            }
         }
 
         // castDelay <
         switch(wandStat.castDelay.getType()){
-            case GREATER_OR_EQUAL:
+            case GREATER_OR_EQUAL -> {
                 if(wand.getCastDelay() < wandStat.castDelay.getMin()){
                     return 2;
                 }
-            case LESS_OR_EQUAL:
+            }
+            case LESS_OR_EQUAL -> {
                 if(wand.getCastDelay() > wandStat.castDelay.getMin()){
                     return -2;
                 }
-            default:
+            }
+            default -> {
                 if(wand.getCastDelay() < wandStat.castDelay.getMin()){
                     return 2;
                 }else if(wand.getCastDelay() > wandStat.castDelay.getMax()){
                     return -2;
                 }
+            }
         }
 
         // spread <
         switch(wandStat.spread.getType()){
-            case GREATER_OR_EQUAL:
+            case GREATER_OR_EQUAL -> {
                 if(wand.getSpread() < wandStat.spread.getMin()){
                     return 1;
                 }
-            case LESS_OR_EQUAL:
+            }
+            case LESS_OR_EQUAL -> {
                 if(wand.getSpread() > wandStat.spread.getMin()){
                     return -1;
                 }
-            default:
+            }
+            default -> {
                 if(wand.getSpread() < wandStat.spread.getMin()){
                     return 1;
                 }else if(wand.getSpread() > wandStat.spread.getMax()){
                     return -1;
                 }
+            }
         }
 
         return 0;
@@ -478,133 +489,115 @@ class WandStat{
     }
 }
 
+// https://wondible.com/noita-know-your-wand/
 public class WandList{
-    WandStat[] wandList;
+    static final WandStat[] wandList = readFile();
 
-    // https://wondible.com/noita-know-your-wand/
+    private static WandStat[] readFile(){
+        ArrayList<WandStat> wands = new ArrayList<>();
+        File file = new File(Global.getPathConfig() + "wand.properties");
+
+        try(Scanner myReader = new Scanner(file)){
+            while(myReader.hasNextLine()){
+                String[] data = myReader.nextLine().split(";");
+
+                wands.add(new WandStat(
+                    data[0], // folder
+                    data[1], // file
+                    data[2].equals("true"), // shuffle
+                    switch(data[4]){ // draw
+                        case "true" -> new IntRange(Integer.parseInt(data[3]), true);
+                        case "false" -> new IntRange(Integer.parseInt(data[3]), false);
+                        default -> new IntRange(Integer.parseInt(data[3]), Integer.parseInt(data[4]));
+                    }, switch(data[6]){ // cast delay
+                        case "true" -> new IntRange(Integer.parseInt(data[5]), true);
+                        case "false" -> new IntRange(Integer.parseInt(data[5]), false);
+                        default -> new IntRange(Integer.parseInt(data[5]), Integer.parseInt(data[6]));
+                    }, switch(data[8]){ // recharge time
+                        case "true" -> new IntRange(Integer.parseInt(data[7]), true);
+                        case "false" -> new IntRange(Integer.parseInt(data[7]), false);
+                        default -> new IntRange(Integer.parseInt(data[7]), Integer.parseInt(data[8]));
+                    }, switch(data[10]){ // slot
+                        case "true" -> new IntRange(Integer.parseInt(data[9]), true);
+                        case "false" -> new IntRange(Integer.parseInt(data[9]), false);
+                        default -> new IntRange(Integer.parseInt(data[9]), Integer.parseInt(data[10]));
+                    }, switch(data[12]){ // spread
+                        case "true" -> new IntRange(Integer.parseInt(data[11]), true);
+                        case "false" -> new IntRange(Integer.parseInt(data[11]), false);
+                        default -> new IntRange(Integer.parseInt(data[11]), Integer.parseInt(data[12]));
+                    }
+                ));
+            }
+        }catch(Exception e){
+            System.out.println("Error reading wand config: " + e.getMessage());
+            return null;
+        }
+
+        // sort
+        WandStat[] result = wands.toArray(new WandStat[0]);
+        WandStat tmp;
+
+        for(int i=0; i < result.length; i++){
+            for(int j=1; j < result.length; j++){
+                if(WandStat.compare(result[j - 1], result[j]) < 0){
+                    tmp = result[j - 1];
+                    result[j - 1] = result[j];
+                    result[j] = tmp;
+                }
+            }
+        }
+
+        /*for(WandStat wand : result){
+            System.out.println(wand.toString());
+        }*/
+
+        return result;
+    }
+
     public WandList(){
-        wandList = new WandStat[]{
-            //new WandStat("wand_0000.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0001.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0002.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0003.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0004.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0005.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0006.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0007.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0008.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0009.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0010.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0011.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0012.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0013.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0014.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0015.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0016.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0017.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0018.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0019.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0020.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0021.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0022.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0023.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0024.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0025.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0026.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0027.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0028.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0029.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0030.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0031.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0032.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0033.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            //new WandStat("wand_0034.png", AA, new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA), new IntRange(AA, AA)),
-            new WandStat("wand_0035.png", false, new IntRange(3, true), new IntRange(16, 16), new IntRange(30, false), new IntRange(23, true), new IntRange(5, 7)),
-            new WandStat("wand_0103.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(30, 60), new IntRange(20, 22), new IntRange(7, true)),
-            new WandStat("wand_0105.png", true, new IntRange(1, 1), new IntRange(16, 16), new IntRange(30, 60), new IntRange(1, 4), new IntRange(7, true)),
-            new WandStat("wand_0140.png", false, new IntRange(3, true), new IntRange(2, 2), new IntRange(30, 60), new IntRange(20, 22), new IntRange(5, false)),
-            new WandStat("wand_0173.png", false, new IntRange(1, 1), new IntRange(9, 9), new IntRange(30, 60), new IntRange(23, true), new IntRange(7, true)),
-            new WandStat("wand_0232.png", false, new IntRange(1, 1), new IntRange(9, 9), new IntRange(60, true), new IntRange(23, true), new IntRange(5, 7)),
-            new WandStat("wand_0236.png", false, new IntRange(1, 1), new IntRange(2, 2), new IntRange(30, false), new IntRange(17, 19), new IntRange(5, false)),
-            new WandStat("wand_0260.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(60, true), new IntRange(23, true), new IntRange(7, true)),
-            new WandStat("wand_0338.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(30, 60), new IntRange(23, true), new IntRange(5, 7)),
-            new WandStat("wand_0362.png", false, new IntRange(3, true), new IntRange(23, 23), new IntRange(30, 60), new IntRange(20, 22), new IntRange(5, false)),
-            new WandStat("wand_0366.png", true, new IntRange(1, 1), new IntRange(23, 23), new IntRange(30, 60), new IntRange(1, 4), new IntRange(5, 7)),
-            new WandStat("wand_0371.png", true, new IntRange(1, 1), new IntRange(16, 16), new IntRange(30, 60), new IntRange(1, 4), new IntRange(5, false)),
-            new WandStat("wand_0441.png", false, new IntRange(3, true), new IntRange(16, 16), new IntRange(30, false), new IntRange(20, 22), new IntRange(7, true)),
-            new WandStat("wand_0454.png", false, new IntRange(3, true), new IntRange(30, 30), new IntRange(30, 60), new IntRange(23, true), new IntRange(5, false)),
-            new WandStat("wand_0455.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(60, true), new IntRange(23, true), new IntRange(5, 7)),
-            new WandStat("wand_0478.png", false, new IntRange(3, true), new IntRange(16, 16), new IntRange(30, 60), new IntRange(20, 22), new IntRange(5, 7)),
-            new WandStat("wand_0481.png", false, new IntRange(3, true), new IntRange(2, 2), new IntRange(30, 60), new IntRange(23, true), new IntRange(7, true)),
-            new WandStat("wand_0504.png", false, new IntRange(3, true), new IntRange(30, 30), new IntRange(30, false), new IntRange(20, 22), new IntRange(7, true)),
-            new WandStat("wand_0541.png", true, new IntRange(1, 1), new IntRange(30, 30), new IntRange(30, false), new IntRange(1, 4), new IntRange(5, false)),
-            new WandStat("wand_0562.png", true, new IntRange(1, 1), new IntRange(30, 30), new IntRange(30, 60), new IntRange(1, 4), new IntRange(7, true)),
-            new WandStat("wand_0595.png", false, new IntRange(3, true), new IntRange(30, 30), new IntRange(30, 60), new IntRange(20, 22), new IntRange(5, 7)),
-            new WandStat("wand_0596.png", false, new IntRange(3, true), new IntRange(16, 16), new IntRange(30, 60), new IntRange(23, true), new IntRange(7, true)),
-            new WandStat("wand_0607.png", true, new IntRange(1, 1), new IntRange(30, 30), new IntRange(30, false), new IntRange(1, 4), new IntRange(7, true)),
-            new WandStat("wand_0621.png", false, new IntRange(1, 1), new IntRange(30, 30), new IntRange(30, 60), new IntRange(23, true), new IntRange(5, false)),
-            new WandStat("wand_0629.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(30, false), new IntRange(23, true), new IntRange(5, false)),
-            new WandStat("wand_0642.png", true, new IntRange(1, 1), new IntRange(30, 30), new IntRange(30, 60), new IntRange(1, 4), new IntRange(5, false)),
-            new WandStat("wand_0650.png", false, new IntRange(3, true), new IntRange(2, 2), new IntRange(30, 60), new IntRange(20, 22), new IntRange(5, false)),
-            new WandStat("wand_0701.png", false, new IntRange(3, true), new IntRange(23, 23), new IntRange(60, true), new IntRange(20, 22), new IntRange(5, false)),
-            new WandStat("wand_0761.png", false, new IntRange(1, 1), new IntRange(9, 9), new IntRange(60, true), new IntRange(23, true), new IntRange(5, false)),
-            new WandStat("wand_0789.png", false, new IntRange(2, 2), new IntRange(2, 2), new IntRange(30, false), new IntRange(23, true), new IntRange(5, false)),
-            new WandStat("wand_0802.png", false, new IntRange(3, true), new IntRange(16, 16), new IntRange(30, 60), new IntRange(20, 22), new IntRange(7, true)),
-            new WandStat("wand_0816.png", false, new IntRange(3, true), new IntRange(16, 16), new IntRange(60, false), new IntRange(23, true), new IntRange(7, true)),
-            new WandStat("wand_0821.png", false, new IntRange(1, 1), new IntRange(2, 2), new IntRange(30, false), new IntRange(23, true), new IntRange(5, false)),
-            new WandStat("wand_0833.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(30, false), new IntRange(23, true), new IntRange(5, 7)),
-            new WandStat("wand_0847.png", true, new IntRange(1, 1), new IntRange(2, 2), new IntRange(30, 60), new IntRange(1, 4), new IntRange(5, 7)),
-            new WandStat("wand_0896.png", false, new IntRange(3, true), new IntRange(23, 23), new IntRange(60, true), new IntRange(20, 22), new IntRange(7, true)),
-            new WandStat("wand_0897.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(60, true), new IntRange(20, 22), new IntRange(5, 7)),
-            new WandStat("wand_0963.png", false, new IntRange(3, true), new IntRange(9, 9), new IntRange(30, 60), new IntRange(23, true), new IntRange(5, 7))
-        };
-        this.sort();
+        // empty
     }
 
     public void generateAllSprites(){
+        if(wandList == null){
+            System.out.println("error wand file not loaded at \"" + Global.getPathConfig() + "wand.properties" + "\", can't generate sprites");
+            return;
+        }
+
         JPanel wandJPanel;
         String outputPath = Global.getPathOutput();
-        for(int i=0; i < this.wandList.length; i++){
-            System.out.println(this.wandList[i].toString());
-            wandJPanel = this.wandList[i].getJPanel();
+        for(WandStat wandStat : wandList){
+            //System.out.println(wandStat.toString());
+            wandJPanel = wandStat.getJPanel();
             if(wandJPanel != null && wandJPanel.getSize().width > 0 && wandJPanel.getSize().height > 0){
                 BufferedImage bi = new BufferedImage(wandJPanel.getSize().width, wandJPanel.getSize().height, BufferedImage.TYPE_INT_ARGB);
                 Graphics g = bi.createGraphics();
                 wandJPanel.paint(g);
                 g.dispose();
                 try{
-                    ImageIO.write(bi,"png",new File(outputPath + "wandStat_" + this.wandList[i].getFileName()));
+                    ImageIO.write(bi, "png", new File(outputPath + "wandStat_" + wandStat.getFileName()));
                 }catch(Exception e){
-                    System.out.println("error while saving image \"" + outputPath + "wandStat_" + this.wandList[i].getFileName() + "\"");
-                }
-            }
-        }
-    }
-
-    public void sort(){
-        WandStat tmp;
-
-        for(int i=0; i < this.wandList.length; i++){
-            for(int j=1; j < this.wandList.length; j++){
-                if(WandStat.compare(this.wandList[j - 1], this.wandList[j]) < 0){
-                    tmp = this.wandList[j - 1];
-                    this.wandList[j - 1] = this.wandList[j];
-                    this.wandList[j] = tmp;
+                    System.out.println("error while saving image \"" + outputPath + "wandStat_" + wandStat.getFileName() + "\"");
                 }
             }
         }
     }
 
     public String getSprite(Wand wand){
+        if(wandList == null){
+            System.out.println("error wand file not loaded at \"" + Global.getPathConfig() + "wand.properties" + "\", returning default sprite");
+            return "./src/main/java/org/example/image/wand/wand_0832.png";
+        }
+
         int min = 0;
-        int max = this.wandList.length - 1;
+        int max = wandList.length - 1;
         int current;
         int comparaisonResult;
         boolean stop = false;
 
         while(min < max && !stop){
             current = min + (max - min)/2;
-            comparaisonResult = WandStat.compare(wand, this.wandList[current]);
+            comparaisonResult = WandStat.compare(wand, wandList[current]);
             if(comparaisonResult > 0){
                 max = current;
             }else if(comparaisonResult < 0){
@@ -612,15 +605,15 @@ public class WandList{
             }else{
                 min = current;
                 max = current;
-                while(min - 1 >= 0 && WandStat.compare(wand, this.wandList[min - 1]) == 0){
+                while(min - 1 >= 0 && WandStat.compare(wand, wandList[min - 1]) == 0){
                     min--;
                 }
-                while(max + 1 < this.wandList.length && WandStat.compare(wand, this.wandList[max + 1]) == 0){
+                while(max + 1 < wandList.length && WandStat.compare(wand, wandList[max + 1]) == 0){
                     max++;
                 }
             }
             if(min + 1 == max){
-                comparaisonResult = Math.abs(WandStat.compare(wand, this.wandList[min])) - Math.abs(WandStat.compare(wand, this.wandList[max]));
+                comparaisonResult = Math.abs(WandStat.compare(wand, wandList[min])) - Math.abs(WandStat.compare(wand, wandList[max]));
                 if(comparaisonResult > 0){
                     min = max;
                 }else if(comparaisonResult < 0){
@@ -629,17 +622,21 @@ public class WandList{
                     stop = true;
                 }
             }
-            //System.out.println("range found: [" + min + ";" + max + "]");
+            //System.out.println("range found: [" + min + ";" + max + "]\n ->" + wandList[min].toString() + "\n ->" + wandList[max].toString() + "\n");
         }
 
-        /*System.out.println("valid wands:");
+        /*System.out.println("valid wands (" + min + ", " + max + "):");
         for(int i=min; i <= max; i++){
-            System.out.println(this.wandList[i].toString());
+            System.out.println(wandList[i].toString());
         }*/
 
-        Random random = new Random();
-        int randomNumber = random.nextInt(max + 1 - min) + min;
-        //System.out.println("wand N°" + randomNumber + " " + this.wandList[randomNumber].getSprite());
-        return this.wandList[randomNumber].getSprite();
+        if(min == max){
+            Random random = new Random();
+            int randomNumber = random.nextInt(max + 1 - min) + min;
+            //System.out.println("wand N°" + randomNumber + " " + wandList[randomNumber].getSprite());
+            return wandList[randomNumber].getSprite();
+        }else{
+            return wandList[min].getSprite();
+        }
     }
 }

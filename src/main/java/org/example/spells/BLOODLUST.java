@@ -25,12 +25,12 @@ public class BLOODLUST extends Spell{
         this.recoil = 30.0;
         this.setFriendlyFire = true;
         this.friendlyFire = true;
+        this.goreParticles = 15;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // c.gore_particles    = c.gore_particles + 15
         // c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_red.xml,"
         cardPool.draw(1, true, castState);
     }

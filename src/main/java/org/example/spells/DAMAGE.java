@@ -22,13 +22,13 @@ public class DAMAGE extends Spell{
         this.castDelay = 5;
         this.damageComponent.setProjectile(10.0);
         this.recoil = 10.0;
+        this.goreParticles = 5;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        /*c.gore_particles    = c.gore_particles + 5
-		c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_yellow.xml,"*/
+		// c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_yellow.xml,"
         cardPool.draw(1, true, castState);
     }
 }

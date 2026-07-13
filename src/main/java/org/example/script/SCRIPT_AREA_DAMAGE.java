@@ -1,0 +1,47 @@
+package org.example.script;
+
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
+public class SCRIPT_AREA_DAMAGE extends Script{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
+    @Override
+    protected void initialization(){
+        this.name = "Damage field";
+        this.imageFile = "area_damage.png";
+        this.emote = staticEmote;
+    }
+}
+
+/*<Entity>
+
+	<AreaDamageComponent
+		aabb_min.x="-16"
+		aabb_min.y="-16"
+		aabb_max.x="16"
+		aabb_max.y="16"
+		damage_per_frame="0.14"
+		update_every_n_frame="1"
+		entities_with_tag="homing_target"
+		death_cause="$damage_rock_curse"
+		damage_type="DAMAGE_PROJECTILE"
+		circle_radius="16"
+		>
+	</AreaDamageComponent>
+
+	<SpriteComponent
+		_enabled="1"
+		alpha="1"
+		image_file="data/particles/area_indicator_032_purple.png"
+		next_rect_animation=""
+		offset_x="16"
+		offset_y="16"
+		rect_animation="spawn"
+		z_index="1.1"
+		never_ragdollify_on_death="1"
+		>
+	</SpriteComponent>
+
+</Entity>*/

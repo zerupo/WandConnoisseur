@@ -78,7 +78,6 @@ public class WandConnoisseur{
     // shuffle
     // always cast
     // code every spell
-    // list of 1k wands
     // put on the raspberry
     public static void main(String[] args){
         String botToken = BotConfig.getBotToken();

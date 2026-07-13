@@ -27,7 +27,6 @@ public class DYNAMITE extends Spell{
         this.spread = 6.0;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         castState.addProjectile(this.relatedProjectile.clone());

@@ -26,12 +26,11 @@ public class HEAVY_SHOT extends Spell{
         this.damageComponent.setProjectile(43.75);
         this.recoil = 50.0;
         this.speed = 0.3;
+        this.goreParticles = 10;
     }
 
-    // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        // c.gore_particles    = c.gore_particles + 10
         cardPool.draw(1, true, castState);
     }
 }

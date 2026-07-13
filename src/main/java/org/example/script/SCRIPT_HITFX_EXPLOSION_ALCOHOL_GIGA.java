@@ -1,0 +1,85 @@
+package org.example.script;
+
+import org.example.config.EmoteConfig;
+
+import java.lang.invoke.MethodHandles;
+
+public class SCRIPT_HITFX_EXPLOSION_ALCOHOL_GIGA extends Script{
+    static String staticEmote = EmoteConfig.getEmote(MethodHandles.lookup().lookupClass().getSimpleName().toLowerCase());
+
+    @Override
+    protected void initialization(){
+        this.name = "Giant explosion on drunk enemies";
+        this.imageFile = "explode_on_alcohol_giga.png";
+        this.emote = staticEmote;
+    }
+}
+
+/*<Entity>
+
+    <HitEffectComponent
+		condition_status="ALCOHOLIC"
+        effect_hit="LOAD_UNIQUE_CHILD_ENTITY"
+        value_string="data/entities/misc/hitfx_explode_explosion_giga.xml" >
+	</HitEffectComponent >
+
+</Entity>*/
+
+// data/entities/misc/hitfx_explode_explosion_giga.xml
+/*<Entity
+  name="$projectile_default"
+   >
+
+	<Base file="data/entities/base_projectile.xml" >
+		<VelocityComponent>
+    	</VelocityComponent>
+	</Base>
+
+  <ProjectileComponent
+    _enabled="1"
+  	lob_min="0.8"
+  	lob_max="1.0"
+    speed_min="0"
+    speed_max="0"
+    die_on_low_velocity="1"
+    on_death_explode="1"
+    on_death_gfx_leave_sprite="0"
+    on_lifetime_out_explode="1"
+	explosion_dont_damage_shooter="0"
+    on_collision_die="1"
+	shoot_light_flash_radius="15"
+	shoot_light_flash_r="255"
+    shoot_light_flash_g="250"
+    shoot_light_flash_b="80"
+	damage="0"
+    lifetime="0" >
+    <config_explosion
+      never_cache="1"
+      camera_shake="60"
+      explosion_radius="100"
+      explosion_sprite="data/particles/explosion_032.xml"
+	  load_this_entity="data/entities/particles/particle_explosion/main_large.xml"
+      explosion_sprite_lifetime="0"
+      create_cell_probability="5"
+      hole_destroy_liquid="0"
+      hole_enabled="1"
+      ray_energy="6700000"
+      damage="5"
+      particle_effect="1"
+      damage_mortals="1"
+	  physics_explosion_power.min="4.5"
+      physics_explosion_power.max="9"
+      shake_vegetation="1"
+      sparks_count_max="1500"
+      sparks_count_min="1600"
+      sparks_enabled="1"
+      stains_enabled="1"
+      stains_radius="35"
+      background_lightning_count="5"
+	  max_durability_to_destroy="11"
+     audio_event_name="explosion" >
+	  >
+    </config_explosion>
+  </ProjectileComponent>
+
+</Entity>*/

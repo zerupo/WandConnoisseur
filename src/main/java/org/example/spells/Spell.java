@@ -47,6 +47,7 @@ public abstract class Spell{
     protected boolean autoStat = true;
     protected boolean setCastDelay = false;
     protected int castDelay = 0;
+    protected boolean setRechargeTime = false;
     protected int rechargeTime = 0;
     protected DamageComponent damageComponent = new DamageComponent();
     protected int lifetime = 0;
@@ -61,6 +62,14 @@ public abstract class Spell{
     protected boolean friendlyFire = false;
     protected boolean multiplySpeed = true;
     protected double speed = 1.0;
+    protected boolean setGoreParticles = false;
+    protected int goreParticles = 0;
+    protected boolean setBounce = false;
+    protected int bounce = 0;
+    protected String material = "";
+    protected int materialAmount = 0;
+    protected String trailMaterial = "";
+    protected int trailMaterialAmount = 0;
 
     public Spell(){
         this.initialization();
@@ -117,6 +126,7 @@ public abstract class Spell{
         newSpell.neverUnlimited = this.neverUnlimited;
         newSpell.autoStat = this.autoStat;
         newSpell.castDelay = this.castDelay;
+        newSpell.setRechargeTime = this.setRechargeTime;
         newSpell.rechargeTime = this.rechargeTime;
         newSpell.damageComponent = this.damageComponent.clone(); // clone
         newSpell.lifetime = this.lifetime;
@@ -131,6 +141,14 @@ public abstract class Spell{
         newSpell.friendlyFire = this.friendlyFire;
         newSpell.multiplySpeed = this.multiplySpeed;
         newSpell.speed = this.speed;
+        newSpell.setGoreParticles = this.setGoreParticles;
+        newSpell.goreParticles = this.goreParticles;
+        newSpell.setBounce = this.setBounce;
+        newSpell.bounce = this.bounce;
+        newSpell.material = this.material;
+        newSpell.materialAmount = this.materialAmount;
+        newSpell.trailMaterial = this.trailMaterial;
+        newSpell.trailMaterialAmount = this.trailMaterialAmount;
         if(this.imageLabel != null){
             newSpell.imageInJLabel();
         }
@@ -307,6 +325,10 @@ public abstract class Spell{
         return this.castDelay;
     }
 
+    public boolean getSetRechargeTime(){
+        return this.setRechargeTime;
+    }
+
     public int getRechargeTime(){
         return this.rechargeTime;
     }
@@ -371,6 +393,38 @@ public abstract class Spell{
         return this.speed;
     }
 
+    public boolean getSetGoreParticles(){
+        return this.setGoreParticles;
+    }
+
+    public int getGoreParticles(){
+        return this.goreParticles;
+    }
+
+    public boolean getSetBounce(){
+        return this.setBounce;
+    }
+
+    public int getBounce(){
+        return this.bounce;
+    }
+
+    public String getMaterial(){
+        return this.material;
+    }
+
+    public int getMaterialAmount(){
+        return this.materialAmount;
+    }
+
+    public String getTrailMaterial(){
+        return this.trailMaterial;
+    }
+
+    public int getTrailMaterialAmount(){
+        return this.trailMaterialAmount;
+    }
+
     public int getLastIteration(){
         return 0;
     }
@@ -394,7 +448,7 @@ public abstract class Spell{
 
         // cast state
         if(this.setCastDelay || this.castDelay != 0){innerString.append("\nCast delay: ").append(this.setCastDelay ? "=" : "").append(String.format("%1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
-        if(this.rechargeTime != 0){innerString.append(String.format("\nRecharge time: %1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
+        if(this.setRechargeTime || this.rechargeTime != 0){innerString.append("\nRecharge time: ").append(this.setRechargeTime ? "=" : "").append(String.format("%1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
         if(this.damageComponent.getProjectile() != 0){innerString.append("\nProjectile damage: ").append(this.damageComponent.getProjectile());}
         if(this.damageComponent.getMelee() != 0){innerString.append("\nMelee damage: ").append(this.damageComponent.getMelee());}
         if(this.damageComponent.getExplosion() != 0){innerString.append("\nExplosion damage: ").append(this.damageComponent.getExplosion());}
@@ -414,11 +468,17 @@ public abstract class Spell{
         if(this.critRate != 0){innerString.append("\nCrit rate: ").append(this.critRate).append("%");}
         if(this.pattern != 0){innerString.append("\nPattern: ").append(this.pattern).append("°");}
         if(this.spread != 0){innerString.append("\nSpread: ").append(this.spread).append("°");}
-        if(this.recoil != 0){innerString.append("\nRecoil: ").append(this.setRecoil ? "=" : "").append(this.recoil);}
+        if(this.setRecoil || this.recoil != 0){innerString.append("\nRecoil: ").append(this.setRecoil ? "=" : "").append(this.recoil);}
         if(this.screenshake != 0){innerString.append("\nScreen shake: ").append(this.screenshake);}
         if(this.gravity != 0){innerString.append("\nGravity: ").append(this.gravity);}
         if(this.setFriendlyFire){innerString.append("\nFriendly fire: ").append(this.friendlyFire ? "true" : "false");}
         if(this.multiplySpeed ? this.speed != 1.0 : this.speed != 0.0){innerString.append("\nSpeed: ").append(this.multiplySpeed ? "x" : "").append(this.speed);}
+        if(this.setGoreParticles || this.goreParticles != 0){innerString.append("\nGore particles: ").append(this.setGoreParticles ? "=" : "").append(this.goreParticles);}
+        if(this.setBounce || this.bounce != 0){innerString.append("\nBounce: ").append(this.setBounce ? "=" : "").append(this.bounce);}
+        if(!this.material.equals("")){innerString.append("\nMaterial: \"").append(this.material).append("\"");}
+        if(this.materialAmount != 0){innerString.append("\nMaterial amount: ").append(this.materialAmount);}
+        if(!this.trailMaterial.equals("")){innerString.append("\nTrail material: \"").append(this.trailMaterial).append("\"");}
+        if(this.trailMaterialAmount != 0){innerString.append("\nTrail material amount: ").append(this.trailMaterialAmount);}
 
         if(!innerString.isEmpty()){
             result.append("\n\n# Cast state").append(innerString);
@@ -691,15 +751,15 @@ public abstract class Spell{
 
     public void applyStats(CardPool cardPool, CastState castState){
         // cardPool
-        if(this.rechargeTime != 0){
+        if(this.setRechargeTime){
+            cardPool.setRechargeTime(this.rechargeTime);
+        }else if(this.rechargeTime != 0){
             cardPool.addRechargeTime(this.rechargeTime);
         }
-        if(this.recoil != 0){
-            if(this.setRecoil){
-                cardPool.setRecoil(this.recoil);
-            }else{
-                cardPool.addRecoil(this.recoil);
-            }
+        if(this.setRecoil){
+            cardPool.setRecoil(this.recoil);
+        }else if(this.recoil != 0){
+            cardPool.addRecoil(this.recoil);
         }
 
         // castState
@@ -738,6 +798,28 @@ public abstract class Spell{
             }
         }else if(this.speed != 0.0){
             castState.addSpeed(this.speed, 0.0, 20.0);
+        }
+        if(this.setGoreParticles){
+            castState.setGoreParticles(this.goreParticles);
+        }else if(this.goreParticles != 0){
+            castState.addGoreParticles(this.goreParticles);
+        }
+        if(this.setBounce){
+            castState.setBounce(this.bounce);
+        }else if(this.bounce != 0){
+            castState.addBounce(this.bounce);
+        }
+        if(!this.material.equals("")){
+            castState.setMaterial(this.material);
+        }
+        if(this.materialAmount != 0){
+            castState.addMaterialAmount(this.materialAmount);
+        }
+        if(!this.trailMaterial.equals("")){
+            castState.addTrailMaterial(this.trailMaterial);
+        }
+        if(this.trailMaterialAmount != 0){
+            castState.addTrailMaterialAmount(this.trailMaterialAmount);
         }
         for(Script script : this.relatedScripts){
             castState.addScript(script);

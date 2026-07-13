@@ -31,15 +31,15 @@ public class NUKE_GIGA extends Spell{
         this.screenshake = 30.5;
         this.recoil = 300.0;
         this.speed = 0.5;
+        this.goreParticles = 30;
+        this.material = "fire";
+        this.materialAmount = 80;
     }
 
     // TODO
     @Override
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
-        /*c.material = "fire"
-		c.material_amount = c.material_amount + 80
-		c.ragdoll_fx = 2
-		c.gore_particles = c.gore_particles + 30*/
+		// c.ragdoll_fx = 2
         castState.addProjectile(this.relatedProjectile.clone());
     }
 }
