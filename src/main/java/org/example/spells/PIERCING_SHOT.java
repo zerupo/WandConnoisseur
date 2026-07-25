@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_PIERCING_SHOT;
 
@@ -22,7 +23,7 @@ public class PIERCING_SHOT extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0.5, 0.6, 0.6, 0.4, 0, 0, 0, 0);
         this.price = 190;
         this.manaCost = 140;
-        this.damageComponent.setProjectile(-15.0);
+        this.damageComponent.setDamage(-15.0, DamageType.PROJECTILE);
         this.setFriendlyFire = true;
         this.friendlyFire = true;
     }

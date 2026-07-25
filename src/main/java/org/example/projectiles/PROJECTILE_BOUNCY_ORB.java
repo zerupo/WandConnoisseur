@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -50,8 +51,8 @@ public class PROJECTILE_BOUNCY_ORB extends ProjectileBase{
             // velocity_sets_scale="0"
             .setKnockback(1.6);
             // physics_impulse_coeff="2000"
-        this.projectileComponent.getDamageComponent().setProjectile(5.0);
-        this.projectileComponent.getDamageComponent().setSlice(5.0);
+        this.projectileComponent.getDamageComponent().setDamage(5.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(5.0, DamageType.SLICE);
     }
 }
 

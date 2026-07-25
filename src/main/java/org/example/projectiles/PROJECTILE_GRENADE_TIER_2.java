@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -42,8 +43,8 @@ public class PROJECTILE_GRENADE_TIER_2 extends ProjectileBase{
             // shoot_light_flash_b="40"
             .setKnockback(1.0);
             // physics_impulse_coeff="4000"
-        this.projectileComponent.getDamageComponent().setProjectile(40.0);
-        this.projectileComponent.getDamageComponent().setFire(30.0);
+        this.projectileComponent.getDamageComponent().setDamage(40.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(30.0, DamageType.FIRE);
     }
 }
 

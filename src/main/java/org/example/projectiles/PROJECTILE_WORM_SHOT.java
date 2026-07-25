@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -43,7 +44,7 @@ public class PROJECTILE_WORM_SHOT extends ProjectileBase{
             // bounces_left="10"
             // bounce_always="1"
             .setFriendlyFire(true);
-        this.projectileComponent.getDamageComponent().setProjectile(2.5);
+        this.projectileComponent.getDamageComponent().setDamage(2.5, DamageType.PROJECTILE);
     }
 }
 

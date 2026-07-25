@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 
 import java.lang.invoke.MethodHandles;
 
@@ -11,7 +12,7 @@ public class BLOODLUST extends Spell{
     @Override
     protected void initialization(){
         this.name = "Bloodlust";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "blood lust"};
         this.imageFile = "bloodlust.png";
         this.emote = staticEmote;
         this.description = "A projectile gains a hefty damage boost, but is also able to hurt you";
@@ -20,7 +21,7 @@ public class BLOODLUST extends Spell{
         this.price = 160;
         this.manaCost = 2;
         this.castDelay = 8;
-        this.damageComponent.setProjectile(32.5);
+        this.damageComponent.setDamage(32.5, DamageType.PROJECTILE);
         this.spread = 6.0;
         this.recoil = 30.0;
         this.setFriendlyFire = true;

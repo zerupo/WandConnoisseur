@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -40,7 +41,7 @@ public class PROJECTILE_MINE extends ProjectileBase{
             // shoot_light_flash_radius="64"
             // damage_every_x_frames="15"
             // physics_impulse_coeff="8000"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
     }
 }
 

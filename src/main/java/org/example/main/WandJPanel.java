@@ -122,13 +122,13 @@ public class WandJPanel{
             statValues[0] = "No";
         }
         statValues[1] = String.valueOf(this.wand.getNbDraw());
-        statValues[2] = String.format("%1$df (%2$3.2fs)", this.wand.getCastDelay(), this.wand.getCastDelay()/60.0);
-        statValues[3] = String.format("%1$df (%2$3.2fs)", this.wand.getRechargeTime(), this.wand.getRechargeTime()/60.0);
+        statValues[2] = Global.delayFormat(this.wand.getCastDelay());
+        statValues[3] = Global.delayFormat(this.wand.getRechargeTime());
         statValues[4] = String.valueOf(this.wand.getMaxMana());
         statValues[5] = String.valueOf(this.wand.getRegenMana());
         statValues[6] = String.valueOf(this.wand.getNbSlot());
-        statValues[7] = String.format("%1$2.1f DEG", this.wand.getSpread());
-        statValues[8] = String.format("x%1$2.1f", this.wand.getSpeed());
+        statValues[7] = String.format("%1$2.1f DEG", this.wand.getSpread()).replace(',', '.');
+        statValues[8] = String.format("x%1$2.1f", this.wand.getSpeed()).replace(',', '.');
 
         Graphics2D gTemp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
         fm = gTemp.getFontMetrics(font);
@@ -190,17 +190,15 @@ public class WandJPanel{
     }
 
     public void updateSpells(){
-        Spell[] spells = this.wand.getSpells();
+        Spell[] spells = this.wand.getSpells(false);
 
         this.basicJPanel.removeAll();
         for(int i=0; i < spells.length; i++){
-            if(spells[i] != null){
-                if(this.imageScaleFactor != spells[i].getImageScaleFactor()){
-                    spells[i].setImageScaleFactor(this.imageScaleFactor);
-                }
-                this.basicJPanel.add(spells[i].getImageLabel());
-                spells[i].setLocation(i*this.slotSize*this.imageScaleFactor + (i + 1)*this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getWidth())/2, this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getHeight())/2);
+            if(this.imageScaleFactor != spells[i].getImageScaleFactor()){
+                spells[i].setImageScaleFactor(this.imageScaleFactor);
             }
+            this.basicJPanel.add(spells[i].getImageLabel());
+            spells[i].setLocation(i*this.slotSize*this.imageScaleFactor + (i + 1)*this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getWidth())/2, this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getHeight())/2);
         }
     }
 }

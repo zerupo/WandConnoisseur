@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -39,7 +40,7 @@ public class PROJECTILE_EXPANDING_ORB extends ProjectileBase{
             .setKnockback(1.5);
             // ragdoll_force_multiplier="0.05"
             // damage_every_x_frames="15"
-        this.projectileComponent.getDamageComponent().setProjectile(75.0);
+        this.projectileComponent.getDamageComponent().setDamage(75.0, DamageType.PROJECTILE);
     }
 }
 

@@ -10,12 +10,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 class Modifier{
     public String name;
@@ -32,15 +32,16 @@ class Modifier{
     }
 }
 
-public class WispCommand implements Command{
-    @Override
-    public String getName(){
-        return "wisp";
-    }
-
-    @Override
-    public String getDescription(){
-        return "Renvoie la liste des modifiers pour faire un wisp au format .csv (Excel/LibreOffice Calc/etc)";
+public class WispCommand extends Command{
+    public WispCommand(){
+        this.name = "wisp";
+        this.description = "Renvoie la liste des modifiers pour faire un wisp au format .csv (Excel/LibreOffice Calc/etc).";
+        this.commandOptions = new CommandOption[]{
+            new CommandOption(OptionType.STRING, "sort", "Sort à transformer en wisp.", false, true),
+            new CommandOption(OptionType.INTEGER, "lifetime_min", "Lifetime minimum du projectile, remplace celui du projectile sélectionné.", false, false),
+            new CommandOption(OptionType.INTEGER, "lifetime_max", "Lifetime maximum du projectile, remplace celui du projectile sélectionné.", false, false),
+            new CommandOption(OptionType.INTEGER, "nb_modifier", "Nombre de modificateurs max de chaque type (défaut: 11, max: 21).", false, false)
+        };
     }
 
     private static int[][] getValues(Modifier[] modifiers, int minLifetime, int maxLifetime, int nbMaxModifier){
@@ -170,11 +171,10 @@ public class WispCommand implements Command{
             return;
         }
 
-        DecimalFormat df = new DecimalFormat("0.##");
         if(validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
-            stringResult.append("Recherche de wisps pour le sort ").append(spell.getName()).append(", lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(df.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%), max modifier: ").append(nbModifier);
+            stringResult.append("Recherche de wisps pour le sort ").append(spell.getName()).append(", lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(Global.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%), max modifier: ").append(nbModifier);
         }else{
-            stringResult.append("Recherche de wisps pour le lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(df.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%) , max modifier: ").append(nbModifier);
+            stringResult.append("Recherche de wisps pour le lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(Global.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%) , max modifier: ").append(nbModifier);
         }
         event.reply(stringResult.toString()).queue();
 

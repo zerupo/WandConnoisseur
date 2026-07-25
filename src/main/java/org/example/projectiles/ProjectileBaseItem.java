@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -18,8 +19,8 @@ public abstract class ProjectileBaseItem extends Projectile{
             .setDamageScaledBySpeed(true)
             .setDamageScaleMaxSpeed(200.0);
             // never_hit_player="1"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setMelee(12.5);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(12.5, DamageType.FIRE);
     }
 }
 

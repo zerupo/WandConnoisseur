@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -41,8 +42,8 @@ public class PROJECTILE_HEAL_BULLET extends ProjectileBase{
             // shoot_light_flash_b="40"
             // collide_with_shooter_frames="4"
             .setFriendlyFire(true);
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setHealing(-8.75);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(-8.75, DamageType.HEALING);
     }
 }
 

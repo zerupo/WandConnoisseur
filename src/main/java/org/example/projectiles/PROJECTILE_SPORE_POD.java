@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -38,7 +39,7 @@ public class PROJECTILE_SPORE_POD extends ProjectileBase{
             .setOnCollisionDie(true)
             // on_collision_remove_projectile="0"
             .setOnLifetimeOutExplode(false);
-        this.projectileComponent.getDamageComponent().setProjectile(2.5);
+        this.projectileComponent.getDamageComponent().setDamage(2.5, DamageType.PROJECTILE);
     }
 }
 

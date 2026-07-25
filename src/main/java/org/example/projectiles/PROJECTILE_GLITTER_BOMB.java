@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -18,7 +19,7 @@ public class PROJECTILE_GLITTER_BOMB extends ProjectileBasePhysics{
             .setLifetime(50)
             .setOnDeathExplode(true)
             .setOnLifetimeOutExplode(true);
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
     }
 }
 

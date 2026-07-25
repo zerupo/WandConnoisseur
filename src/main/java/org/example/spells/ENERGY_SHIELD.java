@@ -11,7 +11,7 @@ public class ENERGY_SHIELD extends Spell{
     @Override
     protected void initialization(){
         this.name = "Energy shield";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "shield"};
         this.imageFile = "energy_shield.png";
         this.emote = staticEmote;
         this.description = "Deflects incoming projectiles";

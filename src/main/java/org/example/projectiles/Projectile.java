@@ -2,7 +2,6 @@ package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
 import org.example.main.CastState;
-import org.example.main.DamageComponent;
 import org.example.main.Global;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;

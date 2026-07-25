@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -38,7 +39,7 @@ public class PROJECTILE_MEGALASER extends ProjectileBase{
             .setCollideWithWorld(false);
             // penetrate_entities="0"
             // collide_with_tag=""
-        this.projectileComponent.getDamageComponent().setProjectile(125.0);
+        this.projectileComponent.getDamageComponent().setDamage(125.0, DamageType.PROJECTILE);
     }
 }
 

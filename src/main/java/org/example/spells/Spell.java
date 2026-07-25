@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.projectiles.Projectile;
 import org.example.script.Script;
 
@@ -218,18 +219,16 @@ public abstract class Spell{
         return this.spawnProbabilities.getSpawnProbability();
     }
 
-    public String getTierString(){
-        double[] tier = this.spawnProbabilities.getSpawnProbability();
-        String result = "[";
+    public String getTierString(boolean includeAll){
+        return this.spawnProbabilities.toString(includeAll);
+    }
 
-        if(tier.length > 0){
-            result += "T0: " + String.format("%1$3.1f", tier[0]);
-        }
-        for(int i=1; i < tier.length; i++){
-            result += "; T" + i + ": " + String.format("%1$3.1f", tier[i]);
-        }
+    public double getTierTotal(){
+        return this.spawnProbabilities.total();
+    }
 
-        return result + "]";
+    public int getNbTier(){
+        return this.spawnProbabilities.nbTier();
     }
 
     public int getImageScaleFactor(){
@@ -439,31 +438,21 @@ public abstract class Spell{
         result.append("\nCharges: ").append(this.getChargeString());
         result.append("\nRecursive: ").append(this.recursive ? "Yes" : "No");
         result.append("\nMana cost: ").append(this.manaCost);
-        result.append("\nSpawn probabilities: ").append(this.getTierString());
+        result.append("\nSpawn probabilities: ").append(this.getTierString(false));
         result.append("\nPrice: ").append(this.price);
         if(this.relatedProjectile == null){
             if(this.triggerType != Projectile.TriggerType.none){result.append("\nTrigger type: ").append(this.triggerType);}
-            if(this.triggerType == Projectile.TriggerType.timer){result.append(String.format("\nTimer lifetime: %1$df (%2$3.2fs)", this.timerLength, this.timerLength/60.0));}
+            if(this.triggerType == Projectile.TriggerType.timer){result.append("\nTimer lifetime: ").append(Global.delayFormat(this.timerLength));}
         }
 
         // cast state
-        if(this.setCastDelay || this.castDelay != 0){innerString.append("\nCast delay: ").append(this.setCastDelay ? "=" : "").append(String.format("%1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
-        if(this.setRechargeTime || this.rechargeTime != 0){innerString.append("\nRecharge time: ").append(this.setRechargeTime ? "=" : "").append(String.format("%1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
-        if(this.damageComponent.getProjectile() != 0){innerString.append("\nProjectile damage: ").append(this.damageComponent.getProjectile());}
-        if(this.damageComponent.getMelee() != 0){innerString.append("\nMelee damage: ").append(this.damageComponent.getMelee());}
-        if(this.damageComponent.getExplosion() != 0){innerString.append("\nExplosion damage: ").append(this.damageComponent.getExplosion());}
-        if(this.damageComponent.getElectricity() != 0){innerString.append("\nElectricity damage: ").append(this.damageComponent.getElectricity());}
-        if(this.damageComponent.getFire() != 0){innerString.append("\nFire damage: ").append(this.damageComponent.getFire());}
-        if(this.damageComponent.getDrill() != 0){innerString.append("\nDrill damage: ").append(this.damageComponent.getDrill());}
-        if(this.damageComponent.getSlice() != 0){innerString.append("\nSlice damage: ").append(this.damageComponent.getSlice());}
-        if(this.damageComponent.getIce() != 0){innerString.append("\nIce damage: ").append(this.damageComponent.getIce());}
-        if(this.damageComponent.getHealing() != 0){innerString.append("\nHealing damage: ").append(this.damageComponent.getHealing());}
-        if(this.damageComponent.getPhysics_hit() != 0){innerString.append("\nPhysics_hit damage: ").append(this.damageComponent.getPhysics_hit());}
-        if(this.damageComponent.getRadioactive() != 0){innerString.append("\nRadioactive damage: ").append(this.damageComponent.getRadioactive());}
-        if(this.damageComponent.getPoison() != 0){innerString.append("\nPoison damage: ").append(this.damageComponent.getPoison());}
-        if(this.damageComponent.getOvereating() != 0){innerString.append("\nOvereating damage: ").append(this.damageComponent.getOvereating());}
-        if(this.damageComponent.getCurse() != 0){innerString.append("\nCurse damage: ").append(this.damageComponent.getCurse());}
-        if(this.damageComponent.getHealing() != 0){innerString.append("\nHoly damage: ").append(this.damageComponent.getHealing());}
+        if(this.setCastDelay || this.castDelay != 0){innerString.append("\nCast delay: ").append(this.setCastDelay ? "=" : "").append(Global.delayFormat(this.castDelay));}
+        if(this.setRechargeTime || this.rechargeTime != 0){innerString.append("\nRecharge time: ").append(this.setRechargeTime ? "=" : "").append(Global.delayFormat(this.rechargeTime));}
+        for(DamageType damageType : DamageType.values()){
+            if(this.damageComponent.getDamage(damageType) != 0.0){
+                innerString.append(innerString.isEmpty() ? "" : "\n").append(damageType.getDisplayName()).append(" damage: ").append(this.damageComponent.getDamage(damageType));
+            }
+        }
         if(this.lifetime != 0){innerString.append("\nLifetime: ").append(this.lifetime).append("f");}
         if(this.critRate != 0){innerString.append("\nCrit rate: ").append(this.critRate).append("%");}
         if(this.pattern != 0){innerString.append("\nPattern: ").append(this.pattern).append("°");}
@@ -489,7 +478,7 @@ public abstract class Spell{
         if(this.relatedProjectile != null){
             innerString.append(this.relatedProjectile.toString(importantOnly));
             if(!innerString.isEmpty()){
-                result.append("\n\n# Related Projectile\n").append(innerString.toString());
+                result.append("\n\n# Related projectile\n").append(innerString.toString());
                 innerString.setLength(0);
             }
         }
@@ -715,10 +704,14 @@ public abstract class Spell{
     }
 
     public void copy(CardPool cardPool, CastState castState, Spell spell, int recursionLevel){
-        copy(cardPool, castState, spell, recursionLevel, 1);
+        copy(cardPool, castState, spell, recursionLevel, 1, false);
     }
 
-    public void copy(CardPool cardPool, CastState castState, Spell spell, int recursionLevel, int iterationLevel){
+    public void copyDrawDisabled(CardPool cardPool, CastState castState, Spell spell, int recursionLevel){
+        copy(cardPool, castState, spell, recursionLevel, 1, true);
+    }
+
+    public void copy(CardPool cardPool, CastState castState, Spell spell, int recursionLevel, int iterationLevel, boolean disableDraw){
         Flowchart currentNode = null;
         Flowchart newNode = null;
         int nextRecursionLevel = recursionLevel;
@@ -739,7 +732,13 @@ public abstract class Spell{
                 if(makeFlowchart){
                     cardPool.addCallStack(newNode);
                 }
+                if(disableDraw){
+                    cardPool.disableDraw();
+                }
                 spell.doAction(cardPool, castState, nextRecursionLevel, iterationLevel);
+                if(disableDraw){
+                    cardPool.enableDraw();
+                }
                 if(makeFlowchart){
                     cardPool.removeCallStack();
                 }

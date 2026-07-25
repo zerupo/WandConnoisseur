@@ -4,16 +4,15 @@ import org.example.main.Global;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
-public class HelpCommand implements Command{
-    @Override
-    public String getName(){
-        return "help";
-    }
-
-    @Override
-    public String getDescription(){
-        return "Liste toutes les commandes disponibles.";
+public class HelpCommand extends Command{
+    public HelpCommand(){
+        this.name = "help";
+        this.description = "Liste toutes les commandes disponibles.";
+        this.commandOptions = new CommandOption[]{
+            new CommandOption(OptionType.STRING, "commande", "Nom d'une commande spécifique pour connaitre ses options.", false, true)
+        };
     }
 
     @Override

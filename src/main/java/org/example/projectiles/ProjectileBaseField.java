@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -35,7 +36,7 @@ public abstract class ProjectileBaseField extends Projectile{
             // damage_game_effect_entities="data/entities/misc/effect_charm.xml,"
             // play_damage_sounds="0"
             // damage_every_x_frames="15"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
     }
 }
 

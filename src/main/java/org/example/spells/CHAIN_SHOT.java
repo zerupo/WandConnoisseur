@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_CHAIN_SHOT;
 
@@ -22,7 +23,7 @@ public class CHAIN_SHOT extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.4, 0, 0.6, 0.8, 0, 0, 0, 0, 0);
         this.price = 240;
         this.manaCost = 70;
-        this.damageComponent.setProjectile(-5.0);
+        this.damageComponent.setDamage(-5.0, DamageType.PROJECTILE);
         this.lifetime = -30;
         this.spread = 10.0;
     }

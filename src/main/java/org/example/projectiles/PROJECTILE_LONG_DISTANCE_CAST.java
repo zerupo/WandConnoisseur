@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -34,7 +35,7 @@ public class PROJECTILE_LONG_DISTANCE_CAST extends ProjectileBase{
             // hit_particle_force_multiplier="0.01"
             // penetrate_entities="1"
             // penetrate_world="1"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
     }
 }
 

@@ -580,7 +580,7 @@ public class CardPool{
         StringBuilder result = new StringBuilder();
 
         result.append("Mana cost: ").append(this.manaUsage);
-        if(this.rechargeTime != 0){result.append("\n").append(String.format("Recharge time: %1$df (%2$3.2fs)", this.rechargeTime, this.rechargeTime/60.0));}
+        if(this.rechargeTime != 0){result.append("\n").append("Recharge time: ").append(Global.delayFormat(this.rechargeTime));}
         if(this.recoil != 0){result.append("\n").append("Recoil: ").append(this.recoil);}
 
         return result.toString();

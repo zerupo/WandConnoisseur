@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -34,7 +35,7 @@ public class PROJECTILE_LUMINOUS_DRILL extends ProjectileBase{
             // hit_particle_force_multiplier="0.25"
             // ground_penetration_coeff="4"
             // ground_penetration_max_durability_to_destroy="14"
-        this.projectileComponent.getDamageComponent().setProjectile(10.0);
+        this.projectileComponent.getDamageComponent().setDamage(10.0, DamageType.PROJECTILE);
     }
 }
 

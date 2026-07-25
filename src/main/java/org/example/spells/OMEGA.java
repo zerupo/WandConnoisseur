@@ -30,25 +30,19 @@ public class OMEGA extends Spell{
         for(int i=0; i < cardPool.getDiscardSize(); i++){
             currentSpell = cardPool.getDiscardSpell(i);
             if(currentSpell.getClass() != RESET.class){
-                cardPool.disableDraw();
-                copy(cardPool, castState, currentSpell, recursionLevel);
-                cardPool.enableDraw();
+                copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
             }
         }
         for(int i=0; i < cardPool.getHandSize(); i++){
             currentSpell = cardPool.getHandSpell(i);
             if(!currentSpell.recursive){
-                cardPool.disableDraw();
-                copy(cardPool, castState, currentSpell, recursionLevel);
-                cardPool.enableDraw();
+                copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
             }
         }
         for(int i=0; i < cardPool.getDeckSize(); i++){
             currentSpell = cardPool.getDeckSpell(i);
             if(currentSpell.getClass() != RESET.class){
-                cardPool.disableDraw();
-                copy(cardPool, castState, currentSpell, recursionLevel);
-                cardPool.enableDraw();
+                copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
             }
         }
     }

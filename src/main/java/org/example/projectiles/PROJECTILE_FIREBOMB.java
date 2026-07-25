@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -42,8 +43,8 @@ public class PROJECTILE_FIREBOMB extends ProjectileBase{
             // shoot_light_flash_radius="60"
             .setKnockback(0.6);
             // physics_impulse_coeff="10000"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setFire(10.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(10.0, DamageType.FIRE);
     }
 }
 

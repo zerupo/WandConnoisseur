@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -38,7 +39,7 @@ public class PROJECTILE_SPIRAL_SHOT extends ProjectileBase{
             // shoot_light_flash_radius="180"
             // damage_every_x_frames="5"
             // physics_impulse_coeff="5000"
-        this.projectileComponent.getDamageComponent().setProjectile(5.0);
+        this.projectileComponent.getDamageComponent().setDamage(5.0, DamageType.PROJECTILE);
     }
 }
 

@@ -173,6 +173,10 @@ public class AutoCompleteListener extends ListenerAdapter{
                 values.add(String.format("%1$d f", intDelay).replace(',', '.'));
                 values.add(String.format("%1$3.2f s", intDelay/60.0).replace(',', '.'));
             }
+            case "couleur" -> {
+                values.add("gradient");
+                values.add("FFFFFF");
+            }
             case "font" -> {
                 values.add("pixel");
                 values.add("title");
@@ -186,14 +190,20 @@ public class AutoCompleteListener extends ListenerAdapter{
                         values.add("svg_light");
                         values.add("menu");
                     }
-                    case "flowchart_image" -> {
+                    case "flowchart" -> {
                         values.add("png");
                         values.add("svg");
                         values.add("svg_light");
+                        values.add("text");
+                        values.add("text_file");
                     }
                     case "liste_sorts" -> {
                         values.add("message");
                         values.add("csv");
+                    }
+                    case "texte" -> {
+                        values.add("png");
+                        values.add("svg");
                     }
                 }
             }

@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 
 import java.lang.invoke.MethodHandles;
 
@@ -20,7 +21,7 @@ public class DAMAGE extends Spell{
         this.price = 140;
         this.manaCost = 5;
         this.castDelay = 5;
-        this.damageComponent.setProjectile(10.0);
+        this.damageComponent.setDamage(10.0, DamageType.PROJECTILE);
         this.recoil = 10.0;
         this.goreParticles = 5;
     }

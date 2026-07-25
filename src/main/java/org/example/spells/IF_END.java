@@ -9,7 +9,7 @@ public class IF_END extends Spell{
     @Override
     protected void initialization(){
         this.name = "Requirement - Endpoint";
-        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "req endpoint", "req end", "endpoint"};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "req endpoint", "req end", "end point", "endpoint"};
         this.imageFile = "if_end.png";
         this.emote = staticEmote;
         this.description = "Any Requirement spells before this will skip all spells between them and this spell";

@@ -12,7 +12,7 @@ public class TEMPORARY_WALL extends Spell{
     @Override
     protected void initialization(){
         this.name = "Summon Wall";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "wall"};
         this.imageFile = "temporary_wall.png";
         this.emote = staticEmote;
         this.description = "Summons a shortlived obstacle";

@@ -9,16 +9,18 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
-public class SpellListCommand implements Command{
-    @Override
-    public String getName(){
-        return "liste_sorts";
-    }
-
-    @Override
-    public String getDescription(){
-        return "Renvoie la liste des sorts disponibles";
+public class SpellListCommand extends Command{
+    public SpellListCommand(){
+        this.name = "liste_sorts";
+        this.description = "Renvoie la liste des sorts disponibles.";
+        this.commandOptions = new CommandOption[]{
+            new CommandOption(OptionType.STRING, "propriete", "Liste des propriétés à afficher, séparées par des \",\".", false, true),
+            new CommandOption(OptionType.STRING, "condition", "Condition de sélection des sorts.", false, true),
+            new CommandOption(OptionType.STRING, "tri", "Ordre d'affichage des sorts.", false, true),
+            new CommandOption(OptionType.STRING, "type", "format de la liste (défaut: message).", false, true)
+        };
     }
 
     public void executeSlash(SlashCommandInteractionEvent event){
@@ -119,8 +121,8 @@ public class SpellListCommand implements Command{
 
                     writer.write("spell;");
                     if(propertyOption != null){
-                        for(int i=0; i < properties.length; i++){
-                            writer.write(properties[i][0] + ";");
+                        for(String[] property : properties){
+                            writer.write(property[0] + ";");
                         }
                     }
                     writer.write("\n");

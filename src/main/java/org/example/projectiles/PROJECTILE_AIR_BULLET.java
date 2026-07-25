@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -41,7 +42,7 @@ public class PROJECTILE_AIR_BULLET extends ProjectileBase{
             // shoot_light_flash_radius="48"
             .setKnockback(100.0);
             // physics_impulse_coeff="100000"
-        this.projectileComponent.getDamageComponent().setProjectile(5.75);
+        this.projectileComponent.getDamageComponent().setDamage(5.75, DamageType.PROJECTILE);
     }
 }
 

@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_SPIRALING_SHOT;
 
@@ -24,7 +25,7 @@ public class SPIRALING_SHOT extends Spell{
         this.manaCost = 0;
         this.autoStat = false;
         this.castDelay = -6;
-        this.damageComponent.setProjectile(2.5);
+        this.damageComponent.setDamage(2.5, DamageType.PROJECTILE);
         this.lifetime = 50;
     }
 

@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_HEAVY_SHOT;
 
@@ -23,7 +24,7 @@ public class HEAVY_SHOT extends Spell{
         this.price = 150;
         this.manaCost = 7;
         this.castDelay = 10;
-        this.damageComponent.setProjectile(43.75);
+        this.damageComponent.setDamage(43.75, DamageType.PROJECTILE);
         this.recoil = 50.0;
         this.speed = 0.3;
         this.goreParticles = 10;

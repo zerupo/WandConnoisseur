@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -16,7 +17,7 @@ public class PROJECTILE_REGENERATION_FIELD extends ProjectileBaseField{
             // damage_game_effect_entities="data/entities/misc/effect_regeneration.xml,"
             .setFriendlyFire(true);
             // collide_with_shooter_frames="0"
-        this.projectileComponent.getDamageComponent().setHealing(-1.25);
+        this.projectileComponent.getDamageComponent().setDamage(-1.25, DamageType.HEALING);
     }
 }
 

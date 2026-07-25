@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -45,7 +46,7 @@ public class PROJECTILE_LASER extends ProjectileBase{
             // shoot_light_flash_b="70"
             .setKnockback(2.0);
             // physics_impulse_coeff="2000"
-        this.projectileComponent.getDamageComponent().setProjectile(9.75);
+        this.projectileComponent.getDamageComponent().setDamage(9.75, DamageType.PROJECTILE);
     }
 }
 

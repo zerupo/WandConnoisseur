@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -41,7 +42,7 @@ public class PROJECTILE_ANTIHEAL extends ProjectileBase{
             // shoot_light_flash_radius="72"
             .setKnockback(1.8);
             // physics_impulse_coeff="1500"
-        this.projectileComponent.getDamageComponent().setProjectile(30.0);
+        this.projectileComponent.getDamageComponent().setDamage(30.0, DamageType.PROJECTILE);
     }
 }
 

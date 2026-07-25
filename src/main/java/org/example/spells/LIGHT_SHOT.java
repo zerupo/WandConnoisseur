@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_LIGHT_SHOT;
 
@@ -22,7 +23,7 @@ public class LIGHT_SHOT extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 0, 0.3, 0.5, 0.4, 0, 0, 0, 0, 0, 0);
         this.price = 60;
         this.manaCost = 5;
-        this.damageComponent.setProjectile(-25.0);
+        this.damageComponent.setDamage(-25.0, DamageType.PROJECTILE);
         this.castDelay = -3;
         this.spread = -6.0;
         this.recoil = -10.0;

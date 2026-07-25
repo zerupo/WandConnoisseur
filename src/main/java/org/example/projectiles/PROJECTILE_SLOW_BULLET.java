@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -43,7 +44,7 @@ public class PROJECTILE_SLOW_BULLET extends ProjectileBase{
             // shoot_light_flash_b="255"
             // shoot_light_flash_radius="100"
             // physics_impulse_coeff="4000"
-        this.projectileComponent.getDamageComponent().setProjectile(11.25);
+        this.projectileComponent.getDamageComponent().setDamage(11.25, DamageType.PROJECTILE);
     }
 }
 

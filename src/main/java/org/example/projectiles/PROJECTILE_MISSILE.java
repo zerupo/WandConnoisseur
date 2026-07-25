@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -13,7 +14,7 @@ public class PROJECTILE_MISSILE extends ProjectileRocketTank{
         this.imageFile = "missile.png";
         this.emote = staticEmote;
         this.projectileComponent = (this.projectileComponent == null ? new ProjectileComponent() : this.projectileComponent);
-        this.projectileComponent.getDamageComponent().setProjectile(50.0);
+        this.projectileComponent.getDamageComponent().setDamage(50.0, DamageType.PROJECTILE);
     }
 }
 

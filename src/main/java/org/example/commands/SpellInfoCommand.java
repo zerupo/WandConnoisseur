@@ -7,17 +7,17 @@ import org.example.spells.Spell;
 import java.io.File;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.utils.FileUpload;
 
-public class SpellInfoCommand implements Command{
-    @Override
-    public String getName(){
-        return "sort_info";
-    }
-
-    @Override
-    public String getDescription(){
-        return "Renvoie les informations d'un sort.";
+public class SpellInfoCommand extends Command{
+    public SpellInfoCommand(){
+        this.name = "sort_info";
+        this.description = "Renvoie les informations d'un sort.";
+        this.commandOptions = new CommandOption[]{
+            new CommandOption(OptionType.STRING, "nom", "Sort à décrire.", true, true),
+            new CommandOption(OptionType.BOOLEAN, "fichier", "Renvoie le code du sort sous forme de fichier à la place (défaut: false).", false, false)
+        };
     }
 
     @Override

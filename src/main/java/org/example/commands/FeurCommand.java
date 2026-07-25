@@ -2,15 +2,11 @@ package org.example.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class FeurCommand implements Command{
-    @Override
-    public String getName(){
-        return "feur";
-    }
-
-    @Override
-    public String getDescription(){
-        return "Quoi ?";
+public class FeurCommand extends Command{
+    public FeurCommand(){
+        this.name = "feur";
+        this.description = "Quoi ?";
+        this.commandOptions = new CommandOption[0];
     }
 
     @Override

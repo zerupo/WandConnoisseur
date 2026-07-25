@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.projectiles.PROJECTILE_DISC_BULLET_BIGGER;
 
 import java.lang.invoke.MethodHandles;
@@ -22,7 +23,7 @@ public class DISC_BULLET_BIGGER extends Spell{
         this.price = 270;
         this.manaCost = 70;
         this.castDelay = 40;
-        this.damageComponent.setProjectile(5.0);
+        this.damageComponent.setDamage(5.0, DamageType.PROJECTILE);
         this.spread = 6.4;
         this.recoil = 30.0;
     }

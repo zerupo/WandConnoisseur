@@ -2,6 +2,8 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
+import org.example.main.Global.DamageTypeDoublePair;
 
 import java.lang.invoke.MethodHandles;
 
@@ -11,7 +13,7 @@ public class DAMAGE_FOREVER extends Spell{
     @Override
     protected void initialization(){
         this.name = "Mana To Damage";
-        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "mtd", "m2d"};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "mana to power", "mtd", "m2d"};
         this.imageFile = "damage_forever.png";
         this.emote = staticEmote;
         this.description = "If the wand has more than 50 mana, all mana over that is converted into additional damage";
@@ -34,9 +36,7 @@ public class DAMAGE_FOREVER extends Spell{
         int availableMana = cardPool.getMaxMana() - cardPool.getManaUsage();
 
         if(availableMana > 50){
-            DamageComponent damage = new DamageComponent();
-            damage.setProjectile(0.625*(availableMana - 50));
-            castState.addDamageComponent(damage);
+            castState.addDamageComponent(new DamageComponent(new DamageTypeDoublePair(0.625*(availableMana - 50), DamageType.PROJECTILE)));
             cardPool.setManaUsage(cardPool.getMaxMana() - 50);
         }
         // c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_red.xml,"

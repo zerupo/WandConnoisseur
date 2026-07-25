@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -45,8 +46,8 @@ public class PROJECTILE_FRIEND_FLY extends ProjectileBase{
             // physics_impulse_coeff="1200"
             // velocity_sets_scale="1"
             // damage_every_x_frames="30"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setMelee(10.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(10.0, DamageType.MELEE);
     }
 }
 

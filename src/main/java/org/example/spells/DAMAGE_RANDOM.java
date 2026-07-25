@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 
 import java.lang.invoke.MethodHandles;
 
@@ -31,10 +32,7 @@ public class DAMAGE_RANDOM extends Spell{
 
         int multiplier = random.random(-3, 4)*random.random(0, 2);
 
-        DamageComponent damage = new DamageComponent();
-
-        damage.setProjectile(10.0*multiplier);
-        castState.addDamageComponent(damage);
+        castState.addDamageComponent(new DamageComponent(new Global.DamageTypeDoublePair(10.0*multiplier, DamageType.PROJECTILE)));
         castState.addGoreParticles(5*multiplier);
         // c.extra_entities    = c.extra_entities .. "data/entities/particles/tinyspark_yellow.xml,"
         cardPool.addRecoil(10.0*multiplier);

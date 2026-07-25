@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_ELECTRIC_CHARGE;
 
@@ -22,7 +23,7 @@ public class ELECTRIC_CHARGE extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 1, 1, 0, 0.8, 0.7, 0, 0, 0, 0, 0);
         this.price = 150;
         this.manaCost = 8;
-        this.damageComponent.setElectricity(2.5);
+        this.damageComponent.setDamage(2.5, DamageType.ELECTRICITY);
     }
 
     // TODO

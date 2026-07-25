@@ -2,10 +2,21 @@ package org.example.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public interface Command{
-    String getName();
+public abstract class Command{
+    String name;
+    String description;
+    CommandOption[] commandOptions;
+    public String getName(){
+        return this.name;
+    }
 
-    String getDescription();
+    public String getDescription(){
+        return this.description;
+    }
 
-    void executeSlash(SlashCommandInteractionEvent event);
+    public CommandOption[] getCommandOptions(){
+        return this.commandOptions;
+    }
+
+    public abstract void executeSlash(SlashCommandInteractionEvent event);
 }

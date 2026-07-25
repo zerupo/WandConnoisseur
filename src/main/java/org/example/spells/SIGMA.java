@@ -27,36 +27,30 @@ public class SIGMA extends Spell{
     public void action(CardPool cardPool, CastState castState, int recursionLevel, int iterationLevel){
         Spell currentSpell;
         int currentCastDelay = castState.getCastDelay();
-        int currentRechareTime = cardPool.getRechargeTime();
+        int currentRechargeTime = cardPool.getRechargeTime();
         int currentMana = cardPool.getManaUsage();
 
         for(int i=0; i < cardPool.getDiscardSize(); i++){
             currentSpell = cardPool.getDiscardSpell(i);
             if(currentSpell.type == SpellType.static_projectile){
-                cardPool.disableDraw();
-                copy(cardPool, castState, currentSpell, recursionLevel);
-                cardPool.enableDraw();
+                copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
             }
         }
         for(int i=0; i < cardPool.getHandSize(); i++){
             currentSpell = cardPool.getHandSpell(i);
             if(currentSpell.type == SpellType.static_projectile){
-                cardPool.disableDraw();
-                copy(cardPool, castState, currentSpell, recursionLevel);
-                cardPool.enableDraw();
+                copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
             }
         }
         for(int i=0; i < cardPool.getDeckSize(); i++){
             currentSpell = cardPool.getDeckSpell(i);
             if(currentSpell.type == SpellType.static_projectile){
-                cardPool.disableDraw();
-                copy(cardPool, castState, currentSpell, recursionLevel);
-                cardPool.enableDraw();
+                copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
             }
         }
 
         castState.setCastDelay(currentCastDelay);
-        cardPool.setRechargeTime(currentRechareTime);
+        cardPool.setRechargeTime(currentRechargeTime);
         cardPool.setManaUsage(currentMana);
 
         cardPool.draw(1, true, castState);

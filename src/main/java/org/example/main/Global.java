@@ -12,6 +12,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,6 +27,27 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 public class Global{
+    public enum DamageType{PROJECTILE, MELEE, EXPLOSION, ELECTRICITY, FIRE, DRILL, SLICE, ICE, HEALING, PHYSICS_HIT, RADIOACTIVE, POISON, OVEREATING, CURSE, HOLY;
+        public String getDisplayName(){
+            String result = name().toLowerCase().replace('_', ' ');
+            return Character.toUpperCase(result.charAt(0)) + result.substring(1);
+        }
+    }
+    public record DamageTypeBooleanPair(boolean value, DamageType damageType){
+        public static DamageTypeBooleanPair of(boolean value, DamageType damageType){
+            return new DamageTypeBooleanPair(value, damageType);
+        }
+    }
+    public record DamageTypeDoublePair(double value, DamageType damageType){
+        public static DamageTypeDoublePair of(double value, DamageType damageType){
+            return new DamageTypeDoublePair(value, damageType);
+        }
+    }
+    private final static Player player = new Player(Double.MAX_VALUE, Integer.MAX_VALUE, true);
+    private static Wand lastWand = null;
+    private static int projectileCount = 0;
+    private static int enemyCount = 0;
+    private final static DecimalFormat DF = createDecimalFormat();
     private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
     private final static String pathAutoDelete = "./src/main/java/org/example/fileOutput/autoDelete/";
     private final static String pathConfig = "./src/main/java/org/example/configFiles/";
@@ -67,6 +90,22 @@ public class Global{
     private static boolean reqOEState = false;
 
     // getters
+    public static Player getPlayer(){
+        return player;
+    }
+
+    public static int getProjectileCount(){
+        return projectileCount;
+    }
+
+    public static Wand getLastWand(){
+        return lastWand;
+    }
+
+    public static int getEnemyCount(){
+        return enemyCount;
+    }
+
     public static String getPathOutput(){
         return pathOutput;
     }
@@ -170,6 +209,7 @@ public class Global{
     public static Command[] getCommandList(){
         if(commandList == null){
             commandList = jda.retrieveCommands().complete().toArray(new Command[0]);
+            Arrays.sort(commandList, Comparator.comparing(Command::getName));
         }
 
         return commandList;
@@ -268,8 +308,32 @@ public class Global{
         reqOEState = !reqOEState;
     }
 
+    // setters
+    public static void setLastWand(Wand wand){
+        lastWand = wand;
+    }
+
     private Global(){
         throw new UnsupportedOperationException("This class cannot be instantiated.");
+    }
+
+    private static DecimalFormat createDecimalFormat(){
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+
+        dfs.setDecimalSeparator('.');
+        dfs.setGroupingSeparator(' ');
+
+        return new DecimalFormat("0.##", dfs);
+    }
+
+    public static String format(double value){
+        synchronized(DF){
+            return DF.format(value);
+        }
+    }
+
+    public static String delayFormat(int value){
+        return String.format("%1$df (%2$3.2fs)", value, value/60.0).replace(",", ".");
     }
 
     public static BufferedImage rotateImageByDegrees(BufferedImage img, double angle){
@@ -430,8 +494,8 @@ public class Global{
             spellsString[i] = spellsString[i].trim().toLowerCase();
         }
 
-        for(int i=0; i < spellsString.length; i++){
-            m = spellPattern.matcher(spellsString[i]);
+        for(String s : spellsString){
+            m = spellPattern.matcher(s);
             if(m.find()){
                 currentSpell = spellList.getSpell(m.group(2));
                 if(currentSpell != null){
@@ -451,7 +515,7 @@ public class Global{
                     spells.add(currentSpell.clone());
                 }
             }else{
-                unknownSpells.append(unknownSpells.isEmpty() ? "" : ", ").append("\"").append(spellsString[i]).append("\"");
+                unknownSpells.append(unknownSpells.isEmpty() ? "" : ", ").append("\"").append(s).append("\"");
             }
         }
 
@@ -473,7 +537,7 @@ public class Global{
 
         if(m.find()){
             switch(m.group(3)){
-                case "s" -> result = (int)(Double.parseDouble(m.group(1))*60.0);
+                case "s" -> result = (int)Math.round(Double.parseDouble(m.group(1))*60.0);
                 case "f" -> {
                     if(!m.group(2).equals("")){
                         throw new IllegalArgumentException("\"" + input + "\" -> une valeur en frame doit être un entier");
@@ -484,7 +548,7 @@ public class Global{
                     if(m.group(2).equals("")){
                         result = Integer.parseInt(m.group(1));
                     }else{
-                        result = (int)(Double.parseDouble(m.group(1))*60.0);
+                        result = (int)Math.round(Double.parseDouble(m.group(1))*60.0);
                     }
                 }
             }
@@ -619,5 +683,14 @@ public class Global{
         }else{
             return text.substring(0, length);
         }
+    }
+
+    public static String toDisplayName(String value){
+        if(value == null || value.isEmpty()){
+            return value;
+        }
+
+        String result = value.toLowerCase().replace('_', ' ');
+        return Character.toUpperCase(result.charAt(0)) + result.substring(1);
     }
 }

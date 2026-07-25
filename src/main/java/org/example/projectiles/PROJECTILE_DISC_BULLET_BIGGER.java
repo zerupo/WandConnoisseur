@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -50,8 +51,8 @@ public class PROJECTILE_DISC_BULLET_BIGGER extends ProjectileBase{
             // ragdoll_fx_on_collision="BLOOD_EXPLOSION"
             .setKnockback(1.3);
             // physics_impulse_coeff="10000"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setSlice(37.5);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(37.5, DamageType.SLICE);
     }
 }
 

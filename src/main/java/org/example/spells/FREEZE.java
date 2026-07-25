@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_FREEZE;
 import org.example.script.SCRIPT_EFFECT_FROZEN;
@@ -23,7 +24,7 @@ public class FREEZE extends Spell{
         this.spawnProbabilities = new SpawnProbabilities(0, 1, 0, 1, 0.9, 0.8, 0, 0, 0, 0, 0);
         this.price = 140;
         this.manaCost = 10;
-        this.damageComponent.setIce(5.0);
+        this.damageComponent.setDamage(5.0, DamageType.ICE);
     }
 
     @Override

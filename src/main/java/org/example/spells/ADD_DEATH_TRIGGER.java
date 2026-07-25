@@ -39,9 +39,7 @@ public class ADD_DEATH_TRIGGER extends Spell{
         while(spellCount < cardPool.getDeckSize() && (currentSpell.getType() == SpellType.modifier || currentSpell.getType() == SpellType.passif || currentSpell.getType() == SpellType.other || currentSpell.getType() == SpellType.multicast)){
             if(!currentSpell.getHasCharges() || currentSpell.getChargesLeft() >= 0){
                 if(currentSpell.getType() == SpellType.modifier){
-                    cardPool.disableDraw();
-                    copy(cardPool, castState, currentSpell, recursionLevel);
-                    cardPool.enableDraw();
+                    copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
                 }
             }
             spellCount++;
@@ -66,9 +64,7 @@ public class ADD_DEATH_TRIGGER extends Spell{
                     cardPool.draw(1, true, castState.addProjectileTrigger(currentSpell.getRelatedProjectile().clone(), this.triggerType));
                 }
             }else{
-                cardPool.disableDraw();
-                copy(cardPool, castState, currentSpell, recursionLevel);
-                cardPool.enableDraw();
+                copyDrawDisabled(cardPool, castState, currentSpell, recursionLevel);
             }
         }
     }

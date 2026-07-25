@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -44,8 +45,8 @@ public class PROJECTILE_FREEZING_GAZE extends ProjectileBase{
             // physics_impulse_coeff="2000"
             // damage_game_effect_entities="data/entities/misc/effect_frozen_short.xml,"
             // penetrate_entities="1"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setIce(10.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(10.0, DamageType.ICE);
     }
 }
 

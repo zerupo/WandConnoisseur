@@ -9,7 +9,7 @@ public class IF_HALF extends Spell{
     @Override
     protected void initialization(){
         this.name = "Requirement - Every Other";
-        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "req every other", "req eo", "every other"};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "if half", "req every other", "req eo", "every other"};
         this.imageFile = "if_half.png";
         this.emote = staticEmote;
         this.description = "The next spell is skipped every other time this spell is cast";

@@ -12,7 +12,7 @@ public class TEMPORARY_PLATFORM extends Spell{
     @Override
     protected void initialization(){
         this.name = "Summon Platform";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "platform"};
         this.imageFile = "temporary_platform.png";
         this.emote = staticEmote;
         this.description = "Summons a shortlived bit of ground";

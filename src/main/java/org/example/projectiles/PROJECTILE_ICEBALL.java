@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -37,8 +38,8 @@ public class PROJECTILE_ICEBALL extends ProjectileBase{
             // shoot_light_flash_radius="150"
             .setKnockback(1.5);
             // physics_impulse_coeff="2800"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setIce(6.25);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(6.25, DamageType.ICE);
     }
 }
 

@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -40,7 +41,7 @@ public class PROJECTILE_FUNKY_SPELL extends ProjectileBase{
             // bounces_left="0"
             // go_through_this_material="aluminium_robot"
             // muzzle_flash_file="data/entities/particles/muzzle_flashes/muzzle_flash_medium.xml"
-        this.projectileComponent.getDamageComponent().setProjectile(3.75);
+        this.projectileComponent.getDamageComponent().setDamage(3.75, DamageType.PROJECTILE);
     }
 }
 

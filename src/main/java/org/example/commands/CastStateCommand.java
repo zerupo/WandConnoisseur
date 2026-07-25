@@ -1,6 +1,5 @@
 package org.example.commands;
 
-import net.dv8tion.jda.api.utils.FileUpload;
 import org.example.main.CastState;
 import org.example.main.Global;
 import org.example.main.Wand;
@@ -9,16 +8,24 @@ import org.example.spells.Spell;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.utils.FileUpload;
 
-public class CastStateCommand implements Command{
-    @Override
-    public String getName() {
-        return "cast_state";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Renvoie une image ou un menu contenant les différent cast states.";
+public class CastStateCommand extends Command{
+    public CastStateCommand(){
+        this.name = "cast_state";
+        this.description = "Renvoie une image ou un menu contenant les différent cast states.";
+        this.commandOptions = new CommandOption[]{
+            new CommandOption(OptionType.STRING, "sorts", "Sorts à séparer par des \",\", précéder par 0: max: ou inf: pour modifier les charges (défaut: inf:).", true, true),
+            new CommandOption(OptionType.INTEGER, "draw", "Nombre de sorts/lancer de la baguette (défaut: 1).", false, false),
+            new CommandOption(OptionType.STRING, "cast_delay", "Délais des sorts en frames ou secondes, ajouter \"f\" ou \"s\" à la fin pour préciser (défaut: 0).", false, true),
+            new CommandOption(OptionType.STRING, "recharge_time", "Temps de recharge de la baguette en frames ou secondes, ajouter \"f\" ou \"s\" à la fin (défaut: 0).", false, true),
+            new CommandOption(OptionType.INTEGER, "mana_max", "Mana max de la baguette (défaut: 1000000).", false, false),
+            new CommandOption(OptionType.INTEGER, "mana_regen", "Régénération de mana de la baguette en mana/sec (défaut: 1000000).", false, false),
+            new CommandOption(OptionType.NUMBER, "spread", "Dispersion de la baguette (défaut: 0.0).", false, false),
+            new CommandOption(OptionType.NUMBER, "speed", "Multiplicateur caché de la vitesse des projectiles (défaut: 1.0).", false, false),
+            new CommandOption(OptionType.STRING, "type", "format du cast state (défaut: png).", false, true)
+        };
     }
 
     @Override
@@ -53,15 +60,15 @@ public class CastStateCommand implements Command{
 
         if(type == 3){
             CastState[] castStates = wand.getCastState(true);
-            Spell[] spells = wand.getSpells();
-            String spellsEmote = "";
+            Spell[] spells = wand.getSpells(false);
+            StringBuilder spellsEmote = new StringBuilder();
 
             for(Spell spell : spells){
-                spellsEmote += spell.getEmote();
+                spellsEmote.append(spell.getEmote());
                 wand.putSpellEnd(spell);
             }
 
-            MenuTree menu = new MenuTree(event.getId(), "Cast state", "", Global.JPanelToFile(wand.getWandJPanel(), Global.getPathAutoDelete() + "wand_" + fileName), spellsEmote);
+            MenuTree menu = new MenuTree(event.getId(), "Cast state", "", Global.JPanelToFile(wand.getWandJPanel(), Global.getPathAutoDelete() + "wand_" + fileName), spellsEmote.toString());
             for(int i=0; i < castStates.length; i++){
                 menu.addChild(castStates[i].toMenuTree("",(i + 1) + ") Cast state initial"));
             }
@@ -72,8 +79,8 @@ public class CastStateCommand implements Command{
             FileUpload wandStatImage = null;
             FileUpload castStateImage;
 
-            for(int i=0; i < statOptions.length; i++){
-                if(event.getOption(statOptions[i]) != null){
+            for(String statOption : statOptions){
+                if(event.getOption(statOption) != null){
                     statChanged = true;
                     break;
                 }
@@ -115,5 +122,7 @@ public class CastStateCommand implements Command{
                 event.getHook().editOriginal("Erreur lors de la création de l'image").queue();
             }
         }
+
+        Global.setLastWand(wand);
     }
 }

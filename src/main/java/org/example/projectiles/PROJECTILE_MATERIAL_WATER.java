@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -37,7 +38,7 @@ public class PROJECTILE_MATERIAL_WATER extends ProjectileBase{
             // camera_shake_when_shot="1.0"
             // ground_collision_fx="0"
             // ragdoll_fx_on_collision="NORMAL"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
     }
 }
 

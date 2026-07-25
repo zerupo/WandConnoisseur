@@ -11,7 +11,7 @@ public class TINY_GHOST extends Spell{
     @Override
     protected void initialization(){
         this.name = "Summon Tiny Ghost";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "ghost"};
         this.imageFile = "tiny_ghost.png";
         this.emote = staticEmote;
         this.description = "Summons a tiny ethereal being to your help";

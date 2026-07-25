@@ -27,4 +27,70 @@ public class SpawnProbabilities{
     public double[] getSpawnProbability(){
         return this.spawnProbability;
     }
+
+    public int nbTier(){
+        int total = 0;
+
+        for(double value : this.spawnProbability){
+            if(value != 0.0){
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    public String toString(boolean includeAll){
+        if(includeAll){
+            StringBuilder result = new StringBuilder("[");
+
+            if(this.spawnProbability.length > 0){
+                result.append("T0: ").append(String.format("%1$2.1f", this.spawnProbability[0]).replace(',', '.'));
+            }
+            for(int i=1; i < this.spawnProbability.length; i++){
+                result.append("; T").append(i).append(": ").append(String.format("%1$2.1f", this.spawnProbability[i]));
+            }
+
+            return result + "]";
+        }else{
+            switch(this.nbTier()){
+                case 0 -> {
+                    return "0";
+                }
+                case 1 -> {
+                    for(int i=0; i < this.spawnProbability.length; i++){
+                        if(this.spawnProbability[i] != 0.0){
+                            return "T" + i + ": " + String.format("%1$2.1f", this.spawnProbability[i]).replace(',', '.');
+                        }
+                    }
+                }
+                default -> {
+                    StringBuilder result = new StringBuilder();
+
+                    for(int i=0; i < this.spawnProbability.length; i++){
+                        if(this.spawnProbability[i] != 0.0){
+                            if(!result.isEmpty()){
+                                result.append(", ");
+                            }
+                            result.append("T").append(i).append(": ").append(String.format("%1$2.1f", this.spawnProbability[i]).replace(',', '.'));
+                        }
+                    }
+
+                    return "[" + result + "]";
+                }
+            }
+
+            return "";
+        }
+    }
+
+    public double total(){
+        double result = 0.0;
+
+        for(double value : this.spawnProbability){
+            result += value;
+        }
+
+        return result;
+    }
 }

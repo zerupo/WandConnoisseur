@@ -1,5 +1,6 @@
 package org.example.main;
 
+import org.example.main.Global.DamageType;
 import org.example.menu.MenuTree;
 import org.example.projectiles.Projectile;
 import org.example.script.Script;
@@ -695,23 +696,13 @@ public class CastState{
             }
         }
 
-        if(this.castDelay != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append(String.format("Cast delay: %1$df (%2$3.2fs)", this.castDelay, this.castDelay/60.0));}
-        if(this.damageComponent.getProjectile() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Projectile damage: ").append(this.damageComponent.getProjectile());}
-        if(this.damageComponent.getMelee() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Melee damage: ").append(this.damageComponent.getMelee());}
-        if(this.damageComponent.getExplosion() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Explosion damage: ").append(this.damageComponent.getExplosion());}
-        if(this.damageComponent.getElectricity() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Electricity damage: ").append(this.damageComponent.getElectricity());}
-        if(this.damageComponent.getFire() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Fire damage: ").append(this.damageComponent.getFire());}
-        if(this.damageComponent.getDrill() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Drill damage: ").append(this.damageComponent.getDrill());}
-        if(this.damageComponent.getSlice() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Slice damage: ").append(this.damageComponent.getSlice());}
-        if(this.damageComponent.getIce() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Ice damage: ").append(this.damageComponent.getIce());}
-        if(this.damageComponent.getHealing() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Healing damage: ").append(this.damageComponent.getHealing());}
-        if(this.damageComponent.getPhysics_hit() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Physics_hit damage: ").append(this.damageComponent.getPhysics_hit());}
-        if(this.damageComponent.getRadioactive() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Radioactive damage: ").append(this.damageComponent.getRadioactive());}
-        if(this.damageComponent.getPoison() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Poison damage: ").append(this.damageComponent.getPoison());}
-        if(this.damageComponent.getOvereating() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Overeating damage: ").append(this.damageComponent.getOvereating());}
-        if(this.damageComponent.getCurse() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Curse damage: ").append(this.damageComponent.getCurse());}
-        if(this.damageComponent.getHealing() != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Holy damage: ").append(this.damageComponent.getHealing());}
-        if(this.lifetime != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append(String.format("Lifetime: %1$df (%2$3.2fs)", this.lifetime, this.lifetime/60.0));}
+        if(this.castDelay != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Cast delay: ").append(Global.delayFormat(this.castDelay));}
+        for(DamageType damageType : DamageType.values()){
+            if(this.damageComponent.getDamage(damageType) != 0.0){
+                innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append(damageType.getDisplayName()).append(" damage: ").append(this.damageComponent.getDamage(damageType));
+            }
+        }
+        if(this.lifetime != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Lifetime: ").append(Global.delayFormat(this.lifetime));}
         if(this.critRate != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Crit rate: ").append(this.critRate).append("%");}
         if(this.pattern != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Pattern: ").append(this.pattern).append(discordFormat ? "°" : " deg");}
         if(this.spread != 0){innerBuilder.append(innerBuilder.isEmpty() ? "" : "\n").append("Spread: ").append(this.spread).append(discordFormat ? "°" : " deg");}

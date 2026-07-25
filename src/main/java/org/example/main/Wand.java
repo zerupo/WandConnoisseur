@@ -118,8 +118,20 @@ public class Wand{
         return this.speed;
     }
 
-    public Spell[] getSpells(){
-        return this.spells;
+    public Spell[] getSpells(boolean includeNull){
+        if(!includeNull){
+            return this.spells;
+        }
+
+        ArrayList<Spell> spellList = new ArrayList<>();
+
+        for(Spell spell : this.spells){
+            if(spell != null){
+                spellList.add(spell);
+            }
+        }
+
+        return spellList.toArray(new Spell[0]);
     }
 
     public JPanel getWandJPanel(){
@@ -277,6 +289,8 @@ public class Wand{
         int nbCast = 0;
         boolean recharged = false;
         int y = 0;
+        int totalDelay = 0;
+        int totalMana = 0;
 
         if(infoResult.flowchartImage != null || infoResult.flowchartString != null){
             cardPoolCopy.setAutoFlowchart(true);
@@ -298,17 +312,20 @@ public class Wand{
             currentRechargeTime = cardPoolCopy.getRechargeTime();
             currentCastDelay += primaryCastState.getCastDelay();
             currentMana -= cardPoolCopy.getManaUsage()*60;
+            totalMana += cardPoolCopy.getManaUsage();
             if(cardPoolCopy.getWrappedThisCast() || cardPoolCopy.getDeckSize() <= 0){
                 if(infoResult.flowchartString != null){
-                    infoResult.flowchartString.append("Mana cost: ").append(cardPoolCopy.getManaUsage()).append("\n").append("Recharge time").append(currentCastDelay > currentRechargeTime ? " (cast delay): " : ": ").append(String.format("%1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime / 60.0)).append("\n").append(nbCast).append(")\n").append(cardPoolCopy.getFlowchartString(formatting));
+                    infoResult.flowchartString.append("Mana cost: ").append(cardPoolCopy.getManaUsage()).append("\n").append("Recharge time").append(currentCastDelay > currentRechargeTime ? " (cast delay): " : ": ").append(Global.delayFormat(currentRechargeTime)).append("\n").append(nbCast).append(")\n").append(cardPoolCopy.getFlowchartString(formatting));
                 }
                 waitingTime += Math.max(Math.max(currentCastDelay, currentRechargeTime), 0);
+                totalDelay += Math.max(Math.max(currentCastDelay, currentRechargeTime), 1);
                 recharged = true;
             }else{
                 if(infoResult.flowchartString != null){
-                    infoResult.flowchartString.append("Mana cost: ").append(cardPoolCopy.getManaUsage()).append("\n").append("Cast delay: ").append(String.format("%1$df (%2$3.2fs)", currentCastDelay, currentCastDelay / 60.0)).append("\n").append(nbCast).append(")\n").append(cardPoolCopy.getFlowchartString(formatting)).append(allCasts ? "\n" : "");
+                    infoResult.flowchartString.append("Mana cost: ").append(cardPoolCopy.getManaUsage()).append("\n").append("Cast delay: ").append(Global.delayFormat(currentCastDelay)).append("\n").append(nbCast).append(")\n").append(cardPoolCopy.getFlowchartString(formatting)).append(allCasts ? "\n" : "");
                 }
                 waitingTime += Math.max(currentCastDelay, 0);
+                totalDelay += Math.max(currentCastDelay, 1);
                 currentCastDelay = 0;
             }
             Global.nextFrame(Math.max(waitingTime, 1));
@@ -337,7 +354,7 @@ public class Wand{
                 infoResult.castStates = castStateList.toArray(new CastState[0]);
             }
             if(infoResult.castStateImage != null){
-                CastState.addToImage(0, 0, infoResult.castStateImage, String.format("Recharge time: %1$df (%2$3.2fs)", currentRechargeTime, currentRechargeTime/60.0), castInfo.toArray(new String[0]), castStateList.toArray(new CastState[0]));
+                CastState.addToImage(0, 0, infoResult.castStateImage, "Recharge time: " + Global.delayFormat(currentRechargeTime) + "\nAverage mana cost: " + Global.format((double)totalMana/totalDelay) + "/f (" + (int)Math.max(Math.ceil(60.0*totalMana/totalDelay), 0) + " regen)", castInfo.toArray(new String[0]), castStateList.toArray(new CastState[0]));
             }
         }
     }

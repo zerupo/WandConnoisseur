@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -40,7 +41,7 @@ public class PROJECTILE_NUKE_GIGA extends ProjectileBase{
             // shoot_light_flash_b="40"
             // shoot_light_flash_radius="130"
             .setKnockback(1.5);
-        this.projectileComponent.getDamageComponent().setProjectile(250.0);
+        this.projectileComponent.getDamageComponent().setDamage(250.0, DamageType.PROJECTILE);
     }
 }
 

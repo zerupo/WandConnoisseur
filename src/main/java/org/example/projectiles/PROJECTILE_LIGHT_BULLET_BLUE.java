@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -40,7 +41,7 @@ public class PROJECTILE_LIGHT_BULLET_BLUE extends ProjectileBase{
             // shoot_light_flash_b="255"
             // shoot_light_flash_radius="64"
             .setKnockback(0.0);
-        this.projectileComponent.getDamageComponent().setProjectile(3.75);
+        this.projectileComponent.getDamageComponent().setDamage(3.75, DamageType.PROJECTILE);
     }
 }
 

@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -35,7 +36,7 @@ public class PROJECTILE_PEBBLE extends ProjectileBase{
             // shoot_light_flash_g="255"
             // shoot_light_flash_b="170"
             // shoot_light_flash_radius="32"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
     }
 }
 

@@ -11,7 +11,7 @@ public class ENERGY_SHIELD_SECTOR extends Spell{
     @Override
     protected void initialization(){
         this.name = "Energy shield sector";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "shield sector"};
         this.imageFile = "energy_shield_sector.png";
         this.emote = staticEmote;
         this.description = "Deflects incoming projectiles";

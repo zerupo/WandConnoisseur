@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -30,7 +31,7 @@ public class PROJECTILE_LASER_EMITTER_CUTTER extends ProjectileBase{
             .setOnCollisionDie(false)
             .setLifetime(60)
             .setKnockback(1.3);
-        this.projectileComponent.getDamageComponent().setProjectile(20.0);
+        this.projectileComponent.getDamageComponent().setDamage(20.0, DamageType.PROJECTILE);
     }
 }
 

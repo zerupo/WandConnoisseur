@@ -587,13 +587,18 @@ public class ImageBuilder{
             root.appendChild(defs);
         }
 
-        currentGroup = document.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "rect");
-        currentGroup.setAttribute("x", "0");
-        currentGroup.setAttribute("y", "0");
-        currentGroup.setAttribute("width", String.valueOf(this.canvasWidth + 2*this.margin));
-        currentGroup.setAttribute("height", String.valueOf(this.canvasHeight + 2*this.margin));
-        currentGroup.setAttribute("fill", "black");
-        root.appendChild(currentGroup);
+        if(this.backgroundColor.getAlpha() != 0){
+            currentGroup = document.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "rect");
+            currentGroup.setAttribute("x", "0");
+            currentGroup.setAttribute("y", "0");
+            currentGroup.setAttribute("width", String.valueOf(this.canvasWidth + 2*this.margin));
+            currentGroup.setAttribute("height", String.valueOf(this.canvasHeight + 2*this.margin));
+            currentGroup.setAttribute("fill", String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
+            if(this.backgroundColor.getAlpha() != 255){
+                currentGroup.setAttribute("fill-opacity", String.valueOf(backgroundColor.getAlpha()/255));
+            }
+            root.appendChild(currentGroup);
+        }
 
         currentGroup = document.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "g");
         currentGroup.setAttribute("id", "images");

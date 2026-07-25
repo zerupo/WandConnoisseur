@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -44,8 +45,8 @@ public class PROJECTILE_SWARM_FLY extends ProjectileBase{
             .setKnockback(0.4);
             // physics_impulse_coeff="1200"
             // damage_every_x_frames="20"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setMelee(3.5);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(3.5, DamageType.MELEE);
     }
 }
 

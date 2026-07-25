@@ -11,7 +11,7 @@ public class TORCH_ELECTRIC extends Spell{
     @Override
     protected void initialization(){
         this.name = "Electric Torch";
-        //this.alias = new String[]{this.getClass().getSimpleName(), this.name};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "elec torch", "torch elec"};
         this.imageFile = "torch_electric.png";
         this.emote = staticEmote;
         this.description = "Gives your wand a bright but very dangerous light!";

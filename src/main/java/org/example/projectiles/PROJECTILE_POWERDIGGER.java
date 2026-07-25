@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 
 import java.lang.invoke.MethodHandles;
@@ -39,8 +40,8 @@ public class PROJECTILE_POWERDIGGER extends ProjectileBase{
             // shoot_light_flash_g="110"
             // shoot_light_flash_b="145"
             // shoot_light_flash_radius="90"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
-        this.projectileComponent.getDamageComponent().setDrill(2.5);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(2.5, DamageType.DRILL);
     }
 }
 

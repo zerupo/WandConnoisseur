@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -40,8 +41,8 @@ public abstract class ProjectileRocketTank extends Projectile{
             // shoot_light_flash_g="210"
             // shoot_light_flash_b="40"
             // shoot_light_flash_radius="90"
-            .setKnockback(2.0);//	knockback_force="2.0"
-        this.projectileComponent.getDamageComponent().setProjectile(25.0);
+            .setKnockback(2.0);
+        this.projectileComponent.getDamageComponent().setDamage(25.0, DamageType.PROJECTILE);
     }
 }
 

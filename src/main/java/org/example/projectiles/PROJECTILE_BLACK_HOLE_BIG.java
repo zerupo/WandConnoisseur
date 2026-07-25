@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -46,7 +47,7 @@ public class PROJECTILE_BLACK_HOLE_BIG extends ProjectileBase{
             // shoot_light_flash_r="255"
             // shoot_light_flash_g="180"
             // shoot_light_flash_b="230"
-        this.projectileComponent.getDamageComponent().setProjectile(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.PROJECTILE);
     }
 }
 

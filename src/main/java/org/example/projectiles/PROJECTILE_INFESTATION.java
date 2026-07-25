@@ -1,6 +1,7 @@
 package org.example.projectiles;
 
 import org.example.config.EmoteConfig;
+import org.example.main.Global.DamageType;
 import org.example.main.ProjectileComponent;
 import org.example.main.VelocityComponent;
 
@@ -52,8 +53,8 @@ public class PROJECTILE_INFESTATION extends ProjectileBase{
             // collide_with_shooter_frames="120"
             .setFriendlyFire(true);
             // damage_every_x_frames="20"
-        this.projectileComponent.getDamageComponent().setProjectile(1.25);
-        this.projectileComponent.getDamageComponent().setSlice(0.0);
+        this.projectileComponent.getDamageComponent().setDamage(1.25, DamageType.PROJECTILE);
+        this.projectileComponent.getDamageComponent().setDamage(0.0, DamageType.SLICE);
     }
 }
 

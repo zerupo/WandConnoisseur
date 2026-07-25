@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 import org.example.script.Script;
 import org.example.script.SCRIPT_LINE_ARC;
 
@@ -23,7 +24,7 @@ public class LINE_ARC extends Spell{
         this.price = 30;
         this.manaCost = 0;
         this.autoStat = false;
-        this.damageComponent.setProjectile(5.0);
+        this.damageComponent.setDamage(5.0, DamageType.PROJECTILE);
         this.castDelay = -4;
     }
 

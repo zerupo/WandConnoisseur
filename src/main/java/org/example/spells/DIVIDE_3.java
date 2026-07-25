@@ -2,6 +2,7 @@ package org.example.spells;
 
 import org.example.config.EmoteConfig;
 import org.example.main.*;
+import org.example.main.Global.DamageType;
 
 import java.lang.invoke.MethodHandles;
 
@@ -22,7 +23,7 @@ public class DIVIDE_3 extends Spell{
         this.manaCost = 50;
         this.autoStat = false;
         this.castDelay = 35;
-        this.damageComponent.setProjectile(-10.0);
+        this.damageComponent.setDamage(-10.0, DamageType.PROJECTILE);
         this.pattern = 5;
     }
 
@@ -36,7 +37,7 @@ public class DIVIDE_3 extends Spell{
         int iterationLimit = 3;
         boolean copyFailed = false;
         int currentCastDelay = 0;
-        int currentRechareTime = 0;
+        int currentRechargeTime = 0;
 
         castState.addCastDelay(this.castDelay);
 
@@ -50,13 +51,13 @@ public class DIVIDE_3 extends Spell{
                 copyFailed = true;
             }
             currentCastDelay = castState.getCastDelay();
-            currentRechareTime = cardPool.getRechargeTime();
+            currentRechargeTime = cardPool.getRechargeTime();
 
             for(int i=0; i < count; i++){
                 if(i == 0 && !copyFailed){
                     cardPool.disableDraw();
                 }
-                copy(cardPool, castState, currentSpell, recursionLevel, iterationLevel + 1);
+                copy(cardPool, castState, currentSpell, recursionLevel, iterationLevel + 1, false);
                 imax = currentSpell.getLastIteration();
                 if(!copyFailed){
                     cardPool.enableDraw();
@@ -70,7 +71,7 @@ public class DIVIDE_3 extends Spell{
 
             if(iterationLevel == 1 && !copyFailed){
                 castState.setCastDelay(currentCastDelay);
-                cardPool.setRechargeTime(currentRechareTime);
+                cardPool.setRechargeTime(currentRechargeTime);
                 cardPool.discardNext(iter_max);
             }
         }
