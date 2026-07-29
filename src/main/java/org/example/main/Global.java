@@ -1,5 +1,10 @@
 package org.example.main;
 
+import org.example.commands.CommandLocal;
+import static org.example.listeners.CommandListener.createCommandArray;
+import org.example.localization.LanguageManager;
+import static org.example.localization.LanguageManager.Language;
+import org.example.localization.LocalizedText;
 import org.example.menu.MenuManager;
 import org.example.spells.*;
 import static org.example.WandConnoisseur.jda;
@@ -17,6 +22,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
@@ -27,6 +33,12 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 public class Global{
+    private static final LanguageManager languageManager = new LanguageManager();
+    private static final LocalizedText ERROR_INVALID_DELAY = Global.getLanguageManager().get("ERROR_INVALID_DELAY");
+    private static final LocalizedText ERROR_NOT_INTEGER = Global.getLanguageManager().get("ERROR_NOT_INTEGER");
+    private static final LocalizedText ERROR_UNKNOWN_SPELL = Global.getLanguageManager().get("ERROR_UNKNOWN_SPELL");
+    private static final LocalizedText ERROR_UNKNOWN_SPELLS = Global.getLanguageManager().get("ERROR_UNKNOWN_SPELLS");
+    private static final LocalizedText ERROR_MESSAGE_TOO_LONG = Global.getLanguageManager().get("ERROR_MESSAGE_TOO_LONG");
     public enum DamageType{PROJECTILE, MELEE, EXPLOSION, ELECTRICITY, FIRE, DRILL, SLICE, ICE, HEALING, PHYSICS_HIT, RADIOACTIVE, POISON, OVEREATING, CURSE, HOLY;
         public String getDisplayName(){
             String result = name().toLowerCase().replace('_', ' ');
@@ -43,50 +55,51 @@ public class Global{
             return new DamageTypeDoublePair(value, damageType);
         }
     }
-    private final static Player player = new Player(Double.MAX_VALUE, Integer.MAX_VALUE, true);
+    private static final Player player = new Player(Double.MAX_VALUE, Integer.MAX_VALUE, true);
     private static Wand lastWand = null;
     private static int projectileCount = 0;
     private static int enemyCount = 0;
-    private final static DecimalFormat DF = createDecimalFormat();
-    private final static String pathOutput = "./src/main/java/org/example/fileOutput/";
-    private final static String pathAutoDelete = "./src/main/java/org/example/fileOutput/autoDelete/";
-    private final static String pathConfig = "./src/main/java/org/example/configFiles/";
-    private final static SpellFilter spellFilter = new SpellFilter();
-    private final static String[] spellProperties = SpellFilter.PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
-    private final static String[] spellStringProperties = SpellFilter.STRING_PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
-    private final static ProjectileList projectileList = new ProjectileList();
-    private final static ScriptList scriptList = new ScriptList();
-    private final static SpellList spellList = new SpellList();
-    private final static SpellList spellListNonRecursive = new SpellList(spell -> !spell.getRecursive());
-    private final static SpellList spellListProjectileType = new SpellList(spell -> spell.getType() == Spell.SpellType.projectile);
-    private final static SpellList spellListProjectileTypeNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.projectile && !spell.getRecursive());
-    private final static SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
-    private final static SpellList spellListRelatedProjectileNonRecursive = new SpellList(spell -> spell.getRelatedProjectile() != null && !spell.getRecursive());
-    private final static SpellList spellListProjectileComponent = new SpellList(spell -> spell.getRelatedProjectile() != null && spell.getRelatedProjectile().getProjectileComponent() != null);
-    private final static SpellList spellListProjectileComponentNonRecursive = new SpellList(spell -> spell.getRelatedProjectile() != null && spell.getRelatedProjectile().getProjectileComponent() != null && !spell.getRecursive());
-    private final static SpellList spellListModifier = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier);
-    private final static SpellList spellListModifierNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier && !spell.getRecursive());
-    private final static SpellList spellListStaticProjectile = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile);
-    private final static SpellList spellListStaticProjectileNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile && !spell.getRecursive());
-    private final static SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
-    private final static String[] aliasList = spellList.getAllAlias();
-    private final static String[] aliasListRelatedProjectile = spellListRelatedProjectile.getAllAlias();
-    private final static String[] aliasListProjectileComponent = spellListProjectileComponent.getAllAlias();
-    private final static String[] aliasListLifetimeModifier = spellListLifetimeModifier.getAllAlias();
+    private static final DecimalFormat DF = createDecimalFormat();
+    private static final String pathOutput = "./src/main/java/org/example/fileOutput/";
+    private static final String pathAutoDelete = "./src/main/java/org/example/fileOutput/autoDelete/";
+    private static final String pathConfig = "./src/main/java/org/example/configFiles/";
+    private static final SpellFilter spellFilter = new SpellFilter();
+    private static final String[] spellProperties = SpellFilter.PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
+    private static final String[] spellStringProperties = SpellFilter.STRING_PROPERTY_RESOLVERS.keySet().stream().sorted().toArray(String[]::new);
+    private static final ProjectileList projectileList = new ProjectileList();
+    private static final ScriptList scriptList = new ScriptList();
+    private static final SpellList spellList = new SpellList();
+    private static final SpellList spellListNonRecursive = new SpellList(spell -> !spell.getRecursive());
+    private static final SpellList spellListProjectileType = new SpellList(spell -> spell.getType() == Spell.SpellType.projectile);
+    private static final SpellList spellListProjectileTypeNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.projectile && !spell.getRecursive());
+    private static final SpellList spellListRelatedProjectile = new SpellList(spell -> spell.getRelatedProjectile() != null);
+    private static final SpellList spellListRelatedProjectileNonRecursive = new SpellList(spell -> spell.getRelatedProjectile() != null && !spell.getRecursive());
+    private static final SpellList spellListProjectileComponent = new SpellList(spell -> spell.getRelatedProjectile() != null && spell.getRelatedProjectile().getProjectileComponent() != null);
+    private static final SpellList spellListProjectileComponentNonRecursive = new SpellList(spell -> spell.getRelatedProjectile() != null && spell.getRelatedProjectile().getProjectileComponent() != null && !spell.getRecursive());
+    private static final SpellList spellListModifier = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier);
+    private static final SpellList spellListModifierNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.modifier && !spell.getRecursive());
+    private static final SpellList spellListStaticProjectile = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile);
+    private static final SpellList spellListStaticProjectileNonRecursive = new SpellList(spell -> spell.getType() == Spell.SpellType.static_projectile && !spell.getRecursive());
+    private static final SpellList spellListLifetimeModifier = new SpellList(spell -> spell.getLifetime() != 0, Comparator.comparing(Spell::getLifetime).thenComparing(Spell::getName));
+    private static final String[] aliasList = spellList.getAllAlias();
+    private static final String[] aliasListRelatedProjectile = spellListRelatedProjectile.getAllAlias();
+    private static final String[] aliasListProjectileComponent = spellListProjectileComponent.getAllAlias();
+    private static final String[] aliasListLifetimeModifier = spellListLifetimeModifier.getAllAlias();
     private static Command[] commandList = null;
-    private final static WandList wandList = new WandList();
-    private final static int baseImageSize = 16;
-    private final static int baseIconSize = 7;
-    private final static int imageScaleFactor = 5;
-    private final static int margin = 4*getImageScaleFactor();
-    private final static Font titleFont = loadFont("./src/main/java/org/example/TitleFont.ttf");
-    private final static Font pixelFont = loadFont("./src/main/java/org/example/PixelFont.ttf");
-    private final static Font glyphFont = loadFont("./src/main/java/org/example/GlyphFont.ttf");
-    private final static Pattern delayPattern = Pattern.compile("^ *([+-]?[0-9]+(|\\.[0-9]+)?)(?: *(|[fs]))? *$");
-    private final static Pattern spellPattern = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
-    public final static MenuManager menuManager = new MenuManager();
+    private static final CommandLocal[] commandLocalList = createCommandArray();
+    private static final WandList wandList = new WandList();
+    private static final int baseImageSize = 16;
+    private static final int baseIconSize = 7;
+    private static final int imageScaleFactor = 5;
+    private static final int margin = 4*getImageScaleFactor();
+    private static final Font titleFont = loadFont("./src/main/java/org/example/TitleFont.ttf");
+    private static final Font pixelFont = loadFont("./src/main/java/org/example/PixelFont.ttf");
+    private static final Font glyphFont = loadFont("./src/main/java/org/example/GlyphFont.ttf");
+    private static final Pattern delayPattern = Pattern.compile("^ *([+-]?[0-9]+(|\\.[0-9]+)?)(?: *(|[fs]))? *$");
+    private static final Pattern spellPattern = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
+    public static final MenuManager menuManager = new MenuManager();
     private static long currentFrame = 0;
-    private final static RandomGenerator randomGenerator = new RandomGenerator();
+    private static final RandomGenerator randomGenerator = new RandomGenerator();
     private static boolean reqOEState = false;
 
     // getters
@@ -104,6 +117,10 @@ public class Global{
 
     public static int getEnemyCount(){
         return enemyCount;
+    }
+
+    public static LanguageManager getLanguageManager(){
+        return languageManager;
     }
 
     public static String getPathOutput(){
@@ -225,6 +242,38 @@ public class Global{
         for(Command command : commandListTemp){
             if(command.getName().equals(name)){
                 return command;
+            }
+        }
+
+        return null;
+    }
+
+    public static CommandLocal[] getCommandLocalList(){
+        return commandLocalList;
+    }
+
+    public static CommandLocal[] getCommandLocalList(String name, Language language){
+        return Arrays.stream(getCommandLocalList()).filter(commandLocal -> commandLocal.getName().get(language).contains(name)).toArray(CommandLocal[]::new);
+    }
+
+    public static CommandLocal[] getCommandLocalList(String name, Locale language){
+        return Arrays.stream(getCommandLocalList()).filter(commandLocal -> commandLocal.getName().get(language).contains(name)).toArray(CommandLocal[]::new);
+    }
+
+    public static CommandLocal getCommandLocal(String name, Language language){
+        for(CommandLocal commandLocal : commandLocalList){
+            if(commandLocal.getName().get(language).equals(name)){
+                return commandLocal;
+            }
+        }
+
+        return null;
+    }
+
+    public static CommandLocal getCommandLocal(String name, Locale language){
+        for(CommandLocal commandLocal : commandLocalList){
+            if(commandLocal.getName().get(language).equals(name)){
+                return commandLocal;
             }
         }
 
@@ -407,10 +456,10 @@ public class Global{
                     }
                 }else{
                     if(replyEvent){
-                        event.getHook().editOriginal(ansiFormatting ? "```ansi\nError message too long```" : "Error message too long").queue();
+                        event.getHook().editOriginal(ansiFormatting ? "```ansi\n" + ERROR_MESSAGE_TOO_LONG.get(event) + "```" : ERROR_MESSAGE_TOO_LONG.get(event)).queue();
                         replyEvent = false;
                     }else{
-                        event.getChannel().sendMessage(ansiFormatting ? "```ansi\nError message too long```" : "Error message too long").queue();
+                        event.getChannel().sendMessage(ansiFormatting ? "```ansi\n" + ERROR_MESSAGE_TOO_LONG.get(event) + "```" : ERROR_MESSAGE_TOO_LONG.get(event)).queue();
                     }
                 }
                 chunk = lines[i];
@@ -430,7 +479,7 @@ public class Global{
 
     public static Wand slashInteractionToWand(SlashCommandInteractionEvent event){
         SpellList spellList = Global.getSpellList();
-        OptionMapping spellsOption = event.getOption("sorts");
+        OptionMapping spellsOption = event.getOption("spells");
         OptionMapping drawOption = event.getOption("draw");
         OptionMapping castDelayOption = event.getOption("cast_delay");
         OptionMapping rechargeTimeOption = event.getOption("recharge_time");
@@ -440,6 +489,7 @@ public class Global{
         OptionMapping speedOption = event.getOption("speed");
         String spellsInput = "";
         StringBuilder unknownSpells = new StringBuilder();
+        boolean severalUnknown = false;
         int draw = 1;
         int castDelay = 0;
         int rechargeTime = 0;
@@ -462,7 +512,7 @@ public class Global{
         }
         if(castDelayOption != null){
             try{
-                castDelay = Global.stringToDelay(castDelayOption.getAsString());
+                castDelay = Global.stringToDelay(event.getGuildLocale().toLocale(), castDelayOption.getAsString());
             }catch(Exception e){
                 event.reply("cast_delay: " + e.getMessage()).setEphemeral(true).queue();
                 return null;
@@ -470,7 +520,7 @@ public class Global{
         }
         if(rechargeTimeOption != null){
             try{
-                rechargeTime = Global.stringToDelay(rechargeTimeOption.getAsString());
+                rechargeTime = Global.stringToDelay(event.getGuildLocale().toLocale(), rechargeTimeOption.getAsString());
             }catch(Exception e){
                 event.reply("recharge_time: " + e.getMessage()).setEphemeral(true).queue();
                 return null;
@@ -515,12 +565,24 @@ public class Global{
                     spells.add(currentSpell.clone());
                 }
             }else{
-                unknownSpells.append(unknownSpells.isEmpty() ? "" : ", ").append("\"").append(s).append("\"");
+                if(unknownSpells.isEmpty()){
+                    unknownSpells.append(s);
+                }else{
+                    if(!severalUnknown){
+                        unknownSpells.insert(0, "\"").append("\"");
+                    }
+                    severalUnknown = true;
+                    unknownSpells.append(", \"").append(s).append("\"");
+                }
             }
         }
 
         if(!unknownSpells.isEmpty()){
-            event.reply("Sorts inconnus: " + unknownSpells).setEphemeral(true).queue();
+            if(severalUnknown){
+                event.reply(ERROR_UNKNOWN_SPELLS.get(event, unknownSpells.toString())).setEphemeral(true).queue();
+            }else{
+                event.reply(ERROR_UNKNOWN_SPELL.get(event, unknownSpells.toString())).setEphemeral(true).queue();
+            }
             return null;
         }
 
@@ -531,7 +593,7 @@ public class Global{
         return wand;
     }
 
-    public static int stringToDelay(String input){
+    public static int stringToDelay(Locale language, String input){
         Matcher m = delayPattern.matcher(input);
         int result;
 
@@ -540,7 +602,7 @@ public class Global{
                 case "s" -> result = (int)Math.round(Double.parseDouble(m.group(1))*60.0);
                 case "f" -> {
                     if(!m.group(2).equals("")){
-                        throw new IllegalArgumentException("\"" + input + "\" -> une valeur en frame doit être un entier");
+                        throw new IllegalArgumentException(ERROR_NOT_INTEGER.get(language, input));
                     }
                     result = Integer.parseInt(m.group(1));
                 }
@@ -553,7 +615,7 @@ public class Global{
                 }
             }
         }else{
-            throw new IllegalArgumentException("\"" + input + "\" n'est pas un délais valide");
+            throw new IllegalArgumentException(ERROR_INVALID_DELAY.get(language, input));
         }
 
         return result;

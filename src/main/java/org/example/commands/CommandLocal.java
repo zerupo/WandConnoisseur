@@ -1,16 +1,18 @@
 package org.example.commands;
 
+import org.example.localization.LocalizedText;
+
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public abstract class Command{
-    String name;
-    String description;
+public abstract class CommandLocal{
+    LocalizedText name;
+    LocalizedText description;
     CommandOption[] commandOptions;
-    public String getName(){
+    public LocalizedText getName(){
         return this.name;
     }
 
-    public String getDescription(){
+    public LocalizedText getDescription(){
         return this.description;
     }
 

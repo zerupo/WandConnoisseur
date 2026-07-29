@@ -495,7 +495,7 @@ public class WandList{
 
     private static WandStat[] readFile(){
         ArrayList<WandStat> wands = new ArrayList<>();
-        File file = new File(Global.getPathConfig() + "wand.properties");
+        File file = new File(Global.getPathConfig() + "wands.txt");
 
         try(Scanner myReader = new Scanner(file)){
             while(myReader.hasNextLine()){
@@ -560,7 +560,7 @@ public class WandList{
 
     public void generateAllSprites(){
         if(wandList == null){
-            System.out.println("error wand file not loaded at \"" + Global.getPathConfig() + "wand.properties" + "\", can't generate sprites");
+            System.out.println("error wand file not loaded at \"" + Global.getPathConfig() + "wands.txt" + "\", can't generate sprites");
             return;
         }
 
@@ -585,7 +585,7 @@ public class WandList{
 
     public String getSprite(Wand wand){
         if(wandList == null){
-            System.out.println("error wand file not loaded at \"" + Global.getPathConfig() + "wand.properties" + "\", returning default sprite");
+            System.out.println("error wand file not loaded at \"" + Global.getPathConfig() + "wands.txt" + "\", returning default sprite");
             return "./src/main/java/org/example/image/wand/wand_0832.png";
         }
 

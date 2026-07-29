@@ -1,5 +1,6 @@
 package org.example.commands;
 
+import org.example.localization.LocalizedText;
 import org.example.main.Global;
 import org.example.main.ProjectileComponent;
 import org.example.main.SpellList;
@@ -32,15 +33,32 @@ class Modifier{
     }
 }
 
-public class WispCommand extends Command{
+public class WispCommand extends CommandLocal{
+    private static final LocalizedText COMMAND_WISP = Global.getLanguageManager().get("COMMAND_WISP");
+    private static final LocalizedText COMMAND_WISP_DESCRIPTION = Global.getLanguageManager().get("COMMAND_WISP_DESCRIPTION");
+    private static final LocalizedText COMMAND_WISP_SPELL = Global.getLanguageManager().get("COMMAND_WISP_SPELL");
+    private static final LocalizedText COMMAND_WISP_SPELL_DESCRIPTION = Global.getLanguageManager().get("COMMAND_WISP_SPELL_DESCRIPTION");
+    private static final LocalizedText COMMAND_WISP_LIFETIME_MIN = Global.getLanguageManager().get("COMMAND_WISP_LIFETIME_MIN");
+    private static final LocalizedText COMMAND_WISP_LIFETIME_MIN_DESCRIPTION = Global.getLanguageManager().get("COMMAND_WISP_LIFETIME_MIN_DESCRIPTION");
+    private static final LocalizedText COMMAND_WISP_LIFETIME_MAX = Global.getLanguageManager().get("COMMAND_WISP_LIFETIME_MAX");
+    private static final LocalizedText COMMAND_WISP_LIFETIME_MAX_DESCRIPTION = Global.getLanguageManager().get("COMMAND_WISP_LIFETIME_MAX_DESCRIPTION");
+    private static final LocalizedText COMMAND_WISP_NB_MODIFIER = Global.getLanguageManager().get("COMMAND_WISP_NB_MODIFIER");
+    private static final LocalizedText COMMAND_WISP_NB_MODIFIER_DESCRIPTION = Global.getLanguageManager().get("COMMAND_WISP_NB_MODIFIER_DESCRIPTION");
+    private static final LocalizedText ERROR_GENERATING_FILE = Global.getLanguageManager().get("ERROR_GENERATING_FILE");
+    private static final LocalizedText ERROR_UNKNOWN_SPELL_LIFETIME = Global.getLanguageManager().get("ERROR_UNKNOWN_SPELL_LIFETIME");
+    private static final LocalizedText MESSAGE_WISP_LIFETIME = Global.getLanguageManager().get("MESSAGE_WISP_LIFETIME");
+    private static final LocalizedText MESSAGE_WISP_NO_SOLUTION = Global.getLanguageManager().get("MESSAGE_WISP_NO_SOLUTION");
+    private static final LocalizedText MESSAGE_WISP_SOLUTION = Global.getLanguageManager().get("MESSAGE_WISP_SOLUTION");
+    private static final LocalizedText MESSAGE_WISP_SPELL = Global.getLanguageManager().get("MESSAGE_WISP_SPELL");
+
     public WispCommand(){
-        this.name = "wisp";
-        this.description = "Renvoie la liste des modifiers pour faire un wisp au format .csv (Excel/LibreOffice Calc/etc).";
+        this.name = COMMAND_WISP;
+        this.description = COMMAND_WISP_DESCRIPTION;
         this.commandOptions = new CommandOption[]{
-            new CommandOption(OptionType.STRING, "sort", "Sort à transformer en wisp.", false, true),
-            new CommandOption(OptionType.INTEGER, "lifetime_min", "Lifetime minimum du projectile, remplace celui du projectile sélectionné.", false, false),
-            new CommandOption(OptionType.INTEGER, "lifetime_max", "Lifetime maximum du projectile, remplace celui du projectile sélectionné.", false, false),
-            new CommandOption(OptionType.INTEGER, "nb_modifier", "Nombre de modificateurs max de chaque type (défaut: 11, max: 21).", false, false)
+            new CommandOption(OptionType.STRING, COMMAND_WISP_SPELL, COMMAND_WISP_SPELL_DESCRIPTION, false, true),
+            new CommandOption(OptionType.INTEGER, COMMAND_WISP_LIFETIME_MIN, COMMAND_WISP_LIFETIME_MIN_DESCRIPTION, false, false),
+            new CommandOption(OptionType.INTEGER, COMMAND_WISP_LIFETIME_MAX, COMMAND_WISP_LIFETIME_MAX_DESCRIPTION, false, false),
+            new CommandOption(OptionType.INTEGER, COMMAND_WISP_NB_MODIFIER, COMMAND_WISP_NB_MODIFIER_DESCRIPTION, false, false)
         };
     }
 
@@ -121,7 +139,7 @@ public class WispCommand extends Command{
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
         SpellList spellListProjectileComponent = Global.getSpellListProjectileComponent();
-        OptionMapping spellOption = event.getOption("sort");
+        OptionMapping spellOption = event.getOption("spell");
         OptionMapping lifetimeMinOption = event.getOption("lifetime_min");
         OptionMapping lifetimeMaxOption = event.getOption("lifetime_max");
         OptionMapping nbModifierOption = event.getOption("nb_modifier");
@@ -167,14 +185,14 @@ public class WispCommand extends Command{
         }
 
         if(!validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
-            event.reply("Sort \"" + spellsInput + "\" inconnu, si vous ne renseignez aucun sort valide, vous devez saisir le lifetime manuellement").setEphemeral(true).queue();
+            event.reply(ERROR_UNKNOWN_SPELL_LIFETIME.get(event, spellsInput)).setEphemeral(true).queue();
             return;
         }
 
         if(validSpellFound && lifetimeMinOption == null && lifetimeMaxOption == null){
-            stringResult.append("Recherche de wisps pour le sort ").append(spell.getName()).append(", lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(Global.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%), max modifier: ").append(nbModifier);
+            stringResult.append(MESSAGE_WISP_SPELL.get(event, spell.getName())).append(", lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(Global.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%), max modifier: ").append(nbModifier);
         }else{
-            stringResult.append("Recherche de wisps pour le lifetime: [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(Global.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%) , max modifier: ").append(nbModifier);
+            stringResult.append(MESSAGE_WISP_LIFETIME.get(event)).append(": [").append(lifetimeMin).append(", ").append(lifetimeMax).append("] (").append(Global.format(100.0/(lifetimeMax - lifetimeMin + 1))).append("%) , max modifier: ").append(nbModifier);
         }
         event.reply(stringResult.toString()).queue();
 
@@ -193,12 +211,12 @@ public class WispCommand extends Command{
 
         int[][] result = getValues(modifiers, lifetimeMin, lifetimeMax, nbModifier);
         if(result.length == 0){
-            stringResult.append("\n\nAucune solution solution trouvée");
+            stringResult.append("\n\n").append(MESSAGE_WISP_NO_SOLUTION.get(event));
             event.getHook().editOriginal(stringResult.toString()).queue();
             return;
         }
 
-        stringResult.append("\n\n").append(result.length).append(" solutions trouvées");
+        stringResult.append("\n\n").append(result.length).append(" ").append(MESSAGE_WISP_SOLUTION.get(event));
 
         final int N = result[0].length - 1;
         Arrays.sort(result, (a, b) -> {
@@ -229,7 +247,7 @@ public class WispCommand extends Command{
             writer.close();
             event.getHook().editOriginal(stringResult.toString()).setFiles(Global.byteToUpload(out.toByteArray(), "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv")).queue();
         }catch(IOException e){
-            stringResult.append("\nErreur lors de l'écriture du fichier");
+            stringResult.append("\n").append(ERROR_GENERATING_FILE.get(event));
             event.getHook().editOriginal(stringResult.toString()).queue();
             System.out.println("error writing the file \"" + "wisp_" + lifetimeMin + "_" + lifetimeMax + ".csv" + "\" " + e.getMessage());
         }

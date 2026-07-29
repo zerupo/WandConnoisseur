@@ -1,8 +1,11 @@
 package org.example.menu;
 
+import org.example.localization.LocalizedText;
 import org.example.main.CardHistory;
+import org.example.main.Global;
 import org.example.spells.Spell;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,7 +25,11 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 
 public class MenuDeckAnimation extends Menu{
-    private CardHistory cardHistory;
+    private static final LocalizedText ERROR_ID_OOB = Global.getLanguageManager().get("ERROR_ID_OOB");
+    private static final LocalizedText ERROR_INVALID_NUMBER = Global.getLanguageManager().get("ERROR_INVALID_NUMBER");
+    private static final LocalizedText MESSAGE_GOTO = Global.getLanguageManager().get("MESSAGE_GOTO");
+    private static final LocalizedText MESSAGE_ID = Global.getLanguageManager().get("MESSAGE_ID");
+    private final CardHistory cardHistory;
 
     public MenuDeckAnimation(String id, String title, String description, CardHistory cardHistory){
         super(id, title, description);
@@ -30,13 +37,13 @@ public class MenuDeckAnimation extends Menu{
     }
 
     // abstract
-    public ActionRow getActionRow(){
-        return ActionRow.of(Button.primary(this.id + ";0", "<<"), Button.primary(this.id + ";1", "<"), Button.secondary(this.id + ";2", "Go to"), Button.primary(this.id + ";3", ">"), Button.primary(this.id + ";4", ">>"));
+    public ActionRow getActionRow(Locale language){
+        return ActionRow.of(Button.primary(this.id + ";0", "<<"), Button.primary(this.id + ";1", "<"), Button.secondary(this.id + ";2", MESSAGE_GOTO.get(language)), Button.primary(this.id + ";3", ">"), Button.primary(this.id + ";4", ">>"));
     }
 
     public void replyHookEvent(SlashCommandInteractionEvent event){
         WebhookMessageEditAction<Message> callback = event.getHook().editOriginal(MessageEditData.fromEmbeds(this.toMessageEmbed()));
-        ActionRow actionRow = this.getActionRow();
+        ActionRow actionRow = this.getActionRow(event.getGuildLocale().toLocale());
 
         if(actionRow != null){
             callback.setComponents(actionRow);
@@ -59,8 +66,8 @@ public class MenuDeckAnimation extends Menu{
             case "0" -> this.cardHistory.previousCardPoolStep();
             case "1" -> this.cardHistory.previousStep();
             case "2" -> {
-                TextInput input = TextInput.create("value", "Rentrez un ID:", TextInputStyle.SHORT).setRequired(true).build();
-                Modal modal = Modal.create(this.id + ";modal", "Go to").addActionRow(input).build();
+                TextInput input = TextInput.create("value", MESSAGE_ID.get(event), TextInputStyle.SHORT).setRequired(true).build();
+                Modal modal = Modal.create(this.id + ";modal", MESSAGE_GOTO.get(event)).addActionRow(input).build();
                 event.replyModal(modal).queue();
                 return true;
             }
@@ -92,27 +99,27 @@ public class MenuDeckAnimation extends Menu{
                 value = Integer.parseInt(m.group(1));
                 value2 = Integer.parseInt(m.group(2));
             }catch(NumberFormatException e){
-                event.reply("\"" + input + "\" n'est pas un nombre valide.").setEphemeral(true).queue();
+                event.reply(ERROR_INVALID_NUMBER.get(event, input)).setEphemeral(true).queue();
                 return true;
             }
             value--;
             value2--;
 
             if(!this.cardHistory.goToStep(value, value2)){
-                event.reply("Id " + input + " hors limite.").setEphemeral(true).queue();
+                event.reply(ERROR_ID_OOB.get(event, input)).setEphemeral(true).queue();
                 return true;
             }
         }else{
             try{
                 value = Integer.parseInt(input);
             }catch(NumberFormatException e){
-                event.reply("\"" + input + "\" n'est pas un nombre valide.").setEphemeral(true).queue();
+                event.reply(ERROR_INVALID_NUMBER.get(event, input)).setEphemeral(true).queue();
                 return true;
             }
             value--;
 
             if(!this.cardHistory.goToStep(value)){
-                event.reply("Id " + input + " hors limite.").setEphemeral(true).queue();
+                event.reply(ERROR_ID_OOB.get(event, input)).setEphemeral(true).queue();
                 return true;
             }
         }

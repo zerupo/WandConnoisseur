@@ -1,0 +1,119 @@
+COMMAND_GENERAL_SPELLS;spells;sorts
+COMMAND_GENERAL_SPELLS_DESCRIPTION;Spells separated by ",", prefix with 0: max: or inf: to override its charges (default: inf:).;Sorts séparés par des ",", préfixez par 0: max: ou inf: pour modifier les charges (défaut: inf:).
+COMMAND_GENERAL_DRAW;draw;pioche
+COMMAND_GENERAL_DRAW_DESCRIPTION;Number of spells/cast of the wand (default: 1).;Nombre de sorts/lancer de la baguette (défaut: 1).
+COMMAND_GENERAL_CAST_DELAY;cast_delay;delais_sort
+COMMAND_GENERAL_CAST_DELAY_DESCRIPTION;Cast delay in frames or seconds, add "f" or "s" at the end to specify (default: 0).;Délais des sorts en frames ou secondes, ajouter "f" ou "s" à la fin pour préciser (défaut: 0).
+COMMAND_GENERAL_RECHARGE_TIME;recharge_time;temps_recharge
+COMMAND_GENERAL_RECHARGE_TIME_DESCRIPTION;Recharge time in frames or seconds, add "f" or "s" at the end to specify (default: 0).;Temps de recharge en frames ou secondes, ajouter "f" ou "s" à la fin pour préciser (défaut: 0).
+COMMAND_GENERAL_MANA_MAX;mana_max;mana_max
+COMMAND_GENERAL_MANA_MAX_DESCRIPTION;Wand's max mana (default: 1000000).;Mana max de la baguette (défaut: 1000000).
+COMMAND_GENERAL_MANA_REGEN;mana_regen;mana_regen
+COMMAND_GENERAL_MANA_REGEN_DESCRIPTION;Wand mana regeneration in mana/s (default: 1000000).;Régénération de mana de la baguette en mana/sec (défaut: 1000000).
+COMMAND_GENERAL_SPREAD;spread;dispersion
+COMMAND_GENERAL_SPREAD_DESCRIPTION;Wand spread (default: 0.0).;Dispersion de la baguette (défaut: 0.0).
+COMMAND_GENERAL_SPEED;speed;vitesse
+COMMAND_GENERAL_SPEED_DESCRIPTION;Hidden projectile speed multiplier (default: 1.0).;Multiplicateur caché de la vitesse des projectiles (défaut: 1.0).
+COMMAND_CAST_STATE;cast_state;cast_state
+COMMAND_CAST_STATE_DESCRIPTION;Returns an image or a menu containing the different cast states.;Renvoie une image ou un menu contenant les différent cast states.
+COMMAND_CAST_STATE_TYPE;type;type
+COMMAND_CAST_STATE_TYPE_DESCRIPTION;Cast state format (default: png).;Format du cast state (défaut: png).
+COMMAND_DECK_ANIMATION;deck_animation;deck_animation
+COMMAND_DECK_ANIMATION_DESCRIPTION;Returns a menu that lets you view the different steps of the deck/hand/discard.;Renvoie un menu permettant de voir les différentes étapes du deck/main/défausse.
+COMMAND_ECHO;echo;echo
+COMMAND_ECHO_DESCRIPTION;Replies with your message.;Répond avec votre message.
+COMMAND_ECHO_TEXT;text;texte
+COMMAND_ECHO_TEXT_DESCRIPTION;The text to return.;Le texte à renvoyer.
+COMMAND_FEUR;feur;feur
+COMMAND_FEUR_DESCRIPTION;What ?;Quoi ?
+COMMAND_FLOWCHART;flowchart;flowchart
+COMMAND_FLOWCHART_DESCRIPTION;Returns the flowchart in the desired format.;Renvoie la flowchart au format demandé.
+COMMAND_FLOWCHART_TYPE;type;type
+COMMAND_FLOWCHART_TYPE_DESCRIPTION;Flowchart format (default: png).;Format de la flowchart (défaut: png).
+COMMAND_HELP;help;aide
+COMMAND_HELP_DESCRIPTION;Lists all available commands.;Liste toutes les commandes disponibles.
+COMMAND_HELP_COMMAND;command;commande
+COMMAND_HELP_COMMAND_DESCRIPTION;Name of a specific command to display its options.;Nom d'une commande spécifique pour connaitre ses options.
+COMMAND_PING;ping;ping
+COMMAND_PING_DESCRIPTION;Check the bot's latency.;Vérifie la latence du bot.
+COMMAND_SPELL_INFO;spell_info;sort_info
+COMMAND_SPELL_INFO_DESCRIPTION;Returns information about a spell.;Renvoie les informations d'un sort.
+COMMAND_SPELL_INFO_NAME;name;nom
+COMMAND_SPELL_INFO_NAME_DESCRIPTION;Name of the spell to be described.;Nom du sort à décrire.
+COMMAND_SPELL_INFO_FILE;file;fichier
+COMMAND_SPELL_INFO_FILE_DESCRIPTION;Returns the spell code as a file instead (default: false).;Renvoie le code du sort sous forme de fichier à la place (défaut: false).
+COMMAND_SPELL_LIST;list_spells;liste_sorts
+COMMAND_SPELL_LIST_DESCRIPTION;Returns the list of available spells.;Renvoie la liste des sorts disponibles.
+COMMAND_SPELL_LIST_PROPERTY;property;propriete
+COMMAND_SPELL_LIST_PROPERTY_DESCRIPTION;List of properties to display, separated by ",".;Liste des propriétés à afficher, séparées par des ",".
+COMMAND_SPELL_LIST_CONDITION;condition;condition
+COMMAND_SPELL_LIST_CONDITION_DESCRIPTION;Spell selection condition.;Condition de sélection des sorts.
+COMMAND_SPELL_LIST_SORT;sort;tri
+COMMAND_SPELL_LIST_SORT_DESCRIPTION;Spell display order.;Ordre d'affichage des sorts.
+COMMAND_SPELL_LIST_TYPE;type;type
+COMMAND_SPELL_LIST_TYPE_DESCRIPTION;List format (default: message).;Format de la liste (défaut: message).
+COMMAND_TEXT;text;texte
+COMMAND_TEXT_DESCRIPTION;Returns an image of the text with a transparent background, written in a noita font.;Renvoie une image du texte sur fond transparent écrit avec une font de noita.
+COMMAND_TEXT_TEXT;text;texte
+COMMAND_TEXT_TEXT_DESCRIPTION;Text to display.;Texte à afficher.
+COMMAND_TEXT_FONT;font;police
+COMMAND_TEXT_FONT_DESCRIPTION;Font to use for the text.;Police à utiliser pour le texte.
+COMMAND_TEXT_SIZE;size;taille
+COMMAND_TEXT_SIZE_DESCRIPTION;Font size to use for the text.;Taille de la police à utiliser pour le texte.
+COMMAND_TEXT_COLOR;color;couleur
+COMMAND_TEXT_COLOR_DESCRIPTION;Text color in hex format RRGGBB(AA) (default: FFFFFFFF).;Couleur du texte au format hexa RRGGBB(AA) (défaut: FFFFFFFF).
+COMMAND_TEXT_TYPE;type;type
+COMMAND_TEXT_TYPE_DESCRIPTION;Text format (default: png).;Format du texte (défaut: png).
+COMMAND_WISP;wisp;wisp
+COMMAND_WISP_DESCRIPTION;Returns a list of modifiers to make a wisp in .csv format (Excel/LibreOffice Calc/etc.).;Renvoie la liste des modifieurs pour faire un wisp au format .csv (Excel/LibreOffice Calc/etc).
+COMMAND_WISP_SPELL;spell;sort
+COMMAND_WISP_SPELL_DESCRIPTION;Spell to transform into a wisp.;Sort à transformer en wisp.
+COMMAND_WISP_LIFETIME_MIN;lifetime_min;lifetime_min
+COMMAND_WISP_LIFETIME_MIN_DESCRIPTION;Minimum projectile lifetime, replaces the selected projectile's lifetime.;Durée de vie minimum du projectile, remplace celle du projectile sélectionné.
+COMMAND_WISP_LIFETIME_MAX;lifetime_max;lifetime_max
+COMMAND_WISP_LIFETIME_MAX_DESCRIPTION;Maximum projectile lifetime, replaces the selected projectile's lifetime.;Durée de vie maximum du projectile, remplace celle du projectile sélectionné.
+COMMAND_WISP_NB_MODIFIER;nb_modifier;nb_modifieur
+COMMAND_WISP_NB_MODIFIER_DESCRIPTION;Maximum number of modifiers of each type (default: 11, max: 21).;Nombre de modifieurs max de chaque type (défaut: 11, max: 21).
+ERROR_UNKNOWN;Unknown error.;Erreur inconnue.
+ERROR_MENU_OUTDATED;This menu is too old to interact with.;Ce menu est trop ancien pour pouvoir être utilisé.
+ERROR_INTERACTION;Error during interaction.;Erreur lors de l'interaction.
+ERROR_ECHO;You didn't provide any text to echo.;Vous n'avez fourni aucun texte à afficher.
+ERROR_GRADIENT_IMPLEMENTATION;Gradient is not implemented in SVG.;Le gradient n'est pas implémenté en SVG.
+ERROR_INVALID_TYPE;"%0" is not a valid type.;"%0" n'est pas un type valide.
+ERROR_INVALID_NUMBER;"%0" is not a valid number.;"%0" n'est pas un nombre valide.
+ERROR_UNKNOWN_COMMAND;Unknown command "%0".;Commande "%0" inconnue.
+ERROR_UNKNOWN_OPTION;No option for command "%0".;Aucune option pour la commande "%0".
+MESSAGE_LIST_OPTION;List of available options for command **%0**:;Liste des options disponibles pour la commande **%0**:
+ERROR_NO_COMMAND;No command available.;Aucune commande disponible.
+MESSAGE_LIST_COMMAND;List of available commands:;Liste des commandes disponibles:
+MESSAGE_PING;Pong! Bot latency: %0 ms.;Pong! Latence du bot: %0 ms.
+ERROR_UNKNOWN_SPELL;Unknown spell "%0".;Sort "%0" inconnu.
+ERROR_UNKNOWN_SPELLS;Unknown spells: %0.;Sorts inconnus: %0.
+ERROR_FILTER_EMPTY;No spell matches the condition `%0`.;Aucun sort ne respect la condition `%0`.
+MESSAGE_SPELLS_FILTERED;List of spells matching condition `%0`;Liste des sorts respectant la condition `%0`
+MESSAGE_ALL_SPELLS;List of all available spells;Liste de tout les sorts disponibles
+MESSAGE_SORTED;, sorted by `%0`;, triée par `%0`
+ERROR_GENERATING_FILE;Error while generating file.;Erreur lors de la génération du fichier.
+ERROR_GENERATING_IMAGE;Error while generating image.;Erreur lors de la génération de l'image.
+ERROR_UNKNOWN_SPELL_LIFETIME;Unknown spell "%0". If you don't provide a valid spell, you must enter the lifetime manually.;Sort "%0" inconnu. Si vous ne fournissez aucun sort valide, vous devez saisir le lifetime manuellement.
+MESSAGE_WISP_SPELL;Searching wisps for spell %0;Recherche de wisps pour le sort %0
+MESSAGE_WISP_LIFETIME;Searching wisps for lifetime;Recherche de wisps pour le lifetime
+MESSAGE_WISP_NO_SOLUTION;No solution found;Aucune solution solution trouvée
+MESSAGE_WISP_SOLUTION;solution found;solutions trouvées
+MESSAGE_MAX_MODIFIER;max modifiers;modifieurs max
+MESSAGE_ID;Enter an ID:;Rentrez un ID:
+MESSAGE_GOTO;Go to;Aller à
+ERROR_ID_OOB;ID %0 is out of bounds.;ID %0 hors limites.
+ERROR_NOT_INTEGER;"%0" -> a frame value must be an integer.;"%0" -> une valeur en frame doit être un entier.
+ERROR_INVALID_DELAY;"%0" is not a valid delay.;"%0" n'est pas un délais valide.
+ERROR_MESSAGE_TOO_LONG;Error message too long.;Erreur message trop long.
+ERROR_CONDITION_PARENTHESIS;Invalid parentheses in condition "%0".;Parenthèses invalides dans la condition "%0".
+ERROR_CONDITION_SYNTAX;Syntax error in condition "%0".;"Erreur de syntaxe dans la condition "%0".
+ERROR_CONDITION;Error while evaluating: %0;Erreur lors de l'évaluation : %0
+ERROR_CONDITION_UNKNOWN_PROPERTY;"%0" -> property "%1" is unknown.;"%0" -> la propriété "%1" est inconnue.
+ERROR_UNKNOWN_PROPERTY;The property "%0" is unknown.;La propriété "%0" est inconnue.
+ERROR_SORT_SYNTAX;Syntax error in sort "%0".;Erreur de syntaxe dans le tri "%0".
+ERROR_CONDITION_INVALID_OPERATOR_BOOLEAN;"%0" -> "%1" isn't a valid comparator for a boolean.;"%0" -> "%1" n'est pas un comparateur valide pour un booléen.
+ERROR_CONDITION_INVALID_BOOLEAN;"%0" -> "%1" isn't a valid boolean, replace with "true" or "false".;"%0" -> "%1" n'est pas un booléen valide, remplacez par "true" ou "false".
+ERROR_CONDITION_INVALID_INTEGER;"%0" -> "%1" isn't a valid integer.;"%0" -> "%1" n'est pas un entier valide.
+ERROR_CONDITION_INVALID_NUMBER;"%0" -> "%1" isn't a valid number.;"%0" -> "%1" n'est pas un nombre valide".

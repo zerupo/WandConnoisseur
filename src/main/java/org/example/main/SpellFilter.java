@@ -1,5 +1,8 @@
 package org.example.main;
 
+import static org.example.localization.LanguageManager.Language;
+import org.example.localization.LocalizedException;
+import org.example.localization.LocalizedText;
 import org.example.main.Global.DamageType;
 import org.example.projectiles.Projectile;
 import org.example.spells.Spell;
@@ -7,12 +10,13 @@ import org.example.spells.Spell;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Function;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import static java.util.Map.entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 enum Operator{GREATER, GREATER_OR_EQUAL, LOWER, LOWER_OR_EQUAL, EQUALS, DIFFERENT}
 enum LogicGate{AND, OR}
@@ -20,20 +24,41 @@ enum PropertyType{BOOLEAN, INT, DOUBLE}
 enum State{TRUE, FALSE, INVALID}
 class Result{
     private State state;
-    private String error;
+    private LocalizedText error;
+    private String[] args;
 
     public Result(State state){
         this.state = state;
-        this.error = "";
+        this.error = null;
+        this.args = new String[0];
     }
 
-    public Result(State state, String error){
+    public Result(State state, LocalizedText error, String[] args){
         this.state = state;
         if(state == State.INVALID){
             this.error = error;
+            this.args = args;
         }else{
-            this.error = "";
+            this.error = null;
+            this.args = new String[0];
         }
+    }
+
+    public Result(State state, LocalizedText error, String arg){
+        this.state = state;
+        if(state == State.INVALID){
+            this.error = error;
+            this.args = new String[]{arg};
+        }else{
+            this.error = null;
+            this.args = new String[0];
+        }
+    }
+
+    public Result(State state, LocalizedText error){
+        this.state = state;
+        this.error = state == State.INVALID ? error : null;
+        this.args = new String[0];
     }
 
     // getters
@@ -41,28 +66,74 @@ class Result{
         return this.state;
     }
 
-    public String getError(){
+    public LocalizedText getError(){
         return this.error;
+    }
+
+    public String getErrorString(Locale language){
+        return this.error == null ? "" : this.error.get(language);
+    }
+
+    public String getErrorString(Language language){
+        return this.error == null ? "" : this.error.get(language);
+    }
+
+    public String[] getArgs(){
+        return this.args;
     }
 
     // setters
     public void setState(State state){
         this.state = state;
         if(state != State.INVALID){
-            this.error = "";
+            this.error = null;
+            this.args = new String[0];
         }
     }
 
-    public void setState(State state, String error){
+    public void setState(State state, LocalizedText error, String[] args){
         this.state = state;
         if(state == State.INVALID){
             this.error = error;
+            this.args = args;
         }else{
-            this.error = "";
+            this.error = null;
+            this.args = new String[0];
         }
     }
 
-    public void setError(String error){
+    public void setState(State state, LocalizedText error, String arg){
+        this.state = state;
+        if(state == State.INVALID){
+            this.error = error;
+            this.args = new String[]{arg};
+        }else{
+            this.error = null;
+            this.args = new String[0];
+        }
+    }
+
+    public void setState(State state, LocalizedText error){
+        this.state = state;
+        this.error = state == State.INVALID ? error : null;
+        this.args = new String[0];
+    }
+
+    public void setError(LocalizedText error, String[] args){
+        if(this.state == State.INVALID){
+            this.error = error;
+            this.args = args;
+        }
+    }
+
+    public void setError(LocalizedText error, String arg){
+        if(this.state == State.INVALID){
+            this.error = error;
+            this.args = new String[]{arg};
+        }
+    }
+
+    public void setError(LocalizedText error){
         if(this.state == State.INVALID){
             this.error = error;
         }
@@ -71,6 +142,12 @@ class Result{
 record TypedProperty(PropertyType type, Object value){}
 
 class Expression{
+    private static final LocalizedText ERROR_CONDITION_INVALID_BOOLEAN = Global.getLanguageManager().get("ERROR_CONDITION_INVALID_BOOLEAN");
+    private static final LocalizedText ERROR_CONDITION_INVALID_INTEGER = Global.getLanguageManager().get("ERROR_CONDITION_INVALID_INTEGER");
+    private static final LocalizedText ERROR_CONDITION_INVALID_NUMBER = Global.getLanguageManager().get("ERROR_CONDITION_INVALID_NUMBER");
+    private static final LocalizedText ERROR_CONDITION_INVALID_OPERATOR_BOOLEAN = Global.getLanguageManager().get("ERROR_CONDITION_INVALID_OPERATOR_BOOLEAN");
+    private static final LocalizedText ERROR_UNKNOWN = Global.getLanguageManager().get("ERROR_UNKNOWN");
+    private static final LocalizedText ERROR_UNKNOWN_PROPERTY = Global.getLanguageManager().get("ERROR_UNKNOWN_PROPERTY");
     private final String value1;
     private final String value2;
     private final Operator operator;
@@ -116,10 +193,10 @@ class Expression{
 
     private Result evaluateLeaf(Spell spell){
         Function<Spell, TypedProperty> resolver = SpellFilter.PROPERTY_RESOLVERS.get(this.value1);
-        Result result = new Result(State.INVALID, "Erreur inconnue");
+        Result result = new Result(State.INVALID, ERROR_UNKNOWN);
 
         if(resolver == null){
-            result.setState(State.INVALID, "\"" + this + "\" -> la propriété \"" + this.value1 + "\" est inconnue");
+            result.setState(State.INVALID, ERROR_UNKNOWN_PROPERTY, new String[]{this.toString(), this.value1});
             return result;
         }
 
@@ -136,7 +213,7 @@ class Expression{
         switch(typedProperty.type()){
             case BOOLEAN -> {
                 if(this.operator != Operator.EQUALS && this.operator != Operator.DIFFERENT){
-                    result.setError("\"" + this + "\" -> \"" + operatorToString(this.operator) + "\" n'est pas un comparateur valide pour un booléen");
+                    result.setError(ERROR_CONDITION_INVALID_OPERATOR_BOOLEAN, new String[]{this.toString(), operatorToString(this.operator)});
                     return result;
                 }
 
@@ -144,7 +221,7 @@ class Expression{
                 switch(this.value2){
                     case "true" -> result.setState((this.operator == Operator.EQUALS) == valueBoolean ? State.TRUE : State.FALSE);
                     case "false" -> result.setState((this.operator == Operator.DIFFERENT) == valueBoolean ? State.TRUE : State.FALSE);
-                    case default -> result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un booléen valide, remplacez par \"true\" ou \"false\"");
+                    case default -> result.setError(ERROR_CONDITION_INVALID_BOOLEAN, new String[]{this.toString(), this.value2});
                 }
             }
             case INT -> {
@@ -154,7 +231,7 @@ class Expression{
                     actual = (Integer)typedProperty.value();
                     expected = Integer.parseInt(this.value2);
                 }catch(NumberFormatException e){
-                    result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un entier valide");
+                    result.setError(ERROR_CONDITION_INVALID_INTEGER, new String[]{this.toString(), this.value2});
                     return result;
                 }
 
@@ -176,7 +253,7 @@ class Expression{
                     actual = (Double)typedProperty.value();
                     expected = Double.parseDouble(this.value2);
                 }catch(NumberFormatException e){
-                    result.setError("\"" + this + "\" -> \"" + this.value2 + "\" n'est pas un nombre valide");
+                    result.setError(ERROR_CONDITION_INVALID_NUMBER, new String[]{this.toString(), this.value2});
                     return result;
                 }
 
@@ -217,7 +294,10 @@ class Expression{
 }
 
 class ExpressionParser{
-    private final static Pattern pattern = Pattern.compile("^ *(?i)([a-z0-9_]+) *([><]=?|!?=) *([+-]?[0-9]+(?:\\.[0-9]+)?|true|false) *$");
+    private static final LocalizedText ERROR_CONDITION_PARENTHESIS = Global.getLanguageManager().get("ERROR_CONDITION_PARENTHESIS");
+    private static final LocalizedText ERROR_CONDITION_SYNTAX = Global.getLanguageManager().get("ERROR_CONDITION_SYNTAX");
+    private static final LocalizedText ERROR_UNKNOWN = Global.getLanguageManager().get("ERROR_UNKNOWN");
+    private static final Pattern pattern = Pattern.compile("^ *(?i)([a-z0-9_]+) *([><]=?|!?=) *([+-]?[0-9]+(?:\\.[0-9]+)?|true|false) *$");
     private final String[] tokens;
     private int pos = 0;
 
@@ -256,14 +336,14 @@ class ExpressionParser{
 
     private Expression parsePrimary(){
         if(pos >= tokens.length){
-            throw new IllegalArgumentException("Erreur inconnue");
+            throw new LocalizedException(ERROR_UNKNOWN);
         }
 
         if(tokens[pos].equals("(")){
             pos++; // skip "("
             Expression expr = parseOr();
             if(pos >= tokens.length || !tokens[pos].equals(")")){
-                throw new IllegalArgumentException("Erreur parenthèses invalides dans la condition \"" + String.join(" ", this.tokens) + "\"");
+                throw new LocalizedException(ERROR_CONDITION_PARENTHESIS, String.join(" ", this.tokens));
             }
             pos++; // skip ")"
             return expr;
@@ -274,7 +354,7 @@ class ExpressionParser{
 
     private Expression parseExpression(){
         if(pos >= tokens.length){
-            throw new IllegalArgumentException("Erreur inconnue");
+            throw new LocalizedException(ERROR_UNKNOWN);
         }
 
         String expr = tokens[pos++];
@@ -291,7 +371,7 @@ class ExpressionParser{
             };
             return new Expression(m.group(1), operator, m.group(3));
         }else{
-            throw new IllegalArgumentException("Erreur de syntaxe dans la condition \"" + expr + "\"");
+            throw new LocalizedException(ERROR_CONDITION_SYNTAX, expr);
         }
     }
 
@@ -320,7 +400,7 @@ class ExpressionParser{
                 case ')' -> {
                     nbParenthesis--;
                     if(nbParenthesis < 0){
-                        throw new IllegalArgumentException("Erreur parenthèses invalides dans la condition \"" + input + "\"");
+                        throw new LocalizedException(ERROR_CONDITION_PARENTHESIS, input);
                     }
                     if(!currentToken.equals("")){
                         if(previousIsToken){
@@ -364,7 +444,7 @@ class ExpressionParser{
             }
         }
         if(nbParenthesis != 0){
-            throw new IllegalArgumentException("Erreur parenthèses invalides dans la condition \"" + input + "\"");
+            throw new LocalizedException(ERROR_CONDITION_PARENTHESIS, input);
         }
 
         return resultList.toArray(new String[0]);
@@ -372,6 +452,10 @@ class ExpressionParser{
 }
 
 public class SpellFilter{
+    private static final LocalizedText ERROR_CONDITION_PARENTHESIS = Global.getLanguageManager().get("ERROR_CONDITION_PARENTHESIS");
+    private static final LocalizedText ERROR_CONDITION_UNKNOWN_PROPERTY = Global.getLanguageManager().get("ERROR_CONDITION_UNKNOWN_PROPERTY");
+    private static final LocalizedText ERROR_SORT_SYNTAX = Global.getLanguageManager().get("ERROR_SORT_SYNTAX");
+    private static final LocalizedText ERROR_UNKNOWN_PROPERTY = Global.getLanguageManager().get("ERROR_UNKNOWN_PROPERTY");
     public static final Map<String, Function<Spell, TypedProperty>> PROPERTY_RESOLVERS = Map.ofEntries(
         // boolean
         entry("friendly_fire", spell -> new TypedProperty(PropertyType.BOOLEAN, spell.getFriendlyFire())),
@@ -496,15 +580,15 @@ public class SpellFilter{
         entry("alias", Spell::getAliasString),
         entry("charge", Spell::getChargeString),
         entry("damage", spell -> spell.getDamageComponent().toString()),
-        entry("material", spell -> spell.getMaterial()),
-        entry("name", spell -> spell.getName()),
+        entry("material", Spell::getMaterial),
+        entry("name", Spell::getName),
         entry("name_code", spell -> spell.getClass().getSimpleName()),
         entry("projectile_damage", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getDamageComponent().toString()) : "<null>";}),
         entry("projectile_lifetime", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getLifetimeString()) : "<null>";}),
         entry("projectile_speed", spell -> {Projectile projectile = spell.getRelatedProjectile(); ProjectileComponent projectileComponent = projectile == null ? null : projectile.getProjectileComponent(); return projectileComponent != null ? String.valueOf(projectileComponent.getSpeedString()) : "<null>";}),
         entry("tier", spell -> spell.getTierString(false)),
         entry("tier_all", spell -> spell.getTierString(true)),
-        entry("trail_material", spell -> spell.getTrailMaterial()),
+        entry("trail_material", Spell::getTrailMaterial),
         entry("trigger_type", spell -> spell.getTriggerType().toString()),
         entry("type", spell -> spell.getType().toString()),
 
@@ -634,14 +718,15 @@ public class SpellFilter{
         Result currentResult;
 
         if(expression == null){
-            throw new IllegalArgumentException("Erreur de syntaxe dans la condition \"" + input + "\"");
+            throw new LocalizedException(ERROR_CONDITION_PARENTHESIS, input);
         }
 
         for(int i=0; i < spells.length; i++){
             currentResult = expression.evaluate(spells[i]);
             switch(currentResult.getState()){
                 case TRUE -> result.add(spells[i]);
-                case INVALID -> throw new IllegalArgumentException("Erreur lors de l'évaluation : " + currentResult.getError());
+                //case INVALID -> throw new LocalizedException(ERROR_CONDITION, currentResult.getError(), currentResult.getArgs());
+                case INVALID -> throw new LocalizedException(currentResult.getError(), currentResult.getArgs());
             }
         }
 
@@ -681,10 +766,10 @@ public class SpellFilter{
             if(m.find()){
                 sortStruct[i] = new SortStruct(m.group(1), PROPERTY_RESOLVERS.get(m.group(1)), m.group(2).equalsIgnoreCase("DESC"));
                 if(sortStruct[i].resolver == null){
-                    throw new IllegalArgumentException("\"" + inputs[i] + "\" -> la propriété \"" + m.group(1) + "\" est inconnue");
+                    throw new LocalizedException(ERROR_CONDITION_UNKNOWN_PROPERTY, new String[]{inputs[i], m.group(1)});
                 }
             }else{
-                throw new IllegalArgumentException("Erreur de syntaxe dans le tri \"" + inputs[i] + "\"");
+                throw new LocalizedException(ERROR_SORT_SYNTAX, inputs[i]);
             }
         }
 
@@ -755,7 +840,7 @@ public class SpellFilter{
         for(int i=0; i < properties.length; i++){
             stringPropertyStruct[i] = new StringPropertyStruct(SpellFilter.STRING_PROPERTY_RESOLVERS.get(properties[i]));
             if(stringPropertyStruct[i].resolver == null){
-                throw new IllegalArgumentException("Erreur la propriété \"" + properties[i] + "\" est inconnue");
+                throw new LocalizedException(ERROR_UNKNOWN_PROPERTY, properties[i]);
             }
         }
 

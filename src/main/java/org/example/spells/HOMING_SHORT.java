@@ -13,7 +13,7 @@ public class HOMING_SHORT extends Spell{
     @Override
     protected void initialization(){
         this.name = "Short-range Homing";
-        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "short homing"};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "short range homing", "short homing"};
         this.imageFile = "homing_short.png";
         this.emote = staticEmote;
         this.description = "A projectile flies towards targets when near them";

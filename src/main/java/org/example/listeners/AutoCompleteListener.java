@@ -1,11 +1,13 @@
 package org.example.listeners;
 
+import org.example.commands.CommandLocal;
 import org.example.main.Global;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -67,13 +69,13 @@ public class AutoCompleteListener extends ListenerAdapter{
             return values;
         }
 
-        if(Arrays.asList(new String[]{"sorts", "propriete", "tri"}).contains(event.getFocusedOption().getName())){
+        if(Arrays.asList(new String[]{"spells", "property", "sort"}).contains(event.getFocusedOption().getName())){
             preInput = currentInput.substring(0, currentInput.lastIndexOf(',') + 1) + " ";
             currentInput = currentInput.substring(currentInput.lastIndexOf(',') + 1).strip();
         }
 
         switch(event.getFocusedOption().getName()){
-            case "propriete" -> {
+            case "property" -> {
                 if(currentInput.equals("")){
                     validOptions = Arrays.copyOf(Global.getSpellStringProperties(), Math.min(maxOutput, Global.getSpellStringProperties().length));
                 }else{
@@ -99,7 +101,7 @@ public class AutoCompleteListener extends ListenerAdapter{
                     values.add(preInput + validOption);
                 }
             }
-            case "tri" -> {
+            case "sort" -> {
                 if(currentInput.equals("")){
                     validOptions = Arrays.copyOf(Global.getSpellProperties(), Math.min(maxOutput, Global.getSpellProperties().length));
                 }else{
@@ -119,7 +121,7 @@ public class AutoCompleteListener extends ListenerAdapter{
                     values.add(preInput + validOption + postInput);
                 }
             }
-            case "sorts", "sort" -> {
+            case "spells", "spell" -> {
                 if(event.getName().equals("wisp")){
                     currentInput = currentInput.strip();
                     if(currentInput.equals("")){
@@ -153,7 +155,7 @@ public class AutoCompleteListener extends ListenerAdapter{
                     }
                 }
             }
-            case "nom" -> {
+            case "name" -> {
                 currentInput = currentInput.strip();
                 if(currentInput.equals("")){
                     values.addAll(Arrays.asList(Arrays.copyOf(Global.getAliasList(), Math.min(maxOutput, Global.getAliasList().length))));
@@ -164,16 +166,18 @@ public class AutoCompleteListener extends ListenerAdapter{
             case "cast_delay", "recharge_time" -> {
                 int intDelay = 0;
 
-                try{
-                    intDelay = Global.stringToDelay(currentInput);
-                }catch(Exception e){
-                    break;
+                if(!currentInput.equals("")){
+                    try{
+                        intDelay = Global.stringToDelay(event.getGuildLocale().toLocale(), currentInput);
+                    }catch(Exception e){
+                        break;
+                    }
                 }
 
                 values.add(String.format("%1$d f", intDelay).replace(',', '.'));
                 values.add(String.format("%1$3.2f s", intDelay/60.0).replace(',', '.'));
             }
-            case "couleur" -> {
+            case "color" -> {
                 values.add("gradient");
                 values.add("FFFFFF");
             }
@@ -197,22 +201,28 @@ public class AutoCompleteListener extends ListenerAdapter{
                         values.add("text");
                         values.add("text_file");
                     }
-                    case "liste_sorts" -> {
+                    case "list_spells" -> {
                         values.add("message");
                         values.add("csv");
                     }
-                    case "texte" -> {
+                    case "text" -> {
                         values.add("png");
                         values.add("svg");
                     }
                 }
             }
-            case "commande" -> {
+            case "command" -> {
                 currentInput = currentInput.strip();
-                Command[] commandList = currentInput.equals("") ? Global.getCommandList() : Global.getCommandList(currentInput);
+                Locale userLanguage = event.getUserLocale().toLocale();
+                Locale guildLanguage = event.getGuildLocale().toLocale();
+                CommandLocal[] commandLocalList = currentInput.equals("") ? Global.getCommandLocalList() : Global.getCommandLocalList(currentInput, userLanguage);
 
-                for(Command command : commandList){
-                    values.add(command.getName());
+                if(userLanguage != guildLanguage && commandLocalList.length == 0){
+                    commandLocalList = currentInput.equals("") ? Global.getCommandLocalList() : Global.getCommandLocalList(currentInput, guildLanguage);
+                }
+
+                for(CommandLocal commandLocal : commandLocalList){
+                    values.add(commandLocal.getName().get(event.getUserLocale().toLocale()));
                 }
 
                 return values;

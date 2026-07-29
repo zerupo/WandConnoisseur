@@ -96,7 +96,7 @@ public class MenuTree extends Menu{
     }
 
     // abstract
-    public ActionRow getActionRow(){
+    public ActionRow getActionRow(Locale language){
         MenuTree parent = this.getParent();
         int childCount = 0;
 
@@ -121,7 +121,7 @@ public class MenuTree extends Menu{
 
     public void replyHookEvent(SlashCommandInteractionEvent event){
         WebhookMessageEditAction<Message> callback = event.getHook().editOriginal(MessageEditData.fromEmbeds(this.toMessageEmbed()));
-        ActionRow actionRow = this.getActionRow();
+        ActionRow actionRow = this.getActionRow(event.getGuildLocale().toLocale());
 
         if(this.imageFile != null){
             callback.setFiles(FileUpload.fromData(this.imageFile, this.id + ".png"));
@@ -144,7 +144,7 @@ public class MenuTree extends Menu{
         }
 
         MessageEditCallbackAction callback = event.editMessageEmbeds(selectedNode.toMessageEmbed());
-        ActionRow actionRow = selectedNode.getActionRow();
+        ActionRow actionRow = selectedNode.getActionRow(event.getGuildLocale().toLocale());
 
         if(selectedNode.imageFile != null){
             try{

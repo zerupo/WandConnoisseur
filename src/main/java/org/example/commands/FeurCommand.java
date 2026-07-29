@@ -1,11 +1,16 @@
 package org.example.commands;
 
+import org.example.localization.LocalizedText;
+import org.example.main.Global;
+
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class FeurCommand extends Command{
+public class FeurCommand extends CommandLocal{
+    private static final LocalizedText COMMAND_FEUR = Global.getLanguageManager().get("COMMAND_FEUR");
+    private static final LocalizedText COMMAND_FEUR_DESCRIPTION = Global.getLanguageManager().get("COMMAND_FEUR_DESCRIPTION");
     public FeurCommand(){
-        this.name = "feur";
-        this.description = "Quoi ?";
+        this.name = COMMAND_FEUR;
+        this.description = COMMAND_FEUR_DESCRIPTION;
         this.commandOptions = new CommandOption[0];
     }
 

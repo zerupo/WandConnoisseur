@@ -1,5 +1,6 @@
 package org.example.commands;
 
+import org.example.localization.LocalizedText;
 import org.example.main.Global;
 import org.example.main.ImageBuilder;
 
@@ -11,16 +12,32 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
-public class TextCommand extends Command{
+public class TextCommand extends CommandLocal{
+    private static final LocalizedText COMMAND_TEXT = Global.getLanguageManager().get("COMMAND_TEXT");
+    private static final LocalizedText COMMAND_TEXT_DESCRIPTION = Global.getLanguageManager().get("COMMAND_TEXT_DESCRIPTION");
+    private static final LocalizedText COMMAND_TEXT_TEXT = Global.getLanguageManager().get("COMMAND_TEXT_TEXT");
+    private static final LocalizedText COMMAND_TEXT_TEXT_DESCRIPTION = Global.getLanguageManager().get("COMMAND_TEXT_TEXT_DESCRIPTION");
+    private static final LocalizedText COMMAND_TEXT_FONT = Global.getLanguageManager().get("COMMAND_TEXT_FONT");
+    private static final LocalizedText COMMAND_TEXT_FONT_DESCRIPTION = Global.getLanguageManager().get("COMMAND_TEXT_FONT_DESCRIPTION");
+    private static final LocalizedText COMMAND_TEXT_SIZE = Global.getLanguageManager().get("COMMAND_TEXT_SIZE");
+    private static final LocalizedText COMMAND_TEXT_SIZE_DESCRIPTION = Global.getLanguageManager().get("COMMAND_TEXT_SIZE_DESCRIPTION");
+    private static final LocalizedText COMMAND_TEXT_COLOR = Global.getLanguageManager().get("COMMAND_TEXT_COLOR");
+    private static final LocalizedText COMMAND_TEXT_COLOR_DESCRIPTION = Global.getLanguageManager().get("COMMAND_TEXT_COLOR_DESCRIPTION");
+    private static final LocalizedText COMMAND_TEXT_TYPE = Global.getLanguageManager().get("COMMAND_TEXT_TYPE");
+    private static final LocalizedText COMMAND_TEXT_TYPE_DESCRIPTION = Global.getLanguageManager().get("COMMAND_TEXT_TYPE_DESCRIPTION");
+    private static final LocalizedText ERROR_GENERATING_IMAGE = Global.getLanguageManager().get("ERROR_GENERATING_IMAGE");
+    private static final LocalizedText ERROR_GRADIENT_IMPLEMENTATION = Global.getLanguageManager().get("ERROR_GRADIENT_IMPLEMENTATION");
+    private static final LocalizedText ERROR_INVALID_TYPE = Global.getLanguageManager().get("ERROR_INVALID_TYPE");
+
     public TextCommand(){
-        this.name = "texte";
-        this.description = "Renvoie une image du texte sur fond transparent écrit avec une font de noita.";
+        this.name = COMMAND_TEXT;
+        this.description = COMMAND_TEXT_DESCRIPTION;
         this.commandOptions = new CommandOption[]{
-            new CommandOption(OptionType.STRING, "texte", "Texte à écrire.", true, false),
-            new CommandOption(OptionType.STRING, "font", "Font à utiliser pour le texte.", false, true),
-            new CommandOption(OptionType.NUMBER, "taille", "Taille de la font à utiliser pour le texte.", false, false),
-            new CommandOption(OptionType.STRING, "couleur", "Couleur du texte au format hexa RRGGBB(AA) (défaut: FFFFFFFF).", false, true),
-            new CommandOption(OptionType.STRING, "type", "format du texte (défaut: png).", false, true)
+            new CommandOption(OptionType.STRING, COMMAND_TEXT_TEXT, COMMAND_TEXT_TEXT_DESCRIPTION, true, false),
+            new CommandOption(OptionType.STRING, COMMAND_TEXT_FONT, COMMAND_TEXT_FONT_DESCRIPTION, false, true),
+            new CommandOption(OptionType.NUMBER, COMMAND_TEXT_SIZE, COMMAND_TEXT_SIZE_DESCRIPTION, false, false),
+            new CommandOption(OptionType.STRING, COMMAND_TEXT_COLOR, COMMAND_TEXT_COLOR_DESCRIPTION, false, true),
+            new CommandOption(OptionType.STRING, COMMAND_TEXT_TYPE, COMMAND_TEXT_TYPE_DESCRIPTION, false, true)
         };
     }
 
@@ -45,10 +62,10 @@ public class TextCommand extends Command{
 
     @Override
     public void executeSlash(SlashCommandInteractionEvent event){
-        OptionMapping textOption = event.getOption("texte");
+        OptionMapping textOption = event.getOption("text");
         OptionMapping fontOption = event.getOption("font");
-        OptionMapping sizeOption = event.getOption("taille");
-        OptionMapping colorOption = event.getOption("couleur");
+        OptionMapping sizeOption = event.getOption("size");
+        OptionMapping colorOption = event.getOption("color");
         OptionMapping typeOption = event.getOption("type");
         String texte = "";
         String fontTexte = "title";
@@ -62,7 +79,7 @@ public class TextCommand extends Command{
                 case "png" -> {}
                 case "svg" -> type = 1;
                 default -> {
-                    event.reply("\"" + typeOption.getAsString() + "\" n'est pas un type valide.").setEphemeral(true).queue();
+                    event.reply(ERROR_INVALID_TYPE.get(event, typeOption.getAsString())).setEphemeral(true).queue();
                     return;
                 }
             }
@@ -79,14 +96,13 @@ public class TextCommand extends Command{
         if(colorOption != null){
             if(colorOption.getAsString().equalsIgnoreCase("gradient")){
                 if(type == 1){
-                    event.reply("Le gradient n'est pas implémenté en svg.").setEphemeral(true).queue();
+                    event.reply(ERROR_GRADIENT_IMPLEMENTATION.get(event)).setEphemeral(true).queue();
                     return;
                 }
             }else{
                 Pattern p = Pattern.compile("^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$");
                 Matcher m = p.matcher(colorOption.getAsString().toLowerCase());
                 if(m.find()){
-                    System.out.println(colorOption.getAsString().toLowerCase() + " is matching, alpha = " + (m.group(4) != null));
                     if(m.group(4) != null){ // RGBA
                         color = new Color(Integer.parseInt(m.group(1), 16), Integer.parseInt(m.group(2), 16), Integer.parseInt(m.group(3), 16), Integer.parseInt(m.group(4), 16));
                     }else{ // RGB
@@ -148,7 +164,7 @@ public class TextCommand extends Command{
                 event.replyFiles(Global.bufferedImageToUpload(image, "text.png")).queue();
             }
         }catch(Exception e){
-            event.reply("Erreur lors de la création de l'image").setEphemeral(true).queue();
+            event.reply(ERROR_GENERATING_IMAGE.get(event)).setEphemeral(true).queue();
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }

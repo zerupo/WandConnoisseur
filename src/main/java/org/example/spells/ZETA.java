@@ -27,10 +27,6 @@ public class ZETA extends Spell{
         Wand wand = Global.getLastWand();
         Spell[] spells = wand == null ? new Spell[0] : wand.getSpells(false);
 
-        for(Spell spell : spells){
-            System.out.println(spell.getName());
-        }
-
         if(spells.length == 0){
             cardPool.draw(1, true, castState);
             return;

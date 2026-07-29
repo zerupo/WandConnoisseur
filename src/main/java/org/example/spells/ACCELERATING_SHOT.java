@@ -13,7 +13,7 @@ public class ACCELERATING_SHOT extends Spell{
     @Override
     protected void initialization(){
         this.name = "Accelerating shot";
-        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "accel"};
+        this.alias = new String[]{this.getClass().getSimpleName(), this.name, "accelerating", "accel"};
         this.imageFile = "accelerating_shot.png";
         this.emote = staticEmote;
         this.description = "Causes a projectile to accelerate as it flies";

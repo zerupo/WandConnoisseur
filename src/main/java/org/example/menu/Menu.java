@@ -1,5 +1,6 @@
 package org.example.menu;
 
+import java.util.Locale;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -36,7 +37,7 @@ public abstract class Menu{
     }
 
     // abstract
-    public abstract ActionRow getActionRow();
+    public abstract ActionRow getActionRow(Locale language);
     public abstract void replyHookEvent(SlashCommandInteractionEvent event);
 
     // to override

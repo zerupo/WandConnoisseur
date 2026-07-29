@@ -1,5 +1,7 @@
 package org.example.commands;
 
+import org.example.localization.LocalizedException;
+import org.example.localization.LocalizedText;
 import org.example.main.Global;
 import org.example.main.SpellFilter;
 import org.example.spells.*;
@@ -11,22 +13,40 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
-public class SpellListCommand extends Command{
+public class SpellListCommand extends CommandLocal{
+    private static final LocalizedText COMMAND_SPELL_LIST = Global.getLanguageManager().get("COMMAND_SPELL_LIST");
+    private static final LocalizedText COMMAND_SPELL_LIST_DESCRIPTION = Global.getLanguageManager().get("COMMAND_SPELL_LIST_DESCRIPTION");
+    private static final LocalizedText COMMAND_SPELL_LIST_PROPERTY = Global.getLanguageManager().get("COMMAND_SPELL_LIST_PROPERTY");
+    private static final LocalizedText COMMAND_SPELL_LIST_PROPERTY_DESCRIPTION = Global.getLanguageManager().get("COMMAND_SPELL_LIST_PROPERTY_DESCRIPTION");
+    private static final LocalizedText COMMAND_SPELL_LIST_CONDITION = Global.getLanguageManager().get("COMMAND_SPELL_LIST_CONDITION");
+    private static final LocalizedText COMMAND_SPELL_LIST_CONDITION_DESCRIPTION = Global.getLanguageManager().get("COMMAND_SPELL_LIST_CONDITION_DESCRIPTION");
+    private static final LocalizedText COMMAND_SPELL_LIST_SORT = Global.getLanguageManager().get("COMMAND_SPELL_LIST_SORT");
+    private static final LocalizedText COMMAND_SPELL_LIST_SORT_DESCRIPTION = Global.getLanguageManager().get("COMMAND_SPELL_LIST_SORT_DESCRIPTION");
+    private static final LocalizedText COMMAND_SPELL_LIST_TYPE = Global.getLanguageManager().get("COMMAND_SPELL_LIST_TYPE");
+    private static final LocalizedText COMMAND_SPELL_LIST_TYPE_DESCRIPTION = Global.getLanguageManager().get("COMMAND_SPELL_LIST_TYPE_DESCRIPTION");
+    private static final LocalizedText ERROR_CONDITION = Global.getLanguageManager().get("ERROR_CONDITION");
+    private static final LocalizedText ERROR_FILTER_EMPTY = Global.getLanguageManager().get("ERROR_FILTER_EMPTY");
+    private static final LocalizedText ERROR_GENERATING_FILE = Global.getLanguageManager().get("ERROR_GENERATING_FILE");
+    private static final LocalizedText ERROR_INVALID_TYPE = Global.getLanguageManager().get("ERROR_INVALID_TYPE");
+    private static final LocalizedText MESSAGE_ALL_SPELLS = Global.getLanguageManager().get("MESSAGE_ALL_SPELLS");
+    private static final LocalizedText MESSAGE_SORTED = Global.getLanguageManager().get("MESSAGE_SORTED");
+    private static final LocalizedText MESSAGE_SPELLS_FILTERED = Global.getLanguageManager().get("MESSAGE_SPELLS_FILTERED");
+
     public SpellListCommand(){
-        this.name = "liste_sorts";
-        this.description = "Renvoie la liste des sorts disponibles.";
+        this.name = COMMAND_SPELL_LIST;
+        this.description = COMMAND_SPELL_LIST_DESCRIPTION;
         this.commandOptions = new CommandOption[]{
-            new CommandOption(OptionType.STRING, "propriete", "Liste des propriétés à afficher, séparées par des \",\".", false, true),
-            new CommandOption(OptionType.STRING, "condition", "Condition de sélection des sorts.", false, true),
-            new CommandOption(OptionType.STRING, "tri", "Ordre d'affichage des sorts.", false, true),
-            new CommandOption(OptionType.STRING, "type", "format de la liste (défaut: message).", false, true)
+            new CommandOption(OptionType.STRING, COMMAND_SPELL_LIST_PROPERTY, COMMAND_SPELL_LIST_PROPERTY_DESCRIPTION, false, true),
+            new CommandOption(OptionType.STRING, COMMAND_SPELL_LIST_CONDITION, COMMAND_SPELL_LIST_CONDITION_DESCRIPTION, false, true),
+            new CommandOption(OptionType.STRING, COMMAND_SPELL_LIST_SORT, COMMAND_SPELL_LIST_SORT_DESCRIPTION, false, true),
+            new CommandOption(OptionType.STRING, COMMAND_SPELL_LIST_TYPE, COMMAND_SPELL_LIST_TYPE_DESCRIPTION, false, true)
         };
     }
 
     public void executeSlash(SlashCommandInteractionEvent event){
-        OptionMapping propertyOption = event.getOption("propriete");
+        OptionMapping propertyOption = event.getOption("property");
         OptionMapping filterOption = event.getOption("condition");
-        OptionMapping sortOption = event.getOption("tri");
+        OptionMapping sortOption = event.getOption("sort");
         OptionMapping typeOption = event.getOption("type");
         String propertyFilter = "";
         String filter = "";
@@ -42,7 +62,7 @@ public class SpellListCommand extends Command{
                 case "message" -> {}
                 case "csv" -> type = 1;
                 default -> {
-                    event.reply("\"" + typeOption.getAsString() + "\" n'est pas un type valide.").setEphemeral(true).queue();
+                    event.reply(ERROR_INVALID_TYPE.get(event, typeOption.getAsString())).setEphemeral(true).queue();
                     return;
                 }
             }
@@ -60,33 +80,33 @@ public class SpellListCommand extends Command{
         if(filterOption != null){
             try{
                 spellList = spellFilter.filter(spellList, filter);
-            }catch(IllegalArgumentException e){
-                event.reply(e.getMessage()).setEphemeral(true).queue();
+            }catch(LocalizedException e){
+                event.reply(ERROR_CONDITION.get(event) + e.toString(event.getGuildLocale().toLocale())).setEphemeral(true).queue();
                 return;
             }
             if(spellList.length == 0){
-                event.reply("Aucun sort de respect la condition `" + filter + "`").setEphemeral(true).queue();
+                event.reply(ERROR_FILTER_EMPTY.get(event, filter)).setEphemeral(true).queue();
                 return;
             }
-            result.append("Liste des sorts respectant la condition `").append(filter).append("`");
+            result.append(MESSAGE_SPELLS_FILTERED.get(event, filter));
         }else{
-            result.append("Liste de tout les sorts disponibles");
+            result.append(MESSAGE_ALL_SPELLS.get(event));
         }
 
         if(sortOption != null){
             try{
                 spellList = spellFilter.sort(spellList, sort);
-            }catch(IllegalArgumentException e){
-                event.reply(e.getMessage()).setEphemeral(true).queue();
+            }catch(LocalizedException e){
+                event.reply(e.toString(event.getGuildLocale().toLocale())).setEphemeral(true).queue();
                 return;
             }
-            result.append(", triée par `").append(sort).append("`");
+            result.append(MESSAGE_SORTED.get(event, sort));
         }
         if(propertyOption != null){
             try{
                 properties = spellFilter.getStringProperties(spellList, propertyFilter);
-            }catch(IllegalArgumentException e){
-                event.reply(e.getMessage()).setEphemeral(true).queue();
+            }catch(LocalizedException e){
+                event.reply(e.toString(event.getGuildLocale().toLocale())).setEphemeral(true).queue();
                 return;
             }
         }
@@ -141,7 +161,7 @@ public class SpellListCommand extends Command{
                     event.getHook().editOriginal(result.toString()).setFiles(Global.byteToUpload(out.toByteArray(), "spell_list.csv")).queue();
                 }catch(Exception e){
                     System.out.println("error writing the file \"" + "spell_list_.csv" + "\" " + e.getMessage());
-                    event.getHook().editOriginal(result + "\n\nErreur lors de la génération du fichier." ).queue();
+                    event.getHook().editOriginal(result + "\n\n" + ERROR_GENERATING_FILE.get(event)).queue();
                 }
             }
         }

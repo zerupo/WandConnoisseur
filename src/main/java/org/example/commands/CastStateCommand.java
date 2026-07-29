@@ -1,5 +1,6 @@
 package org.example.commands;
 
+import org.example.localization.LocalizedText;
 import org.example.main.CastState;
 import org.example.main.Global;
 import org.example.main.Wand;
@@ -11,20 +12,43 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.utils.FileUpload;
 
-public class CastStateCommand extends Command{
+public class CastStateCommand extends CommandLocal{
+    private static final LocalizedText COMMAND_CAST_STATE = Global.getLanguageManager().get("COMMAND_CAST_STATE");
+    private static final LocalizedText COMMAND_CAST_STATE_DESCRIPTION = Global.getLanguageManager().get("COMMAND_CAST_STATE_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_SPELLS = Global.getLanguageManager().get("COMMAND_GENERAL_SPELLS");
+    private static final LocalizedText COMMAND_GENERAL_SPELLS_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_SPELLS_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_DRAW = Global.getLanguageManager().get("COMMAND_GENERAL_DRAW");
+    private static final LocalizedText COMMAND_GENERAL_DRAW_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_DRAW_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_CAST_DELAY = Global.getLanguageManager().get("COMMAND_GENERAL_CAST_DELAY");
+    private static final LocalizedText COMMAND_GENERAL_CAST_DELAY_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_CAST_DELAY_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_RECHARGE_TIME = Global.getLanguageManager().get("COMMAND_GENERAL_RECHARGE_TIME");
+    private static final LocalizedText COMMAND_GENERAL_RECHARGE_TIME_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_RECHARGE_TIME_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_MANA_MAX = Global.getLanguageManager().get("COMMAND_GENERAL_MANA_MAX");
+    private static final LocalizedText COMMAND_GENERAL_MANA_MAX_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_MANA_MAX_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_MANA_REGEN = Global.getLanguageManager().get("COMMAND_GENERAL_MANA_REGEN");
+    private static final LocalizedText COMMAND_GENERAL_MANA_REGEN_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_MANA_REGEN_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_SPREAD = Global.getLanguageManager().get("COMMAND_GENERAL_SPREAD");
+    private static final LocalizedText COMMAND_GENERAL_SPREAD_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_SPREAD_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_SPEED = Global.getLanguageManager().get("COMMAND_GENERAL_SPEED");
+    private static final LocalizedText COMMAND_GENERAL_SPEED_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_SPEED_DESCRIPTION");
+    private static final LocalizedText COMMAND_CAST_STATE_TYPE = Global.getLanguageManager().get("COMMAND_CAST_STATE_TYPE");
+    private static final LocalizedText COMMAND_CAST_STATE_TYPE_DESCRIPTION = Global.getLanguageManager().get("COMMAND_CAST_STATE_TYPE_DESCRIPTION");
+    private static final LocalizedText ERROR_GENERATING_IMAGE = Global.getLanguageManager().get("ERROR_GENERATING_IMAGE");
+    private static final LocalizedText ERROR_INVALID_TYPE = Global.getLanguageManager().get("ERROR_INVALID_TYPE");
+
     public CastStateCommand(){
-        this.name = "cast_state";
-        this.description = "Renvoie une image ou un menu contenant les différent cast states.";
+        this.name = COMMAND_CAST_STATE;
+        this.description = COMMAND_CAST_STATE_DESCRIPTION;
         this.commandOptions = new CommandOption[]{
-            new CommandOption(OptionType.STRING, "sorts", "Sorts à séparer par des \",\", précéder par 0: max: ou inf: pour modifier les charges (défaut: inf:).", true, true),
-            new CommandOption(OptionType.INTEGER, "draw", "Nombre de sorts/lancer de la baguette (défaut: 1).", false, false),
-            new CommandOption(OptionType.STRING, "cast_delay", "Délais des sorts en frames ou secondes, ajouter \"f\" ou \"s\" à la fin pour préciser (défaut: 0).", false, true),
-            new CommandOption(OptionType.STRING, "recharge_time", "Temps de recharge de la baguette en frames ou secondes, ajouter \"f\" ou \"s\" à la fin (défaut: 0).", false, true),
-            new CommandOption(OptionType.INTEGER, "mana_max", "Mana max de la baguette (défaut: 1000000).", false, false),
-            new CommandOption(OptionType.INTEGER, "mana_regen", "Régénération de mana de la baguette en mana/sec (défaut: 1000000).", false, false),
-            new CommandOption(OptionType.NUMBER, "spread", "Dispersion de la baguette (défaut: 0.0).", false, false),
-            new CommandOption(OptionType.NUMBER, "speed", "Multiplicateur caché de la vitesse des projectiles (défaut: 1.0).", false, false),
-            new CommandOption(OptionType.STRING, "type", "format du cast state (défaut: png).", false, true)
+            new CommandOption(OptionType.STRING, COMMAND_GENERAL_SPELLS, COMMAND_GENERAL_SPELLS_DESCRIPTION, true, true),
+            new CommandOption(OptionType.INTEGER, COMMAND_GENERAL_DRAW, COMMAND_GENERAL_DRAW_DESCRIPTION, false, false),
+            new CommandOption(OptionType.STRING, COMMAND_GENERAL_CAST_DELAY, COMMAND_GENERAL_CAST_DELAY_DESCRIPTION, false, true),
+            new CommandOption(OptionType.STRING, COMMAND_GENERAL_RECHARGE_TIME, COMMAND_GENERAL_RECHARGE_TIME_DESCRIPTION, false, true),
+            new CommandOption(OptionType.INTEGER, COMMAND_GENERAL_MANA_MAX, COMMAND_GENERAL_MANA_MAX_DESCRIPTION, false, false),
+            new CommandOption(OptionType.INTEGER, COMMAND_GENERAL_MANA_REGEN, COMMAND_GENERAL_MANA_REGEN_DESCRIPTION, false, false),
+            new CommandOption(OptionType.NUMBER, COMMAND_GENERAL_SPREAD, COMMAND_GENERAL_SPREAD_DESCRIPTION, false, false),
+            new CommandOption(OptionType.NUMBER, COMMAND_GENERAL_SPEED, COMMAND_GENERAL_SPEED_DESCRIPTION, false, false),
+            new CommandOption(OptionType.STRING, COMMAND_CAST_STATE_TYPE, COMMAND_CAST_STATE_TYPE_DESCRIPTION, false, true)
         };
     }
 
@@ -40,7 +64,7 @@ public class CastStateCommand extends Command{
                 case "svg_light" -> type = 2;
                 case "menu" -> type = 3;
                 default -> {
-                    event.reply("\"" + typeOption.getAsString() + "\" n'est pas un type valide.").setEphemeral(true).queue();
+                    event.reply(ERROR_INVALID_TYPE.get(event, typeOption.getAsString())).setEphemeral(true).queue();
                     return;
                 }
             }
@@ -70,7 +94,7 @@ public class CastStateCommand extends Command{
 
             MenuTree menu = new MenuTree(event.getId(), "Cast state", "", Global.JPanelToFile(wand.getWandJPanel(), Global.getPathAutoDelete() + "wand_" + fileName), spellsEmote.toString());
             for(int i=0; i < castStates.length; i++){
-                menu.addChild(castStates[i].toMenuTree("",(i + 1) + ") Cast state initial"));
+                menu.addChild(castStates[i].toMenuTree("",(i + 1) + ") Initial cast state"));
             }
 
             Global.menuManager.add(menu);
@@ -119,7 +143,7 @@ public class CastStateCommand extends Command{
             }
 
             if(!eventReplied){
-                event.getHook().editOriginal("Erreur lors de la création de l'image").queue();
+                event.getHook().editOriginal(ERROR_GENERATING_IMAGE.get(event)).queue();
             }
         }
 
