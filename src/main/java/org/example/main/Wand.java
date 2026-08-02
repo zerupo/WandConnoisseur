@@ -119,7 +119,7 @@ public class Wand{
     }
 
     public Spell[] getSpells(boolean includeNull){
-        if(!includeNull){
+        if(includeNull){
             return this.spells;
         }
 
@@ -221,6 +221,16 @@ public class Wand{
             return false;
         }else{
             return putSpell(spell, slot);
+        }
+    }
+
+    public void setSpells(Spell[] spells){
+        for(int i=0; i < this.spells.length; i++){
+            if(i < spells.length){
+                this.spells[i] = spells[i];
+            }else{
+                this.spells[i] = null;
+            }
         }
     }
 
@@ -429,6 +439,15 @@ public class Wand{
         InfoResult result = new InfoResult(null, new ImageBuilder(new Color(0, 0, 0)), null, null, null);
         this.getAllInfo(allCasts, result, false);
         return result.flowchartImage.saveAsSVG(filename, embed);
+    }
+
+    public boolean setSprite(String path){
+        if(this.wandJPanel == null){
+            //this.createLayout();
+            this.wandJPanel = new WandJPanel(this);
+        }
+
+        return this.wandJPanel.setWandSprite(path);
     }
 
     public boolean cast(){

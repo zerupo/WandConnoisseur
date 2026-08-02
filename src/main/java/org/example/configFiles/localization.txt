@@ -1,6 +1,6 @@
 COMMAND_GENERAL_SPELLS;spells;sorts
 COMMAND_GENERAL_SPELLS_DESCRIPTION;Spells separated by ",", prefix with 0: max: or inf: to override its charges (default: inf:).;Sorts séparés par des ",", préfixez par 0: max: ou inf: pour modifier les charges (défaut: inf:).
-COMMAND_GENERAL_DRAW;draw;pioche
+COMMAND_GENERAL_DRAW;draw;draw
 COMMAND_GENERAL_DRAW_DESCRIPTION;Number of spells/cast of the wand (default: 1).;Nombre de sorts/lancer de la baguette (défaut: 1).
 COMMAND_GENERAL_CAST_DELAY;cast_delay;delais_sort
 COMMAND_GENERAL_CAST_DELAY_DESCRIPTION;Cast delay in frames or seconds, add "f" or "s" at the end to specify (default: 0).;Délais des sorts en frames ou secondes, ajouter "f" ou "s" à la fin pour préciser (défaut: 0).
@@ -14,6 +14,8 @@ COMMAND_GENERAL_SPREAD;spread;dispersion
 COMMAND_GENERAL_SPREAD_DESCRIPTION;Wand spread (default: 0.0).;Dispersion de la baguette (défaut: 0.0).
 COMMAND_GENERAL_SPEED;speed;vitesse
 COMMAND_GENERAL_SPEED_DESCRIPTION;Hidden projectile speed multiplier (default: 1.0).;Multiplicateur caché de la vitesse des projectiles (défaut: 1.0).
+COMMAND_GENERAL_FILE;file;fichier
+COMMAND_GENERAL_FILE_DESCRIPTION;Xml file containing the wand's information (player.xml or located in bones_new).;Fichier xml contenant les information de la baguette (player.xml ou situé dans bones_new).
 COMMAND_CAST_STATE;cast_state;cast_state
 COMMAND_CAST_STATE_DESCRIPTION;Returns an image or a menu containing the different cast states.;Renvoie une image ou un menu contenant les différent cast states.
 COMMAND_CAST_STATE_TYPE;type;type
@@ -94,7 +96,10 @@ MESSAGE_SPELLS_FILTERED;List of spells matching condition `%0`;Liste des sorts r
 MESSAGE_ALL_SPELLS;List of all available spells;Liste de tout les sorts disponibles
 MESSAGE_SORTED;, sorted by `%0`;, triée par `%0`
 ERROR_GENERATING_FILE;Error while generating file.;Erreur lors de la génération du fichier.
+ERROR_READING_FILE;Error while reading the file.;Erreur lors de la lecture du fichier.
+ERROR_XML_NO_WAND;The provided xml file does not contain a wand.;Le fichier xml fourni ne contient pas de baguette.
 ERROR_GENERATING_IMAGE;Error while generating image.;Erreur lors de la génération de l'image.
+ERROR_WRONG_FILE_TYPE;You have provided a file in %0 format, the required format is %1.;Vous avez fourni un fichier au format %0, le format requis est %1.
 ERROR_UNKNOWN_SPELL_LIFETIME;Unknown spell "%0". If you don't provide a valid spell, you must enter the lifetime manually.;Sort "%0" inconnu. Si vous ne fournissez aucun sort valide, vous devez saisir le lifetime manuellement.
 MESSAGE_WISP_SPELL;Searching wisps for spell %0;Recherche de wisps pour le sort %0
 MESSAGE_WISP_LIFETIME;Searching wisps for lifetime;Recherche de wisps pour le lifetime

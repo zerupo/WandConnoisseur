@@ -27,10 +27,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class Global{
     private static final LanguageManager languageManager = new LanguageManager();
@@ -39,6 +45,9 @@ public class Global{
     private static final LocalizedText ERROR_UNKNOWN_SPELL = Global.getLanguageManager().get("ERROR_UNKNOWN_SPELL");
     private static final LocalizedText ERROR_UNKNOWN_SPELLS = Global.getLanguageManager().get("ERROR_UNKNOWN_SPELLS");
     private static final LocalizedText ERROR_MESSAGE_TOO_LONG = Global.getLanguageManager().get("ERROR_MESSAGE_TOO_LONG");
+    private static final LocalizedText ERROR_READING_FILE = Global.getLanguageManager().get("ERROR_READING_FILE");
+    private static final LocalizedText ERROR_XML_NO_WAND = Global.getLanguageManager().get("ERROR_XML_NO_WAND");
+    private static final LocalizedText ERROR_WRONG_FILE_TYPE = Global.getLanguageManager().get("ERROR_WRONG_FILE_TYPE");
     public enum DamageType{PROJECTILE, MELEE, EXPLOSION, ELECTRICITY, FIRE, DRILL, SLICE, ICE, HEALING, PHYSICS_HIT, RADIOACTIVE, POISON, OVEREATING, CURSE, HOLY;
         public String getDisplayName(){
             String result = name().toLowerCase().replace('_', ' ');
@@ -97,6 +106,7 @@ public class Global{
     private static final Font glyphFont = loadFont("./src/main/java/org/example/GlyphFont.ttf");
     private static final Pattern delayPattern = Pattern.compile("^ *([+-]?[0-9]+(|\\.[0-9]+)?)(?: *(|[fs]))? *$");
     private static final Pattern spellPattern = Pattern.compile("^(?:(inf|max|[0-9]+):)?([^:]*)(?::([0-9]+))?$");
+    private static final Pattern wandSpritePattern = Pattern.compile("^wand_[0-9]{4}$");
     public static final MenuManager menuManager = new MenuManager();
     private static long currentFrame = 0;
     private static final RandomGenerator randomGenerator = new RandomGenerator();
@@ -477,6 +487,40 @@ public class Global{
         }
     }
 
+    public static Node getWandNode(Document doc){
+        return getWandNode(doc.getChildNodes());
+    }
+
+    public static Node getWandNode(NodeList children){
+        for(int i=0; i < children.getLength(); i++){
+            Node currentNode = children.item(i);
+            if(currentNode.getNodeType() != Node.ELEMENT_NODE){
+                continue;
+            }
+            Element currentElement = (Element)currentNode;
+            if(currentElement.getTagName().equals("Entity") && Arrays.asList(currentElement.getAttribute("tags").split(",")).contains("wand")){
+                return currentNode;
+            }
+            Node subNode = getWandNode(currentNode.getChildNodes());
+            if(subNode != null){
+                return subNode;
+            }
+        }
+
+        return null;
+    }
+
+    public static Spell getOrNull(ArrayList<Spell> list, int index){
+        return index >= 0 && index < list.size() ? list.get(index) : null;
+    }
+
+    public static void setOrExpand(ArrayList<Spell> list, int index, Spell spell) {
+        while(list.size() <= index){
+            list.add(null);
+        }
+        list.set(index, spell);
+    }
+
     public static Wand slashInteractionToWand(SlashCommandInteractionEvent event){
         SpellList spellList = Global.getSpellList();
         OptionMapping spellsOption = event.getOption("spells");
@@ -487,6 +531,7 @@ public class Global{
         OptionMapping manaRegenOption = event.getOption("mana_regen");
         OptionMapping spreadOption = event.getOption("spread");
         OptionMapping speedOption = event.getOption("speed");
+        OptionMapping fileOption = event.getOption("file");
         String spellsInput = "";
         StringBuilder unknownSpells = new StringBuilder();
         boolean severalUnknown = false;
@@ -495,20 +540,166 @@ public class Global{
         int rechargeTime = 0;
         int manaMax = 1000000;
         int manaRegen = 1000000;
+        int nb_slot = 0;
         double spread = 0.0;
         double speed = 1.0;
-        Spell currentSpell = null;
+        String sprite = "";
+        Spell currentSpell;
         int currentSpellCount = 1;
+        ArrayList<Spell> alwaysCasts = new ArrayList<>();
         ArrayList<Spell> spells = new ArrayList<>();
         String[] spellsString;
         Wand wand;
         Matcher m;
 
+        if(fileOption != null){
+            try{
+                Message.Attachment attachment = fileOption.getAsAttachment();
+                String currentString = attachment.getFileExtension();
+
+                if(currentString == null || !currentString.equalsIgnoreCase("xml")){
+                    event.reply(ERROR_WRONG_FILE_TYPE.get(event, new String[]{currentString == null ? "" : currentString, "xml"})).setEphemeral(true).queue();
+                    return null;
+                }
+
+                Node wandNode = getWandNode(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(attachment.getProxy().download().join()));
+                if(wandNode == null){
+                    event.reply(ERROR_XML_NO_WAND.get(event)).setEphemeral(true).queue();
+                    return null;
+                }
+
+                NodeList children = wandNode.getChildNodes();
+                for(int i=0; i < children.getLength(); i++){
+                    Node currentNode = children.item(i);
+                    if(currentNode.getNodeType() != Node.ELEMENT_NODE){
+                        continue;
+                    }
+                    Element element = (Element)currentNode;
+                    String indent = "    ";
+                    switch(element.getTagName()){
+                        case "AbilityComponent" -> {
+                            currentString = element.getAttribute("mana_max");
+                            if(!currentString.equals("")){
+                                try{manaMax = (int)Math.floor(Double.parseDouble(currentString));}catch(Exception ignored){}
+                            }
+                            currentString = element.getAttribute("mana_charge_speed");
+                            if(!currentString.equals("")){
+                                try{manaRegen = (int)Math.floor(Double.parseDouble(currentString));}catch(Exception ignored){}
+                            }
+                            currentString = element.getAttribute("sprite_file");
+                            if(!currentString.equals("")){
+                                sprite = currentString.replaceFirst("^.*[/\\\\]", "").replaceFirst("\\.[^.]*$", "");
+                                sprite = "./src/main/java/org/example/image/wand/" + (wandSpritePattern.matcher(sprite).matches() ? "" : "custom/") + sprite + ".png";
+                            }
+
+                            NodeList statNodes = currentNode.getChildNodes();
+                            for(int j=0; j < statNodes.getLength(); j++){
+                                Node statNode = statNodes.item(j);
+                                if(statNode.getNodeType() != Node.ELEMENT_NODE){
+                                    continue;
+                                }
+                                Element statElement = (Element) statNode;
+                                switch(statElement.getTagName()){
+                                    case "gunaction_config" -> {
+                                        currentString = statElement.getAttribute("spread_degrees");
+                                        if(!currentString.equals("")){
+                                            try{spread = Double.parseDouble(currentString);}catch(Exception ignored){}
+                                        }
+                                        currentString = statElement.getAttribute("speed_multiplier");
+                                        if(!currentString.equals("")){
+                                            try{speed = Double.parseDouble(currentString);}catch(Exception ignored){}
+                                        }
+                                        currentString = statElement.getAttribute("fire_rate_wait");
+                                        if(!currentString.equals("")){
+                                            try{castDelay = (int)Math.floor(Double.parseDouble(currentString));}catch(Exception ignored){}
+                                        }
+                                    }
+                                    case "gun_config" -> {
+                                        currentString = statElement.getAttribute("actions_per_round");
+                                        if(!currentString.equals("")){
+                                            try{draw = (int)Math.floor(Double.parseDouble(currentString));}catch(Exception ignored){}
+                                        }
+                                        currentString = statElement.getAttribute("reload_time");
+                                        if(!currentString.equals("")){
+                                            try{rechargeTime = (int)Math.floor(Double.parseDouble(currentString));}catch(Exception ignored){}
+                                        }
+                                        currentString = statElement.getAttribute("deck_capacity");
+                                        if(!currentString.equals("")){
+                                            try{nb_slot = (int)Math.floor(Double.parseDouble(currentString));}catch(Exception ignored){}
+                                        }
+
+                                        //System.out.println(indent + "    \033[0;31mshuffle_deck_when_empty\u001b[0;0m=\"" + statElement.getAttribute("shuffle_deck_when_empty") + "\"");
+                                    }
+                                }
+                            }
+                        }
+                        case "Entity" -> {
+                            if(spellsOption != null || !Arrays.asList(element.getAttribute("tags").split(",")).contains("card_action")){
+                                break;
+                            }
+
+                            NodeList spellNodes = currentNode.getChildNodes();
+                            boolean alwaysCast = false;
+                            int slot = 0;
+                            currentSpell = null;
+
+                            for(int j=0; j < spellNodes.getLength(); j++){
+                                Node spellNode = spellNodes.item(j);
+                                if(spellNode.getNodeType() != Node.ELEMENT_NODE){
+                                    continue;
+                                }
+                                Element spellElement = (Element) spellNode;
+                                switch(spellElement.getTagName()){
+                                    case "ItemActionComponent" -> {
+                                        currentString = spellElement.getAttribute("action_id");
+                                        currentSpell = spellList.getSpell(currentString);
+                                        if(currentSpell == null){
+                                            System.out.println("unknown spell: " + currentString);
+                                            break;
+                                        }
+                                    }
+                                    case "ItemComponent" -> {
+                                        alwaysCast = spellElement.getAttribute("permanently_attached").equals("1");
+                                        currentString = spellElement.getAttribute("inventory_slot.x");
+                                        if(!currentString.equals("")){
+                                            try{slot = (int)Math.floor(Double.parseDouble(currentString));}catch(Exception ignored){}
+                                        }
+                                    }
+                                }
+                            }
+                            if(currentSpell != null){
+                                if(alwaysCast){
+                                    alwaysCasts.add(currentSpell);
+                                }else{
+                                    while(getOrNull(spells, slot) != null){
+                                        slot++;
+                                    }
+                                    setOrExpand(spells, slot, currentSpell);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for(int i=0; i < spells.size() && spells.size() > nb_slot; i++){
+                    if(spells.get(i) == null){
+                        spells.remove(i);
+                        i--;
+                    }
+                }
+                while(spells.size() < nb_slot){
+                    spells.add(null);
+                }
+            }catch(Exception e){
+                System.out.println("Error reading xml: " + e.getMessage() + "\n");
+                e.printStackTrace();
+                event.reply(ERROR_READING_FILE.get(event)).setEphemeral(true).queue();
+                return null;
+            }
+        }
+
         if(drawOption != null){
             draw = Math.max(drawOption.getAsInt(), 1);
-        }
-        if(spellsOption != null){
-            spellsInput = spellsOption.getAsString();
         }
         if(castDelayOption != null){
             try{
@@ -539,40 +730,44 @@ public class Global{
             speed = speedOption.getAsDouble();
         }
 
-        spellsString = spellsInput.split(",");
-        for(int i=0; i < spellsString.length; i++){
-            spellsString[i] = spellsString[i].trim().toLowerCase();
-        }
+        if(spellsOption != null){
+            spellsInput = spellsOption.getAsString();
+            spellsString = spellsInput.split(",");
 
-        for(String s : spellsString){
-            m = spellPattern.matcher(s);
-            if(m.find()){
-                currentSpell = spellList.getSpell(m.group(2));
-                if(currentSpell != null){
-                    switch((m.group(1) != null) ? m.group(1) : "inf"){
-                        case "inf" -> currentSpell.makeInfinite();
-                        case "max" -> currentSpell.refillCharges();
-                        default -> currentSpell.setCharges(Integer.parseInt(m.group(1)));
-                    }
-                }
-                currentSpellCount = (m.group(3) != null) ? Integer.parseInt(m.group(3)) : 1;
-            }else{
-                currentSpell = null;
+            for(int i=0; i < spellsString.length; i++){
+                spellsString[i] = spellsString[i].trim().toLowerCase();
             }
-            if(currentSpell != null){
-                spells.add(currentSpell);
-                for(int j=1; j < currentSpellCount; j++){
-                    spells.add(currentSpell.clone());
-                }
-            }else{
-                if(unknownSpells.isEmpty()){
-                    unknownSpells.append(s);
-                }else{
-                    if(!severalUnknown){
-                        unknownSpells.insert(0, "\"").append("\"");
+
+            for(String s : spellsString){
+                m = spellPattern.matcher(s);
+                if(m.find()){
+                    currentSpell = spellList.getSpell(m.group(2));
+                    if(currentSpell != null){
+                        switch((m.group(1) != null) ? m.group(1) : "inf"){
+                            case "inf" -> currentSpell.makeInfinite();
+                            case "max" -> currentSpell.refillCharges();
+                            default -> currentSpell.setCharges(Integer.parseInt(m.group(1)));
+                        }
                     }
-                    severalUnknown = true;
-                    unknownSpells.append(", \"").append(s).append("\"");
+                    currentSpellCount = (m.group(3) != null) ? Integer.parseInt(m.group(3)) : 1;
+                }else{
+                    currentSpell = null;
+                }
+                if(currentSpell != null){
+                    spells.add(currentSpell);
+                    for(int j=1; j < currentSpellCount; j++){
+                        spells.add(currentSpell.clone());
+                    }
+                }else{
+                    if(unknownSpells.isEmpty()){
+                        unknownSpells.append(s);
+                    }else{
+                        if(!severalUnknown){
+                            unknownSpells.insert(0, "\"").append("\"");
+                        }
+                        severalUnknown = true;
+                        unknownSpells.append(", \"").append(s).append("\"");
+                    }
                 }
             }
         }
@@ -587,9 +782,11 @@ public class Global{
         }
 
         wand = new Wand(draw, castDelay, rechargeTime, manaMax, manaRegen, spells.size(), spread, speed);
-        for(Spell spell : spells){
-            wand.putSpellEnd(spell);
+        if(!sprite.equals("")){
+            wand.setSprite(sprite);
         }
+        wand.setSpells(spells.toArray(new Spell[0]));
+
         return wand;
     }
 

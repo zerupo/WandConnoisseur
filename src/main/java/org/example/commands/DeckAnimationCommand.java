@@ -29,18 +29,21 @@ public class DeckAnimationCommand extends CommandLocal{
     private static final LocalizedText COMMAND_GENERAL_SPREAD_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_SPREAD_DESCRIPTION");
     private static final LocalizedText COMMAND_GENERAL_SPEED = Global.getLanguageManager().get("COMMAND_GENERAL_SPEED");
     private static final LocalizedText COMMAND_GENERAL_SPEED_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_SPEED_DESCRIPTION");
+    private static final LocalizedText COMMAND_GENERAL_FILE = Global.getLanguageManager().get("COMMAND_GENERAL_FILE");
+    private static final LocalizedText COMMAND_GENERAL_FILE_DESCRIPTION = Global.getLanguageManager().get("COMMAND_GENERAL_FILE_DESCRIPTION");
     public DeckAnimationCommand(){
         this.name = COMMAND_DECK_ANIMATION;
         this.description = COMMAND_DECK_ANIMATION_DESCRIPTION;
         this.commandOptions = new CommandOption[]{
-            new CommandOption(OptionType.STRING, COMMAND_GENERAL_SPELLS, COMMAND_GENERAL_SPELLS_DESCRIPTION, true, true),
+            new CommandOption(OptionType.STRING, COMMAND_GENERAL_SPELLS, COMMAND_GENERAL_SPELLS_DESCRIPTION, false, true),
             new CommandOption(OptionType.INTEGER, COMMAND_GENERAL_DRAW, COMMAND_GENERAL_DRAW_DESCRIPTION, false, false),
             new CommandOption(OptionType.STRING, COMMAND_GENERAL_CAST_DELAY, COMMAND_GENERAL_CAST_DELAY_DESCRIPTION, false, true),
             new CommandOption(OptionType.STRING, COMMAND_GENERAL_RECHARGE_TIME, COMMAND_GENERAL_RECHARGE_TIME_DESCRIPTION, false, true),
             new CommandOption(OptionType.INTEGER, COMMAND_GENERAL_MANA_MAX, COMMAND_GENERAL_MANA_MAX_DESCRIPTION, false, false),
             new CommandOption(OptionType.INTEGER, COMMAND_GENERAL_MANA_REGEN, COMMAND_GENERAL_MANA_REGEN_DESCRIPTION, false, false),
             new CommandOption(OptionType.NUMBER, COMMAND_GENERAL_SPREAD, COMMAND_GENERAL_SPREAD_DESCRIPTION, false, false),
-            new CommandOption(OptionType.NUMBER, COMMAND_GENERAL_SPEED, COMMAND_GENERAL_SPEED_DESCRIPTION, false, false)
+            new CommandOption(OptionType.NUMBER, COMMAND_GENERAL_SPEED, COMMAND_GENERAL_SPEED_DESCRIPTION, false, false),
+            new CommandOption(OptionType.ATTACHMENT, COMMAND_GENERAL_FILE, COMMAND_GENERAL_FILE_DESCRIPTION, false, false)
         };
     }
 

@@ -5,6 +5,8 @@ import org.example.spells.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -54,6 +56,19 @@ public class WandJPanel{
             this.createStatJPanel();
         }
         return this.statJPanel;
+    }
+
+    // setters
+
+    public boolean setWandSprite(String path){
+        BufferedImage image = Global.loadImage(path);
+
+        if(image == null){
+            return false;
+        }
+        this.wandSprite = Global.rotateImageByDegrees(Global.scaleImage(image, 2*this.imageScaleFactor), -90);
+
+        return true;
     }
 
     private void createBasicJPanel(){
@@ -108,6 +123,12 @@ public class WandJPanel{
         int maxWidth = 0;
         int maxWidth2 = 0;
         Graphics2D g2d;
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setDecimalSeparator('.');
+        dfs.setGroupingSeparator(' ');
+        DecimalFormat df = new DecimalFormat("0.##", dfs);
+        df.setMinimumFractionDigits(1);
+        df.setMaximumFractionDigits(340);
 
         if(this.wandSprite == null){
             this.wandSprite = Global.rotateImageByDegrees(Global.scaleImage(Global.loadImage(Global.getWandList().getSprite(this.wand)), 2*this.imageScaleFactor), -90);
@@ -127,8 +148,8 @@ public class WandJPanel{
         statValues[4] = String.valueOf(this.wand.getMaxMana());
         statValues[5] = String.valueOf(this.wand.getRegenMana());
         statValues[6] = String.valueOf(this.wand.getNbSlot());
-        statValues[7] = String.format("%1$2.1f DEG", this.wand.getSpread()).replace(',', '.');
-        statValues[8] = String.format("x%1$2.1f", this.wand.getSpeed()).replace(',', '.');
+        statValues[7] = df.format(this.wand.getSpread()) + " DEG";
+        statValues[8] = "x" + df.format(this.wand.getSpeed());
 
         Graphics2D gTemp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
         fm = gTemp.getFontMetrics(font);
@@ -190,15 +211,17 @@ public class WandJPanel{
     }
 
     public void updateSpells(){
-        Spell[] spells = this.wand.getSpells(false);
+        Spell[] spells = this.wand.getSpells(true);
 
         this.basicJPanel.removeAll();
         for(int i=0; i < spells.length; i++){
-            if(this.imageScaleFactor != spells[i].getImageScaleFactor()){
-                spells[i].setImageScaleFactor(this.imageScaleFactor);
+            if(spells[i] != null){
+                if(this.imageScaleFactor != spells[i].getImageScaleFactor()){
+                    spells[i].setImageScaleFactor(this.imageScaleFactor);
+                }
+                this.basicJPanel.add(spells[i].getImageLabel());
+                spells[i].setLocation(i*this.slotSize*this.imageScaleFactor + (i + 1)*this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getWidth())/2, this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getHeight())/2);
             }
-            this.basicJPanel.add(spells[i].getImageLabel());
-            spells[i].setLocation(i*this.slotSize*this.imageScaleFactor + (i + 1)*this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getWidth())/2, this.margin + (this.slotSize*this.imageScaleFactor - spells[i].getImageLabel().getHeight())/2);
         }
     }
 }
